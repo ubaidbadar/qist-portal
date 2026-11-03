@@ -17,26 +17,29 @@ const SETUP_STEPS = [
  * Issues a one-time setup QR on request (issuing again replaces the previous code) and shows it with the steps.
  * The code holds a secret, so it is only shown here, never stored.
  */
-export default function EnrollmentPanel({ device }: { device: Device }) {
+export default function EnrollmentPanel({ deviceId, deviceLabel, enrollment }: { deviceId: string; deviceLabel: string; enrollment?: Device['enrollment'] }) {
   const queryClient = useQueryClient();
   const issue = useMutation({
-    mutationFn: () => apiPost<EnrollmentTicket>(`/devices/${device._id}/enrollment`),
+    mutationFn: () => apiPost<EnrollmentTicket>(`/devices/${deviceId}/enrollment`),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [DEVICES_KEY] }),
   });
   const ticket = issue.data;
 
   return (
     <div className="space-y-5">
-      {device.enrollment && (
+      {enrollment && (
         <Alert tone="success">
           Enrolled on {formatDateTime(device.enrollment.enrolledAt)}
           {device.enrollment.lastCheckInAt && `; last check-in ${formatDateTime(device.enrollment.lastCheckInAt)}`}.
         </Alert>
       )}
 
+      {!enrollment && (
+        <p className="text-sm text-muted">Use this only during a new or factory-reset phone's first setup. An already enrolled phone does not need another QR.</p>
+      )}
       {ticket ? (
         <div className="space-y-2 text-center">
-          <QrCode value={JSON.stringify(ticket.payload)} label={`Setup QR for ${device.brand} ${device.model}`} className="mx-auto w-full max-w-xs" />
+          <QrCode value={JSON.stringify(ticket.payload)} label={`Setup QR for ${deviceLabel`} className="mx-auto w-full max-w-xs" />
           <p className="text-sm text-muted">Valid once, until {formatTime(ticket.expiresAt)}.</p>
         </div>
       ) : (

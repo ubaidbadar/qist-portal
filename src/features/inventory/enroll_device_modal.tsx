@@ -11,7 +11,7 @@ export default function EnrollDeviceModal({ device }: { device: Device }) {
       title={`Set up ${name}`}
       component={({ open }) => <IconButton icon={QrIcon} aria-label={`Setup QR for ${name}`} onClick={open} />}
     >
-      <EnrollmentPanel device={device} />
+      <EnrollmentPanel deviceId={device._id} deviceLabel={`${device.brand} ${device.model}`} enrollment={device.enrollment} />
     </Modal>
   );
 }
