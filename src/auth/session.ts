@@ -15,25 +15,60 @@ interface SessionState {
 
 export const ME_KEY = ['me'] as const;
 const RACE_RETRY_DELAY_MS = 300;
+const REFRESH_TOKEN_STORAGE_KEY = 'qist_refresh';
+
+export const getStoredRefreshToken = () => {
+  try {
+    return localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+};
+
+export const setStoredRefreshToken = (token: string | null | undefined) => {
+  try {
+    if (token) {
+      localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, token);
+    } else {
+      localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+    }
+  } catch {
+    // localStorage might be unavailable or disabled
+  }
+};
 
 export const sessionStore = createStore<SessionState>({ status: 'loading', accessToken: null });
 
 export const getAccessToken = () => sessionStore.get().accessToken;
 
-export function signIn({ accessToken, ...me }: Session) {
+export function signIn({ accessToken, refreshToken, ...me }: Session) {
+  if (refreshToken) {
+    setStoredRefreshToken(refreshToken);
+  }
   queryClient.setQueryData<Me>(ME_KEY, me);
   loadActiveBranch(me.user._id);
   sessionStore.set({ status: 'signed_in', accessToken });
 }
 
 export function signOut() {
+  setStoredRefreshToken(null);
   sessionStore.set({ status: 'signed_out', accessToken: null });
   queryClient.clear();
 }
 
 // Its own client: the main client's interceptor calls refreshSession, which must not loop back into it.
 const authClient = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
-const postRefresh = async () => (await authClient.post<ApiSuccess<Session>>('/auth/refresh')).data.data;
+const postRefresh = async () => {
+  const stored = getStoredRefreshToken();
+  const headers: Record<string, string> = {};
+  if (stored) headers['X-Refresh-Token'] = stored;
+  const res = await authClient.post<ApiSuccess<Session>>(
+    '/auth/refresh',
+    stored ? { refreshToken: stored } : undefined,
+    { headers },
+  );
+  return res.data.data;
+};
 const isAuthFailure = (err: unknown) => axios.isAxiosError(err) && [401, 403].includes(err.response?.status ?? 0);
 
 async function requestRefresh() {
@@ -71,7 +106,10 @@ export const restoreSession = () =>
 
 export async function logOut() {
   try {
-    await authClient.post('/auth/logout');
+    const stored = getStoredRefreshToken();
+    const headers: Record<string, string> = {};
+    if (stored) headers['X-Refresh-Token'] = stored;
+    await authClient.post('/auth/logout', stored ? { refreshToken: stored } : undefined, { headers });
   } finally {
     signOut();
   }

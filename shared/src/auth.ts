@@ -39,7 +39,8 @@ export interface Me {
   branches: Branch[];
 }
 
-/** Returned by signup, login, refresh and change-password. The refresh token travels only in its cookie. */
+/** Returned by signup, login, refresh and change-password. */
 export interface Session extends Me {
   accessToken: string;
+  refreshToken?: string;
 }
