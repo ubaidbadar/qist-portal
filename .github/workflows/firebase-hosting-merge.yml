@@ -11,7 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - name: Setup environment and build
+        run: |
+          API_URL="${{ secrets.VITE_API_URL || vars.VITE_API_URL }}"
+          if [ -n "$API_URL" ]; then
+            echo "VITE_API_URL=$API_URL" > .env
+          elif [ -f .env.example ]; then
+            cp .env.example .env
+          fi
+          npm ci && npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL || vars.VITE_API_URL }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
