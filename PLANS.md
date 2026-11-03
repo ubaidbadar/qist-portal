@@ -1,6 +1,6 @@
 # Qist portal redesign — execution plan
 
-**Status:** Milestones 1–4 implemented on `redesign/qist-ui`; later milestones pending. **Scope:** Frontend only. Do not merge or deploy without review.
+**Status:** Milestones 1–5 in progress on `redesign/qist-ui`; later milestones pending. **Scope:** Frontend only. Do not merge or deploy without review.
 
 ## Goals and boundaries
 A calm, bank-like Qist interface matching the approved references; make everyday retailer workflows possible with minimal backtracking. Preserve all route URLs, backend endpoints, request/response data, existing user permissions, session handling, calculations, error handling, and manual payment processing. Contextual creation and auto-selection are approved frontend workflow improvements, not changes to backend behavior. Respect all five `.claude/skills` documents.

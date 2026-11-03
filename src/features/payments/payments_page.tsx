@@ -11,6 +11,7 @@ import MoneyText from '../../shared/money_text';
 import Page from '../../shared/page';
 import QueryView from '../../shared/query_view';
 import { METHOD_LABELS } from './labels';
+import PaymentLauncher from './payment_launcher';
 import { collectionsQuery, PAYMENTS_KEY } from './queries';
 
 const COLUMNS: Column<Payment>[] = [
@@ -33,7 +34,7 @@ export default function PaymentsPage() {
   const list = usePagedList<Payment>(PAYMENTS_KEY, '/payments', { date, branchId: branch });
 
   return (
-    <Page title="Payments" actions={<Input type="date" aria-label="Day" value={date} max={todayInShops()} onChange={(e) => setParams(e.target.value ? { date: e.target.value } : {}, { replace: true })} />}>
+    <Page title="Payments" actions={<div className="flex flex-wrap items-end gap-3"><PaymentLauncher /><Input type="date" aria-label="Day" value={date} max={todayInShops()} onChange={(e) => setParams(e.target.value ? { date: e.target.value } : {}, { replace: true })} /></div>}>
       <div className="space-y-6">
         <QueryView query={summary} skeleton={<ListSkeleton rows={1} />}>
           {(collections) => <CollectionsSummary collections={collections} />}
