@@ -49,7 +49,7 @@ export default function PaymentsPage() {
               hasMore={list.hasNextPage}
               loadingMore={list.isFetchingNextPage}
               onLoadMore={list.loadMore}
-              empty={<EmptyState icon={Receipt} title="No payments this day" description="Payments are recorded from a contract's page." />}
+              empty={<EmptyState icon={Receipt} title="No payments this day" description="Use Record payment above to add a payment." />}
             />
           )}
         </QueryView>

@@ -12,6 +12,7 @@ const ForgotPasswordPage = lazy(() => import('./features/auth/forgot_password_pa
 const ResetPasswordPage = lazy(() => import('./features/auth/reset_password_page'));
 const VerifyEmailPage = lazy(() => import('./features/auth/verify_email_page'));
 const ChangePasswordPage = lazy(() => import('./features/auth/change_password_page'));
+const DashboardPage = lazy(() => import('./features/dashboard/dashboard_page'));
 const SettingsPage = lazy(() => import('./features/settings/settings_page'));
 const CustomersPage = lazy(() => import('./features/customers/customers_page'));
 const CustomerPage = lazy(() => import('./features/customers/customer_page'));
@@ -28,7 +29,7 @@ const NotFoundPage = lazy(() => import('./app/pages/not_found_page'));
 const ShowcasePage = lazy(() => import('./showcase/showcase_page'));
 
 /** Screens not built yet; each milestone replaces its routes (docs/plan.md §7). */
-const BUILT = new Set(['/settings', '/customers', '/inventory', '/contracts', '/payments', '/lock-center']);
+const BUILT = new Set(['/', '/settings', '/customers', '/inventory', '/contracts', '/payments', '/lock-center']);
 const UPCOMING = NAV_ITEMS.filter((item) => !BUILT.has(item.to));
 
 export default function App() {
@@ -80,6 +81,7 @@ export default function App() {
               }
             />
           ))}
+          <Route path="/" element={<DashboardPage />} />
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/customers/:customerId" element={<CustomerPage />} />
           <Route path="/inventory" element={<InventoryPage />} />

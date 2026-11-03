@@ -1,12 +1,12 @@
 # Qist portal redesign — execution plan
 
-**Status:** Milestones 1–5 implemented on `redesign/qist-ui`; later milestones pending. **Scope:** Frontend only. Do not merge or deploy without review.
+**Status:** Milestones 1–6 in progress on `redesign/qist-ui`; later milestones pending. **Scope:** Frontend only. Do not merge or deploy without review.
 
 ## Goals and boundaries
 A calm, bank-like Qist interface matching the approved references; make everyday retailer workflows possible with minimal backtracking. Preserve all route URLs, backend endpoints, request/response data, existing user permissions, session handling, calculations, error handling, and manual payment processing. Contextual creation and auto-selection are approved frontend workflow improvements, not changes to backend behavior. Respect all five `.claude/skills` documents.
 
 ## Findings
-The legacy design mixes `.portal-shell` token overrides, gradient auth sections, uneven button dimensions, and non-contextual actions. Contract creation sends users to Customers and Inventory when a record is absent; customer form redirects after saving; the Terms step unmounts and loses drafts; Payments has no entry button. Inventory defaults to in-stock, hiding the sold-phone QR. The actual dashboard route is Coming Soon, while the reference is a mockup; do not fabricate metrics. Login is email-only and signup requires first branch: the references' phone login cannot be implemented visually without backend changes.
+The legacy design mixes `.portal-shell` token overrides, gradient auth sections, uneven button dimensions, and non-contextual actions. Contract creation sends users to Customers and Inventory when a record is absent; customer form redirects after saving; the Terms step unmounts and loses drafts; Payments has no entry button. Inventory defaults to in-stock, hiding the sold-phone QR. The original dashboard route was Coming Soon; the redesigned dashboard displays only live existing API values, without fabricated metrics. Login is email-only and signup requires first branch: the references' phone login cannot be implemented visually without backend changes.
 
 ## Tokens
 Logo: `#06B6D4` → `#2F3FE0`, white soft keyhole; only logo uses gradient. Navy `#0A1A3F`, raised `#11275A`, muted-on-dark `#A9B8DD`, cyan `#22D3EE` with dark text `#04122E`; coral `#FFA383`, light blue-grey workspace, semantic success/warning/danger/info, Inter. One `src/index.css` token source, dark and light support, at least 4.5:1 text contrast, generous rounding and 48px action targets. Logical CSS for RTL readiness.
