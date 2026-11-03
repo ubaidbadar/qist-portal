@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FREQUENCIES, type ContractWithSchedule, type Customer, type Device } from '@shop/shared';
 import { Alert, Button, fieldError, Form, Input, Select, toast } from '../../ui';
 import { apiPost } from '../../config/api';
+import { useMe } from '../../auth';
 import { FREQUENCY_LABELS } from '../../shared/labels';
 import { DEVICES_KEY } from '../inventory/queries';
 import { CONTRACTS_KEY, plansQuery } from './queries';
@@ -21,6 +22,8 @@ const FREQUENCY_OPTIONS = FREQUENCIES.map((frequency) => ({ value: frequency, la
 /** Step 3: price and installments, with the schedule recalculated as you type. The server recalculates it again. */
 export default function TermsStep({ branchId, customer, device }: TermsStepProps) {
   const navigate = useNavigate();
+  const { branches } = useMe();
+  const branchName = branches.find((item) => item._id === branchId)?.name ?? 'Unknown branch';
   const queryClient = useQueryClient();
   const plans = (useQuery(plansQuery).data ?? []).filter((plan) => plan.active);
   const planOptions = [{ value: '', label: 'Custom terms' }, ...plans.map((plan) => ({ value: plan._id, label: plan.name }))];
@@ -54,7 +57,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                 })}
               />
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input label="Cash price (Rs)" type="number" min={0} autoFocus {...register('cashRupees', { valueAsNumber: true })} error={fieldError(errors, 'cashRupees')} />
+                <Input label="Cash price (Rs)" type="number" min={0} {...register('cashRupees', { valueAsNumber: true })} error={fieldError(errors, 'cashRupees')} />
                 <Input label="Down payment (Rs)" type="number" min={0} {...register('downRupees', { valueAsNumber: true })} error={fieldError(errors, 'downRupees')} />
                 <Select label="Down payment paid by" options={METHOD_OPTIONS} {...register('downPaymentMethod')} />
                 <Input label="Markup %" type="number" step="0.01" min={0} {...register('markupPercent', { valueAsNumber: true })} error={fieldError(errors, 'markupPercent')} />
@@ -62,9 +65,16 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                 <Select label="Paid" options={FREQUENCY_OPTIONS} {...register('frequency')} error={fieldError(errors, 'frequency')} />
                 <Input label="First installment due" type="date" {...register('firstDueDate')} error={fieldError(errors, 'firstDueDate')} />
               </div>
-              {error && <Alert tone="danger">{error}</Alert>}
+              <div className="rounded-card border border-border bg-canvas px-5 py-4 text-sm">
+                <h2 className="mb-2 text-base font-semibold text-ink">Review before creating</h2>
+                <p className="text-body"><strong>Customer:</strong> {customer.fullName}</p>
+                <p className="text-body"><strong>Phone:</strong> {device.brand} {device.model} · IMEI {device.imeis[0]}</p>
+                <p className="text-body"><strong>Selling branch:</strong> {branchName}</p>
+                <p className="mt-2 text-muted">Check the schedule and payment amounts before confirming.</p>
+              </div>
+              {error && <Alert tone="danger">{error}</Alert>
               <Button type="submit" loading={loading} className="w-full">
-                Create contract
+                Confirm and create contract
               </Button>
             </div>
             <TermsPreview control={control} />

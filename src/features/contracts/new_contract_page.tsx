@@ -10,7 +10,14 @@ import CustomerStep from './customer_step';
 import DeviceStep from './device_step';
 import TermsStep from './terms_step';
 
-const STEPS = ['Customer', 'Phone', 'Terms'] as const;
+const STEPS = ['Customer', 'Phone', 'Terms & review'] as const;
+
+interface SaleDraft {
+  step: number;
+  customer: Customer | null;
+  device: Device | null;
+  sellingBranchId: string | null;
+}
 
 /** Selling a phone: customer → phone → terms. `?customerId=` starts with the customer chosen (from their profile). */
 export default function NewContractPage() {
@@ -18,13 +25,10 @@ export default function NewContractPage() {
   const preset = useQuery({ ...customerQuery(presetId), enabled: Boolean(presetId) });
   const { branchId: activeBranch, branches } = useActiveBranch();
 
-  const [step, setStep] = useState(0);
-  const [chosenCustomer, setChosenCustomer] = useState<Customer | null>(null);
-  const [device, setDevice] = useState<Device | null>(null);
-  const [chosenBranch, setChosenBranch] = useState<string | null>(null);
-  const customer = chosenCustomer ?? preset.data ?? null;
-  const branchId = chosenBranch ?? (activeBranch === ALL_BRANCHES ? (branches[0]?._id ?? '') : activeBranch);
-  const canContinue = step === 0 ? Boolean(customer) : Boolean(device);
+  const [draft, setDraft] = useState<SaleDraft>({ step: 0, customer: null, device: null, sellingBranchId: null });
+  const customer = draft.customer ?? preset.data ?? null;
+  const branchId = draft.sellingBranchId ?? (activeBranch === ALL_BRANCHES ? (branches.length === 1 ? branches[0]._id : '') : activeBranch);
+  const canContinue = draft.draft.step === 0 ? Boolean(customer) : Boolean(branchId && draft.device?.branchId === branchId);
 
   return (
     <Page title="New contract" breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'New contract' }]}>
@@ -33,41 +37,44 @@ export default function NewContractPage() {
           {STEPS.map((label, index) => (
             <li
               key={label}
-              aria-current={index === step ? 'step' : undefined}
-              className={`rounded-pill px-3 py-1 ${index === step ? 'bg-ink text-surface' : index < step ? 'bg-accent/10 text-accent' : 'bg-border text-muted'}`}
+              aria-current={index === draft.step ? 'step' : undefined}
+              className={`rounded-pill px-3 py-1 ${index === draft.step ? 'bg-ink text-surface' : index < draft.step ? 'bg-accent/10 text-accent' : 'bg-border text-muted'}`}
             >
               {index + 1}. {label}
             </li>
           ))}
         </ol>
 
-        {customer && step > 0 && (
+        {customer && draft.step > 0 && (
           <Card padding="sm" className="text-sm text-body">
             <strong className="font-medium text-ink">{customer.fullName}</strong> · {formatCnic(customer.cnic)}
-            {device && step > 1 && <> · {device.brand} {device.model} · IMEI {device.imeis[0]}</>}
+            {draft.device && draft.step > 1 && <> · {draft.device.brand} {draft.device.model} · IMEI {draft.device.imeis[0]}</>}
           </Card>
         )}
 
-        {step === 0 && <CustomerStep selected={customer} onSelect={setChosenCustomer} />}
-        {step === 1 && (
+        {draft.step === 0 && <CustomerStep selected={customer} onSelect={(selected) => setDraft((previous) => ({ ...previous, customer: selected }))} />}
+        {draft.step === 1 && (
           <DeviceStep
             branchId={branchId}
             onBranchChange={(id) => {
-              setChosenBranch(id);
-              setDevice(null);
+              setDraft((previous) => ({ ...previous, sellingBranchId: id, device: null }));
             }}
-            selected={device}
-            onSelect={setDevice}
+            selected={draft.device}
+            onSelect={(selected) => setDraft((previous) => ({ ...previous, device: selected }))}
           />
         )}
-        {step === 2 && customer && device && <TermsStep branchId={branchId} customer={customer} device={device} />}
+        {customer && draft.device && branchId && (
+          <div className={draft.step === 2 ? '' : 'hidden'}>
+            <TermsStep key={draft.device._id} branchId={branchId} customer={customer} device={draft.device} />
+          </div>
+        )}
 
         <div className="flex justify-between">
-          <Button variant="ghost" onClick={() => setStep(step - 1)} disabled={step === 0}>
+          <Button variant="ghost" onClick={() => setDraft((previous) => ({ ...previous, step: previous.step - 1 }))} disabled={draft.step === 0}>
             Back
           </Button>
-          {step < 2 && (
-            <Button onClick={() => setStep(step + 1)} disabled={!canContinue}>
+          {draft.step < 2 && (
+            <Button onClick={() => setDraft((previous) => ({ ...previous, step: previous.step + 1 }))} disabled={!canContinue}>
               Continue
             </Button>
           )}
