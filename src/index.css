@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+@theme {
+  /* Design tokens: this block is the whole look of the design system.
+     Components only use these roles (bg-surface, text-ink, rounded-card, …), never raw colors,
+     so re-theming a project means editing this file. Dark values are redefined below under `.dark`. */
+
+  /* Taken from the logo: teal ring, amber tail, deep navy keyhole. */
+
+  /* Neutrals: cool, slightly teal-leaning greys and the logo's navy for text */
+  --color-canvas: #F4F8F8;   /* page background, soft tints */
+  --color-surface: #FFFFFF;  /* cards, inputs, dialogs; also text on dark fills */
+  --color-ink: #0B1F2A;      /* strongest text: the logo's navy */
+  --color-body: #2B3D47;     /* regular text */
+  --color-muted: #5B6B73;    /* secondary text and icons */
+  --color-subtle: #94A3AB;   /* placeholders and hints */
+  --color-border: #DDE7E9;   /* borders, dividers, resting fills */
+  --color-scrim: rgb(11 31 42 / 0.45);      /* backdrop behind overlays */
+  --color-glow: rgb(11 110 110 / 0.08);     /* soft light behind the page, top left */
+  --color-glow-alt: rgb(255 176 32 / 0.07); /* and top right */
+
+  /* Brand */
+  --color-accent: #0B6E6E;      /* the logo's teal: links, focus, highlights */
+  --color-accent-alt: #FFB020;  /* the logo's amber: second accent, gradient partner */
+  --color-on-accent: #FFFFFF;   /* content placed on accent fills */
+  --color-primary: #0B6E6E;     /* main buttons */
+  --color-on-primary: #FFFFFF;
+  --color-brand-start: #0B6E6E; /* the sign-in pages' gradient panel: teal into navy, in both themes */
+  --color-brand-end: #0B1F2A;
+  --color-on-brand: #FFFFFF;
+  --color-logo-ring: #0B6E6E;
+  --color-logo-tail: #FFB020;
+  --color-hero-start: #E2F1F0;
+  --color-hero-mid: #F2F7F7;
+
+  /* Status palettes: alias the shades components use; point them anywhere to re-theme */
+  --color-danger-50: var(--color-red-50);
+  --color-danger-100: var(--color-red-100);
+  --color-danger-200: var(--color-red-200);
+  --color-danger-300: var(--color-red-300);
+  --color-danger-500: var(--color-red-500);
+  --color-danger-600: var(--color-red-600);
+  --color-danger-700: var(--color-red-700);
+  --color-danger-800: var(--color-red-800);
+  --color-success-50: var(--color-green-50);
+  --color-success-100: var(--color-green-100);
+  --color-success-200: var(--color-green-200);
+  --color-success-800: var(--color-green-800);
+  --color-warning-50: var(--color-amber-50);
+  --color-warning-100: var(--color-amber-100);
+  --color-warning-200: var(--color-amber-200);
+  --color-warning-500: var(--color-amber-500);
+  --color-warning-800: var(--color-amber-800);
+  --color-info-50: var(--color-blue-50);
+  --color-info-100: var(--color-blue-100);
+  --color-info-200: var(--color-blue-200);
+  --color-info-500: var(--color-blue-500);
+  --color-info-800: var(--color-blue-800);
+
+  /* Radius: shape of each kind of surface */
+  --radius-pill: 9999px;      /* buttons, pills, badges, progress */
+  --radius-card: 0.75rem;     /* cards, dialogs */
+  --radius-panel: 1rem;       /* large panels, bottom sheet, hero */
+  --radius-control: 0.5rem;   /* inputs, menus, toasts */
+  --radius-small: 0.375rem;   /* tooltips, compact controls */
+  --radius-chip: 0.25rem;     /* checkboxes, square badges */
+
+  /* Elevation: cards get a hairline border, not a heavy shadow */
+  --shadow-card: 0 0 0 1px var(--color-border), 0 1px 2px rgb(16 24 40 / 0.04);
+  --shadow-lg: 0 12px 32px -8px rgb(16 24 40 / 0.18);
+  --shadow-sheet: 0 -8px 30px rgb(0 0 0 / 0.12);
+
+  /* Typography */
+  --font-display: "Inter", sans-serif;  /* headings */
+  --font-body: "Inter", sans-serif;     /* everything else */
+  --default-font-family: var(--font-body);
+
+  /* Motion */
+  --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);  /* panels and indicators that slide */
+  --animate-pop-in: pop-in 150ms ease-out both;        /* popovers, tooltips, menus */
+}
+
+/* Dark theme: the same roles with dark values; status shades flip so `bg-*-100 text-*-800` stays readable.
+   Toggled by the `dark` class on <html> (utils/theme.ts). */
+:root {
+  color-scheme: light;
+}
+:root.dark {
+  /* Deep navy-teal night, with the logo's teal brightened so it reads on dark surfaces. */
+  color-scheme: dark;
+  --color-canvas: #061219;
+  --color-surface: #0C1D26;
+  --color-ink: #E8F1F2;
+  --color-body: #C2D3D7;
+  --color-muted: #8BA3AA;
+  --color-subtle: #587078;
+  --color-border: #1A3540;
+  --color-scrim: rgb(2 8 12 / 0.7);
+  --color-glow: rgb(95 208 200 / 0.16);
+  --color-glow-alt: rgb(255 176 32 / 0.09);
+  --color-accent: #5FD0C8;
+  --color-accent-alt: #FFB020;
+  --color-on-accent: #061219;
+  --color-primary: #5FD0C8;
+  --color-on-primary: #061219;
+  --color-brand-start: #0B6E6E;
+  --color-brand-end: #071820;
+  --color-logo-ring: #5FD0C8;
+  --color-hero-start: #0E2A31;
+  --color-hero-mid: #0C1D26;
+  --shadow-card: 0 0 0 1px var(--color-border), inset 0 1px 0 rgb(255 255 255 / 0.04), 0 12px 32px -16px rgb(0 0 0 / 0.7);
+  --shadow-lg: 0 16px 40px -12px rgb(0 0 0 / 0.75);
+
+  --color-danger-50: var(--color-red-950);
+  --color-danger-100: var(--color-red-900);
+  --color-danger-200: var(--color-red-800);
+  --color-danger-300: var(--color-red-700);
+  --color-danger-500: var(--color-red-400);
+  --color-danger-600: var(--color-red-400);
+  --color-danger-700: var(--color-red-300);
+  --color-danger-800: var(--color-red-200);
+  --color-success-50: var(--color-green-950);
+  --color-success-100: var(--color-green-900);
+  --color-success-200: var(--color-green-800);
+  --color-success-800: var(--color-green-200);
+  --color-warning-50: var(--color-amber-950);
+  --color-warning-100: var(--color-amber-900);
+  --color-warning-200: var(--color-amber-800);
+  --color-warning-500: var(--color-amber-400);
+  --color-warning-800: var(--color-amber-200);
+  --color-info-50: var(--color-blue-950);
+  --color-info-100: var(--color-blue-900);
+  --color-info-200: var(--color-blue-800);
+  --color-info-500: var(--color-blue-400);
+  --color-info-800: var(--color-blue-200);
+}
+
+/* Outside @theme so they are always emitted: FloatingElement references them from an inline style. */
+@keyframes pop-in {
+  from { opacity: 0; scale: 0.95; }
+}
+@keyframes float {
+  50% { translate: 0 -15px; }
+}
+
+/* `error:` styles a control that is invalid by prop (aria-invalid) or by native constraint after user input. */
+@custom-variant error (&:is([aria-invalid="true"], :user-invalid));
+
+@layer base {
+  body {
+    /* Two soft lights at the top of the page; strong in dark mode, barely there in light mode. */
+    background:
+      radial-gradient(60rem 30rem at 0% -10%, var(--color-glow), transparent 70%),
+      radial-gradient(50rem 28rem at 100% -15%, var(--color-glow-alt), transparent 70%),
+      var(--color-canvas);
+    background-attachment: fixed;
+    color: var(--color-ink);
+  }
+
+  /* One keyboard focus style for every interactive element; components only opt out or adjust the offset. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Heading scale: the element and its class look the same (`<h2>` or `<p className="h2">`).
+     Tailwind utilities still override these, so a one-off size is a class on the element. */
+  :is(h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6) {
+    @apply font-display font-semibold text-ink;
+  }
+  :is(h1, .h1) { @apply text-3xl tracking-tight; }
+  :is(h2, .h2) { @apply text-2xl tracking-tight; }
+  :is(h3, .h3) { @apply text-xl; }
+  :is(h4, .h4) { @apply text-lg; }
+  :is(h5, .h5) { @apply text-base; }
+  :is(h6, .h6) { @apply text-sm; }
+
+  /* Native <details> (ui/accordion.tsx): the panel animates its height where interpolate-size is supported
+     and simply opens elsewhere. */
+  .disclosure {
+    interpolate-size: allow-keywords;
+
+    &::details-content {
+      block-size: 0;
+      overflow: clip;
+    }
+    &[open]::details-content {
+      block-size: auto;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      &::details-content {
+        transition: block-size 300ms var(--ease-emphasized), content-visibility 300ms allow-discrete;
+      }
+    }
+  }
+}
+
+/* Custom utility for the hero gradient, since it's a one-off, not a themed color */
+@utility bg-hero {
+  background: linear-gradient(180deg, var(--color-hero-start) 0%, var(--color-hero-mid) 55%, var(--color-canvas) 100%);
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+
+  /* Safari before 18.2 ignores scrollbar-width */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
