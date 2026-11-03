@@ -85,9 +85,12 @@ export interface Contract {
 }
 
 import type { DeviceCommand } from './commands';
+import type { DeviceLockState } from './constants';
 import type { Payment } from './payments';
 
 export interface ContractWithSchedule extends Contract {
+  /** Last lock state acknowledged by the enrolled phone, null when unavailable. */
+  deviceLockState: DeviceLockState | null;
   installments: Installment[];
   payments?: Payment[];
   commands?: DeviceCommand[];
