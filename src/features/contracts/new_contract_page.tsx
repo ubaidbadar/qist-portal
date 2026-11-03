@@ -28,7 +28,7 @@ export default function NewContractPage() {
   const [draft, setDraft] = useState<SaleDraft>({ step: 0, customer: null, device: null, sellingBranchId: null });
   const customer = draft.customer ?? preset.data ?? null;
   const branchId = draft.sellingBranchId ?? (activeBranch === ALL_BRANCHES ? (branches.length === 1 ? branches[0]._id : '') : activeBranch);
-  const canContinue = draft.draft.step === 0 ? Boolean(customer) : Boolean(branchId && draft.device?.branchId === branchId);
+  const canContinue = draft.step === 0 ? Boolean(customer) : Boolean(branchId && draft.device?.branchId === branchId);
 
   return (
     <Page title="New contract" breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'New contract' }]}>
@@ -38,7 +38,7 @@ export default function NewContractPage() {
             <li
               key={label}
               aria-current={index === draft.step ? 'step' : undefined}
-              className={`rounded-pill px-3 py-1 ${index === draft.step ? 'bg-ink text-surface' : index < draft.step ? 'bg-accent/10 text-accent' : 'bg-border text-muted'}`}
+              className={`rounded-pill px-4 py-2 font-medium ${index === draft.step ? 'bg-brand-raised text-on-brand' : index < draft.step ? 'bg-success-100 text-success-800' : 'bg-border text-muted'}`}
             >
               {index + 1}. {label}
             </li>
