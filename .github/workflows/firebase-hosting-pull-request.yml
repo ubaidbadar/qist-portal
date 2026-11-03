@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
       - name: Setup environment and build
         run: |
           API_URL="${{ secrets.VITE_API_URL || vars.VITE_API_URL }}"
@@ -21,7 +24,8 @@ jobs:
           elif [ -f .env.example ]; then
             cp .env.example .env
           fi
-          npm ci && npm run build
+          bun install --frozen-lockfile
+          bun run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL || vars.VITE_API_URL }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
