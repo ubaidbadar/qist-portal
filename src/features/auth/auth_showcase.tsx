@@ -29,7 +29,7 @@ export default function AuthShowcase() {
       </p>
 
       <div className="relative mt-auto space-y-8">
-        <h2 className="max-w-md text-4xl leading-tight font-semibold tracking-tight">Sell phones on installments. Get paid on time.</h2>
+        <h2 className="max-w-md text-4xl leading-tight font-semibold tracking-tight text-on-brand">Sell phones on installments. Get paid on time.</h2>
         <ul className="space-y-3">
           {FEATURES.map(({ icon: Icon, text }) => (
             <li key={text} className="flex items-center gap-3 text-on-brand/90">

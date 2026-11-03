@@ -7,7 +7,7 @@ const baseClasses =
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',
-  secondary: 'bg-accent text-surface hover:bg-accent/80 hover:text-ink',
+  secondary: 'bg-accent text-on-accent hover:bg-accent/90',
   outline: 'bg-transparent border border-ink text-ink hover:bg-ink hover:text-surface',
   ghost: 'bg-transparent text-body hover:bg-border',
   link: 'bg-transparent text-accent underline-offset-4 hover:underline',
