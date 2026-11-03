@@ -72,7 +72,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                 <p className="text-body"><strong>Selling branch:</strong> {branchName}</p>
                 <p className="mt-2 text-muted">Check the schedule and payment amounts before confirming.</p>
               </div>
-              {error && <Alert tone="danger">{error}</Alert>
+              {error && <Alert tone="danger">{error}</Alert>}
               <Button type="submit" loading={loading} className="w-full">
                 Confirm and create contract
               </Button>
