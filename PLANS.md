@@ -1,6 +1,6 @@
 # Qist portal redesign — execution plan
 
-**Status:** Milestones 1–6 in progress on `redesign/qist-ui`; later milestones pending. **Scope:** Frontend only. Do not merge or deploy without review.
+**Status:** Redesign implementation complete on `redesign/qist-ui`; final browser/device QA pending. **Scope:** Frontend only. Do not merge or deploy without review.
 
 ## Goals and boundaries
 A calm, bank-like Qist interface matching the approved references; make everyday retailer workflows possible with minimal backtracking. Preserve all route URLs, backend endpoints, request/response data, existing user permissions, session handling, calculations, error handling, and manual payment processing. Contextual creation and auto-selection are approved frontend workflow improvements, not changes to backend behavior. Respect all five `.claude/skills` documents.
@@ -24,3 +24,20 @@ Each milestone: one commit, run GitHub CI (typecheck, lint, build), applicable t
 
 ## Acceptance
 Retailer can begin a sale without preregistered customer or phone, add both in context, retain inputs when navigating between steps, and submit using existing validated payloads; existing data flows and permissions still work. Payment and setup actions discoverable. No misleading device status, fake stats, raw palette classes or dead components. Maintain this plan with actual verification and any deferred items.
+
+## Implementation summary — 4 November 2026
+
+- Established semantic light/dark Qist tokens and canonical SVG logo.
+- Restyled shared interactive controls, tables, badges and feedback; preserved component APIs.
+- Rebuilt full-bleed navy desktop auth layout, updated login/signup/recovery visuals without changing email-only authentication or mandatory first branch.
+- Built a working dashboard from the existing collections, overdue and daily payments endpoints. All figures are server-derived; no sample totals.
+- Added inline customer and stock-phone creation in the contract wizard, auto-selection, explicit selling branch, preserved Terms form state on Back, and a final review summary.
+- Added a Payments-page entry flow to select an existing customer and active unpaid contract, then reuse the same idempotent payment form and receipt route.
+- Exposed device-setup QR from eligible contract detail, retaining backend authorization and enrollment semantics.
+- Preserved every existing endpoint, route, Zod business rule, permissions, money representation, and device lock confirmation flow. No dependency changes.
+
+**Verification:** GitHub Actions on the redesign branch passed `bun run check` (TypeScript, ESLint, Vite production build) and `bun test` (existing unit tests). `main` is unchanged; the redesign branch is current with `main`. Automatic Firebase Hosting production deployment was not invoked.
+
+**Remaining acceptance checks before production:** click through auth, contract creation with a new customer and phone, duplicate customer recovery, payment and receipt, QR enrollment, lock/unlock and role-specific permissions on real connected data; inspect mobile (390px), desktop (1440px), keyboard navigation and Urdu/RTL layouts in a browser. These interactive checks cannot be certified by CI alone. The reference's phone-number login remains out of scope because the actual authentication API is email-based.
+
+**Rollback:** Each feature group is isolated in the redesign branch's commit history. Revert its associated commits if it causes a regression; do not merge to `main` until review.
