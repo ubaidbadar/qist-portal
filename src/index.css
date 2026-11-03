@@ -1,135 +1,124 @@
 @import "tailwindcss";
 
 @theme {
-  /* Design tokens: this block is the whole look of the design system.
-     Components only use these roles (bg-surface, text-ink, rounded-card, …), never raw colors,
-     so re-theming a project means editing this file. Dark values are redefined below under `.dark`. */
+  /* Qist design foundation: role-based light workspace and deep-navy branded surfaces. */
+  --color-canvas: #F4F7FC;
+  --color-surface: #FFFFFF;
+  --color-ink: #0A1A3F;
+  --color-body: #334766;
+  --color-muted: #52627B;
+  --color-subtle: #59657D;
+  --color-border: #DCE5F3;
+  --color-scrim: rgb(4 18 46 / 0.64);
+  --color-glow: transparent;
+  --color-glow-alt: transparent;
 
-  /* Neutrals: cool greys and Qist navy */
-  --color-canvas: #F5F8FD;   /* page background, soft tints */
-  --color-surface: #FFFFFF;  /* cards, inputs, dialogs; also text on dark fills */
-  --color-ink: #0B1F4B;      /* strongest text: the logo's navy */
-  --color-body: #334155;     /* regular text */
-  --color-muted: #526178;    /* secondary text and icons */
-  --color-subtle: #94A3AB;   /* placeholders and hints */
-  --color-border: #DDE5F2;   /* borders, dividers, resting fills */
-  --color-scrim: rgb(11 31 75 / 0.45);      /* backdrop behind overlays */
-  --color-glow: rgb(6 182 212 / 0.08);     /* soft light behind the page, top left */
-  --color-glow-alt: rgb(47 63 224 / 0.07); /* and top right */
-
-  /* Brand */
-  --color-accent: #2F3FE0;      /* blue for links, focus, and selection */
-  --color-accent-alt: #2052BC;  /* gradient partner */
-  --color-on-accent: #FFFFFF;   /* content placed on accent fills */
-  --color-primary: #2F3FE0;     /* main buttons */
-  --color-on-primary: #FFFFFF;
-  --color-brand-start: #2F3FE0; /* the sign-in pages' gradient panel: blue into navy, in both themes */
-  --color-brand-end: #0B1F4B;
+  --color-brand-navy: #0A1A3F;
+  --color-brand-raised: #11275A;
+  --color-brand-muted: #A9B8DD;
+  --color-brand-stroke: rgb(255 255 255 / 0.12);
+  --color-brand-gradient-start: #06B6D4;
+  --color-brand-gradient-end: #2F3FE0;
+  --color-logo-keyhole: #FFFFFF;
   --color-on-brand: #FFFFFF;
-  --color-wordmark: #0B1F4B;
-  --color-hero-start: #E3F3FF;
-  --color-hero-mid: #F4F7FD;
+  --color-wordmark: #0A1A3F;
+  --color-accent: #1B55AE;
+  --color-accent-alt: #2052BC;
+  --color-on-accent: #FFFFFF;
+  --color-primary: #22D3EE;
+  --color-on-primary: #04122E;
+  --color-coral: #FFA383;
+  --color-on-coral: #0A1A3F;
+  /* Compatibility roles while migrating legacy components. */
+  --color-brand-start: #0A1A3F;
+  --color-brand-end: #0A1A3F;
+  --color-hero-start: #F4F7FC;
+  --color-hero-mid: #F4F7FC;
 
-  /* Status palettes: alias the shades components use; point them anywhere to re-theme */
-  --color-danger-50: var(--color-red-50);
-  --color-danger-100: var(--color-red-100);
-  --color-danger-200: var(--color-red-200);
-  --color-danger-300: var(--color-red-300);
-  --color-danger-500: var(--color-red-500);
-  --color-danger-600: var(--color-red-600);
-  --color-danger-700: var(--color-red-700);
-  --color-danger-800: var(--color-red-800);
-  --color-success-50: var(--color-green-50);
-  --color-success-100: var(--color-green-100);
-  --color-success-200: var(--color-green-200);
-  --color-success-800: var(--color-green-800);
-  --color-warning-50: var(--color-amber-50);
-  --color-warning-100: var(--color-amber-100);
-  --color-warning-200: var(--color-amber-200);
-  --color-warning-500: var(--color-amber-500);
-  --color-warning-800: var(--color-amber-800);
-  --color-info-50: var(--color-blue-50);
-  --color-info-100: var(--color-blue-100);
-  --color-info-200: var(--color-blue-200);
-  --color-info-500: var(--color-blue-500);
-  --color-info-800: var(--color-blue-800);
+  /* Accessible semantic colors. Meaning is always paired with icon and text. */
+  --color-danger-50: #FFF7F3;
+  --color-danger-100: #FFF0EC;
+  --color-danger-200: #F7C8BE;
+  --color-danger-300: #EEA89A;
+  --color-danger-500: #C44937;
+  --color-danger-600: #A42D26;
+  --color-danger-700: #8D2822;
+  --color-danger-800: #701B18;
+  --color-success-50: #F4FCF7;
+  --color-success-100: #ECF8F2;
+  --color-success-200: #BDE5D0;
+  --color-success-800: #0D654A;
+  --color-warning-50: #FFFBF3;
+  --color-warning-100: #FFF3D9;
+  --color-warning-200: #F1D69E;
+  --color-warning-500: #A97820;
+  --color-warning-800: #875512;
+  --color-info-50: #F4F9FF;
+  --color-info-100: #E8F3FF;
+  --color-info-200: #BDD6F7;
+  --color-info-500: #2E69B2;
+  --color-info-800: #184E9A;
 
-  /* Radius: shape of each kind of surface */
-  --radius-pill: 9999px;      /* buttons, pills, badges, progress */
-  --radius-card: 0.75rem;     /* cards, dialogs */
-  --radius-panel: 1rem;       /* large panels, bottom sheet, hero */
-  --radius-control: 0.5rem;   /* inputs, menus, toasts */
-  --radius-small: 0.375rem;   /* tooltips, compact controls */
-  --radius-chip: 0.25rem;     /* checkboxes, square badges */
+  --radius-pill: 9999px;
+  --radius-card: 1.25rem;
+  --radius-panel: 1.5rem;
+  --radius-control: 0.875rem;
+  --radius-small: 0.625rem;
+  --radius-chip: 0.625rem;
+  --shadow-card: 0 0 0 1px var(--color-border), 0 2px 8px rgb(10 26 63 / 0.04);
+  --shadow-lg: 0 18px 48px -16px rgb(10 26 63 / 0.20);
+  --shadow-sheet: 0 -8px 30px rgb(10 26 63 / 0.14);
 
-  /* Elevation: cards get a hairline border, not a heavy shadow */
-  --shadow-card: 0 0 0 1px var(--color-border), 0 1px 2px rgb(16 24 40 / 0.04);
-  --shadow-lg: 0 12px 32px -8px rgb(16 24 40 / 0.18);
-  --shadow-sheet: 0 -8px 30px rgb(0 0 0 / 0.12);
-
-  /* Typography */
-  --font-display: "Inter", sans-serif;  /* headings */
-  --font-body: "Inter", sans-serif;     /* everything else */
+  --font-display: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
   --default-font-family: var(--font-body);
-
-  /* Motion */
-  --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);  /* panels and indicators that slide */
-  --animate-pop-in: pop-in 150ms ease-out both;        /* popovers, tooltips, menus */
+  --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-pop-in: pop-in 150ms ease-out both;
 }
 
-/* Dark theme: the same roles with dark values; status shades flip so `bg-*-100 text-*-800` stays readable.
-   Toggled by the `dark` class on <html> (utils/theme.ts). */
-:root {
-  color-scheme: light;
-}
+:root { color-scheme: light; }
 :root.dark {
-  /* Deep navy with a lighter blue accent for dark surfaces. */
   color-scheme: dark;
-  --color-canvas: #0B1226;
-  --color-surface: #141D37;
-  --color-ink: #EFF3FF;
-  --color-body: #CDD7EF;
-  --color-muted: #A0AEC8;
-  --color-subtle: #8292AE;
-  --color-border: #283757;
-  --color-scrim: rgb(2 8 12 / 0.7);
-  --color-glow: rgb(6 182 212 / 0.16);
-  --color-glow-alt: rgb(47 63 224 / 0.09);
-  --color-wordmark: #EFF3FF;
-  --color-accent: #9CA8FF;
-  --color-accent-alt: #65D7F0;
-  --color-on-accent: #0B1226;
-  --color-primary: #9CA8FF;
-  --color-on-primary: #0B1226;
-  --color-brand-start: #2F3FE0;
-  --color-brand-end: #0B1F4B;
-  --color-hero-start: #18264A;
-  --color-hero-mid: #141D37;
-  --shadow-card: 0 0 0 1px var(--color-border), inset 0 1px 0 rgb(255 255 255 / 0.04), 0 12px 32px -16px rgb(0 0 0 / 0.7);
-  --shadow-lg: 0 16px 40px -12px rgb(0 0 0 / 0.75);
-
-  --color-danger-50: var(--color-red-950);
-  --color-danger-100: var(--color-red-900);
-  --color-danger-200: var(--color-red-800);
-  --color-danger-300: var(--color-red-700);
-  --color-danger-500: var(--color-red-400);
-  --color-danger-600: var(--color-red-400);
-  --color-danger-700: var(--color-red-300);
-  --color-danger-800: var(--color-red-200);
-  --color-success-50: var(--color-green-950);
-  --color-success-100: var(--color-green-900);
-  --color-success-200: var(--color-green-800);
-  --color-success-800: var(--color-green-200);
-  --color-warning-50: var(--color-amber-950);
-  --color-warning-100: var(--color-amber-900);
-  --color-warning-200: var(--color-amber-800);
-  --color-warning-500: var(--color-amber-400);
-  --color-warning-800: var(--color-amber-200);
-  --color-info-50: var(--color-blue-950);
-  --color-info-100: var(--color-blue-900);
-  --color-info-200: var(--color-blue-800);
-  --color-info-500: var(--color-blue-400);
-  --color-info-800: var(--color-blue-200);
+  --color-canvas: #081634;
+  --color-surface: #11275A;
+  --color-ink: #FFFFFF;
+  --color-body: #DBE5FB;
+  --color-muted: #A9B8DD;
+  --color-subtle: #ADBADE;
+  --color-border: rgb(255 255 255 / 0.12);
+  --color-scrim: rgb(2 8 19 / 0.74);
+  --color-wordmark: #FFFFFF;
+  --color-accent: #22D3EE;
+  --color-accent-alt: #22D3EE;
+  --color-on-accent: #04122E;
+  --color-primary: #22D3EE;
+  --color-on-primary: #04122E;
+  --color-hero-start: #081634;
+  --color-hero-mid: #081634;
+  --shadow-card: 0 0 0 1px var(--color-border), 0 8px 32px -20px rgb(0 0 0 / 0.7);
+  --shadow-lg: 0 18px 48px -16px rgb(0 0 0 / 0.75);
+  --color-danger-50: #351B25;
+  --color-danger-100: #44232E;
+  --color-danger-200: #7B3645;
+  --color-danger-300: #B14F62;
+  --color-danger-500: #FFA383;
+  --color-danger-600: #FFA383;
+  --color-danger-700: #FFB09A;
+  --color-danger-800: #FFE4DD;
+  --color-success-50: #0F2D2D;
+  --color-success-100: #133E35;
+  --color-success-200: #285C4E;
+  --color-success-800: #B0EACC;
+  --color-warning-50: #3D291C;
+  --color-warning-100: #52381E;
+  --color-warning-200: #77542B;
+  --color-warning-500: #EFB465;
+  --color-warning-800: #FFDA92;
+  --color-info-50: #132D52;
+  --color-info-100: #1B3C65;
+  --color-info-200: #345C8D;
+  --color-info-500: #88C8FF;
+  --color-info-800: #B3DEFF;
 }
 
 /* Outside @theme so they are always emitted: FloatingElement references them from an inline style. */
@@ -146,11 +135,7 @@
 @layer base {
   body {
     /* Two soft lights at the top of the page; strong in dark mode, barely there in light mode. */
-    background:
-      radial-gradient(60rem 30rem at 0% -10%, var(--color-glow), transparent 70%),
-      radial-gradient(50rem 28rem at 100% -15%, var(--color-glow-alt), transparent 70%),
-      var(--color-canvas);
-    background-attachment: fixed;
+    background: var(--color-canvas);
     color: var(--color-ink);
   }
 
@@ -162,27 +147,6 @@
 }
 
 @layer components {
-  /* Neutral workspace surfaces with Qist blue reserved for actions and selection. */
-  :root:has(.portal-shell) {
-    --color-canvas: #F6F7F9;
-    --color-ink: #0F172A;
-    --color-body: #334155;
-    --color-muted: #5B6474;
-    --color-subtle: #6B7280;
-    --color-border: #E5E7EB;
-    --shadow-card: 0 0 0 1px var(--color-border);
-  }
-
-  :root.dark:has(.portal-shell) {
-    --color-canvas: #0B0F19;
-    --color-surface: #131B29;
-    --color-ink: #F1F5F9;
-    --color-body: #CBD5E1;
-    --color-muted: #A3AEC0;
-    --color-subtle: #94A3B8;
-    --color-border: #2A3347;
-  }
-
   /* Heading scale: the element and its class look the same (`<h2>` or `<p className="h2">`).
      Tailwind utilities still override these, so a one-off size is a class on the element. */
   :is(h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6) {
@@ -217,7 +181,7 @@
 
 /* Custom utility for the hero gradient, since it's a one-off, not a themed color */
 @utility bg-hero {
-  background: linear-gradient(180deg, var(--color-hero-start) 0%, var(--color-hero-mid) 55%, var(--color-canvas) 100%);
+  background: var(--color-canvas);
 }
 
 @utility hide-scrollbar {
