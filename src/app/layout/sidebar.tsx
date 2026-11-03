@@ -25,7 +25,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sticky top-0 hidden h-dvh shrink-0 flex-col gap-4 border-e border-border bg-surface px-3 py-5 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex ${
+      className={`sidebar-shell sticky top-0 hidden h-dvh shrink-0 flex-col gap-4 border-e border-brand-stroke bg-brand-navy px-3 py-5 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex ${
         collapsed ? 'w-17' : 'w-64'
       }`}
     >

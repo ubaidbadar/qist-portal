@@ -147,6 +147,20 @@
 }
 
 @layer components {
+
+  /* Apply the same semantic roles inside a navy sidebar. Menus portaled to body retain page tokens. */
+  .sidebar-shell {
+    --color-surface: #11275A;
+    --color-canvas: #0A1A3F;
+    --color-ink: #FFFFFF;
+    --color-body: #DBE5FB;
+    --color-muted: #A9B8DD;
+    --color-subtle: #A9B8DD;
+    --color-border: rgb(255 255 255 / 0.12);
+    --color-accent: #22D3EE;
+    --color-on-accent: #04122E;
+    --color-wordmark: #FFFFFF;
+  }
   /* Heading scale: the element and its class look the same (`<h2>` or `<p className="h2">`).
      Tailwind utilities still override these, so a one-off size is a class on the element. */
   :is(h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6) {

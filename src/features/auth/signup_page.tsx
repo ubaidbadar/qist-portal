@@ -12,7 +12,7 @@ export default function SignupPage() {
   return (
     <AuthCard
       title="Create your account"
-      subtitle="Set up your business. You can add more branches and your team later."
+      subtitle="Set up your shop and start tracking installments."
       footer={
         <>
           Already on {APP_NAME}?{' '}
@@ -31,7 +31,7 @@ export default function SignupPage() {
         }}
         component={({ register, errors, loading, error }) => (
           <div className="space-y-4">
-            <Input label="Business name" placeholder="e.g. Al-Madina Mobiles" autoFocus {...register('orgName')} error={fieldError(errors, 'orgName')} />
+            <Input label="Shop name" placeholder="e.g. Al-Madina Mobiles" autoFocus {...register('orgName')} error={fieldError(errors, 'orgName')} />
             <Input label="First branch" placeholder="e.g. Hall Road, Lahore" {...register('branchName')} error={fieldError(errors, 'branchName')} />
             <Input label="Your name" autoComplete="name" {...register('fullName')} error={fieldError(errors, 'fullName')} />
             <Input label="Email" type="email" autoComplete="email" {...register('email')} error={fieldError(errors, 'email')} />

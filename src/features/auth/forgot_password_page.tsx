@@ -8,7 +8,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthCard
       title="Reset your password"
-      subtitle="Enter your email and we'll send you a link to choose a new password."
+      subtitle="Enter your email address and we'll send instructions to reset your password."
       footer={
         <Link to="/login" className={authLinkClasses}>
           Back to sign in

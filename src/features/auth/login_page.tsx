@@ -1,19 +1,21 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { APP_NAME, loginSchema, type Session } from '@shop/shared';
+import { loginSchema, type Session } from '@shop/shared';
 import { Alert, Button, fieldError, Form, Input, PasswordInput } from '../../ui';
 import { apiPost } from '../../config/api';
 import { signIn } from '../../auth';
+import AuthCard, { authLinkClasses } from './auth_card';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const from = (useLocation().state as { from?: string } | null)?.from ?? '/';
 
   return (
-    <>
-      <h1>Sign In</h1>
-      <p className='mt-2'>Welcome back to {APP_NAME}.</p>
+    <AuthCard
+      title="Welcome back"
+      subtitle="Sign in to manage your customers and installments."
+      footer={<>New to Qist? <Link className={authLinkClasses} to="/signup">Create an account</Link></>}
+    >
       <Form
-        className='my-6'
         schema={loginSchema}
         defaultValues={{ email: '', password: '' }}
         onSubmit={async ({ data }) => {
@@ -21,25 +23,19 @@ export default function LoginPage() {
           navigate(from, { replace: true });
         }}
         component={({ register, errors, loading, error }) => (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <Input label="Email" type="email" autoComplete="email" autoFocus {...register('email')} error={fieldError(errors, 'email')} />
-            <PasswordInput label="Password" autoComplete="current-password" {...register('password')} error={fieldError(errors, 'password')} />
-            <div className="text-right text-sm">
-              <Button variant="link" as={Link} to="/forgot-password">
-                Forgot password?
-              </Button>
+            <div>
+              <PasswordInput label="Password" autoComplete="current-password" {...register('password')} error={fieldError(errors, 'password')} />
+              <div className="mt-1 text-end">
+                <Link className={authLinkClasses} to="/forgot-password">Forgot password?</Link>
+              </div>
             </div>
             {error && <Alert tone="danger">{error}</Alert>}
-            <Button type="submit" loading={loading} className="w-full">
-              Sign in
-            </Button>
+            <Button type="submit" loading={loading} className="w-full">Sign in</Button>
           </div>
         )}
       />
-      New to {APP_NAME}?{' '}
-      <Button variant="link" className="mr-auto" as={Link} to="/signup">
-        Create an account
-      </Button>
-    </>
+    </AuthCard>
   );
 }

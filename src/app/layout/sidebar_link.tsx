@@ -13,9 +13,9 @@ export default function SidebarLink({ item: { to, label, icon: Icon }, collapsed
       to={to}
       end={to === '/'}
       className={({ isActive }) =>
-        `relative flex min-h-10 items-center gap-3 rounded-control px-3 text-sm -outline-offset-2 ${collapsed ? 'justify-center' : ''} transition-colors duration-150 ${
-          isActive ? 'bg-accent/10 font-semibold text-accent before:absolute before:inset-y-2 before:-start-3 before:w-1 before:rounded-e-pill before:bg-accent'
-            : 'font-medium text-muted hover:bg-canvas hover:text-ink'
+        `relative flex min-h-12 items-center gap-3 rounded-control px-3 text-sm -outline-offset-2 ${collapsed ? 'justify-center' : ''} transition-colors duration-150 ${
+          isActive ? 'bg-brand-raised font-semibold text-on-brand'
+            : 'font-medium text-brand-muted hover:bg-brand-raised hover:text-on-brand'
         }`
       }
     >
