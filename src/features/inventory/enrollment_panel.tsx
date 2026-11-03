@@ -29,8 +29,8 @@ export default function EnrollmentPanel({ deviceId, deviceLabel, enrollment }: {
     <div className="space-y-5">
       {enrollment && (
         <Alert tone="success">
-          Enrolled on {formatDateTime(device.enrollment.enrolledAt)}
-          {device.enrollment.lastCheckInAt && `; last check-in ${formatDateTime(device.enrollment.lastCheckInAt)}`}.
+          Enrolled on {formatDateTime(enrollment.enrolledAt)}
+          {enrollment.lastCheckInAt && `; last check-in ${formatDateTime(enrollment.lastCheckInAt)}`}.
         </Alert>
       )}
 
@@ -39,7 +39,7 @@ export default function EnrollmentPanel({ deviceId, deviceLabel, enrollment }: {
       )}
       {ticket ? (
         <div className="space-y-2 text-center">
-          <QrCode value={JSON.stringify(ticket.payload)} label={`Setup QR for ${deviceLabel`} className="mx-auto w-full max-w-xs" />
+          <QrCode value={JSON.stringify(ticket.payload)} label={`Setup QR for ${deviceLabel}`} className="mx-auto w-full max-w-xs" />
           <p className="text-sm text-muted">Valid once, until {formatTime(ticket.expiresAt)}.</p>
         </div>
       ) : (
