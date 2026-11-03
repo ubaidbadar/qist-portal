@@ -39,10 +39,10 @@ export default function DataTable<T>({ rows, columns, rowKey, rowHref, empty, ha
   return (
     <Card padding="none" className="overflow-hidden">
       <table className="hidden w-full text-start text-sm md:table">
-        <thead className="border-b border-border bg-canvas text-xs text-muted">
+        <thead className="border-b border-border bg-canvas text-xs font-semibold text-muted">
           <tr>
             {columns.map((column) => (
-              <th key={column.header} scope="col" className={`px-5 py-3 font-semibold ${column.className ?? ''}`}>
+              <th key={column.header} scope="col" className={`px-5 py-4 text-start font-semibold ${column.className ?? ''}`}>
                 {column.header}
               </th>
             ))}
@@ -52,7 +52,7 @@ export default function DataTable<T>({ rows, columns, rowKey, rowHref, empty, ha
           {rows.map((row) => (
             <tr key={rowKey(row)} onClick={openRow(row)} className={clickable}>
               {columns.map((column) => (
-                <td key={column.header} className={`px-5 py-3 align-middle text-body ${column.className ?? ''}`}>
+                <td key={column.header} className={`px-5 py-3.5 align-middle text-body ${column.className ?? ''}`}>
                   {column.cell(row)}
                 </td>
               ))}
@@ -63,7 +63,7 @@ export default function DataTable<T>({ rows, columns, rowKey, rowHref, empty, ha
 
       <ul className="divide-y divide-border md:hidden">
         {rows.map((row) => (
-          <li key={rowKey(row)} onClick={openRow(row)} className={`space-y-2 px-4 py-3 ${clickable}`}>
+          <li key={rowKey(row)} onClick={openRow(row)} className={`space-y-3 px-4 py-4 ${clickable}`}>
             <div className="text-ink">{titleColumn.cell(row)}</div>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
               {detailColumns

@@ -84,7 +84,7 @@ export function ChoiceField({
   const { errorId, controlProps } = useFieldControl(id, error);
 
   return (
-    <label htmlFor={controlProps.id} className={`flex items-start gap-3 cursor-pointer ${className}`}>
+    <label htmlFor={controlProps.id} className={`flex min-h-12 items-center gap-3 cursor-pointer ${className}`}>
       <span className="relative flex items-center justify-center pt-0.5">
         <input type={type} {...controlProps} className={inputClassName} {...props} />
         {indicator}

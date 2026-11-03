@@ -31,16 +31,16 @@ export default function Input({
           <Icon
             size={18}
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted"
+            className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-muted"
           />
         )}
         <input
           {...controlProps}
           name={name}
-          className={`${formInputBaseClasses} py-2.5 ${Icon ? 'pl-10' : ''} ${rightElement ? 'pr-10' : ''} ${className}`}
+          className={`${formInputBaseClasses} py-2.5 ${Icon ? 'ps-10' : ''} ${rightElement ? 'pe-12' : ''} ${className}`}
           {...props}
         />
-        {rightElement && <span className="absolute inset-y-0 right-3 flex items-center">{rightElement}</span>}
+        {rightElement && <span className="absolute inset-y-0 end-1 flex items-center">{rightElement}</span>}
       </span>
     </FieldShell>
   );
