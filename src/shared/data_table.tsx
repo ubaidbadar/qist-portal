@@ -38,11 +38,11 @@ export default function DataTable<T>({ rows, columns, rowKey, rowHref, empty, ha
 
   return (
     <Card padding="none" className="overflow-hidden">
-      <table className="hidden w-full text-left text-sm md:table">
-        <thead className="border-b border-border text-xs text-muted">
+      <table className="hidden w-full text-start text-sm md:table">
+        <thead className="border-b border-border bg-canvas text-xs text-muted">
           <tr>
             {columns.map((column) => (
-              <th key={column.header} scope="col" className={`px-5 py-3 font-medium ${column.className ?? ''}`}>
+              <th key={column.header} scope="col" className={`px-5 py-3 font-semibold ${column.className ?? ''}`}>
                 {column.header}
               </th>
             ))}

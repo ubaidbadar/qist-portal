@@ -17,7 +17,7 @@ export default function VerifyEmailBanner() {
   if (user.emailVerifiedAt || user.role !== 'owner') return null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
       <Alert
         tone="warning"
         title="Confirm your email address"

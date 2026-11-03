@@ -4,8 +4,8 @@ import { BottomSheet } from '../../ui';
 import type { NavItem } from '../nav_items';
 import useNavItems from '../useNavItems';
 
-const TAB_CLASSES = 'flex flex-col items-center gap-1 py-2 text-xs font-medium transition-colors duration-150';
-const tabTone = (isActive: boolean) => (isActive ? 'text-accent' : 'text-muted hover:text-ink');
+const TAB_CLASSES = 'flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 px-0.5 text-center text-xs leading-tight transition-colors duration-150';
+const tabTone = (isActive: boolean) => (isActive ? 'font-semibold text-accent' : 'font-medium text-muted hover:text-ink');
 
 /** Bottom tab bar below lg: the primary pages plus a "More" sheet for the rest. */
 export default function MobileNav() {
@@ -16,19 +16,27 @@ export default function MobileNav() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
       {primaryItems.map((item) => (
         <NavLink key={item.to} to={item.to} end={item.to === '/'} className={({ isActive }) => `${TAB_CLASSES} ${tabTone(isActive)}`}>
-          <item.icon size={20} aria-hidden="true" />
-          {item.label}
+          {({ isActive }) => (
+            <>
+              <span className={`grid h-7 w-11 place-items-center rounded-pill ${isActive ? 'bg-accent/10' : ''}`}>
+                <item.icon size={20} strokeWidth={isActive ? 2.25 : 1.75} aria-hidden="true" />
+              </span>
+              {item.label}
+            </>
+          )}
         </NavLink>
       ))}
 
       <BottomSheet
         component={({ open }) => (
           <button type="button" onClick={open} className={`${TAB_CLASSES} ${tabTone(false)} cursor-pointer`}>
-            <Menu size={20} aria-hidden="true" />
+            <span className="grid h-7 place-items-center">
+              <Menu size={20} strokeWidth={1.75} aria-hidden="true" />
+            </span>
             More
           </button>
         )}

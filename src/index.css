@@ -165,6 +165,27 @@
 }
 
 @layer components {
+  /* Neutral workspace surfaces with Qist teal reserved for actions and selection. */
+  :root:has(.portal-shell) {
+    --color-canvas: #F6F7F9;
+    --color-ink: #0F172A;
+    --color-body: #334155;
+    --color-muted: #5B6474;
+    --color-subtle: #6B7280;
+    --color-border: #E5E7EB;
+    --shadow-card: 0 0 0 1px var(--color-border);
+  }
+
+  :root.dark:has(.portal-shell) {
+    --color-canvas: #0B0F19;
+    --color-surface: #131B29;
+    --color-ink: #F1F5F9;
+    --color-body: #CBD5E1;
+    --color-muted: #A3AEC0;
+    --color-subtle: #94A3B8;
+    --color-border: #2A3347;
+  }
+
   /* Heading scale: the element and its class look the same (`<h2>` or `<p className="h2">`).
      Tailwind utilities still override these, so a one-off size is a class on the element. */
   :is(h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6) {
