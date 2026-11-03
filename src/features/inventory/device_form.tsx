@@ -12,9 +12,11 @@ const BRANDS = ['Samsung', 'Infinix', 'Tecno', 'Xiaomi', 'Redmi', 'Vivo', 'Oppo'
 interface DeviceFormProps {
   device?: Device;
   onDone: () => void;
+  initialBranchId?: string;
+  onCreated?: (device: Device) => void;
 }
 
-export default function DeviceForm({ device, onDone }: DeviceFormProps) {
+export default function DeviceForm({ device, initialBranchId, onCreated, onDone }: DeviceFormProps) {
   const queryClient = useQueryClient();
   const can = useCan();
   const { branchId, branches } = useActiveBranch();
@@ -23,19 +25,21 @@ export default function DeviceForm({ device, onDone }: DeviceFormProps) {
   return (
     <Form
       schema={deviceFormSchema}
-      defaultValues={deviceFormValues(device, defaultBranch)}
+      defaultValues={deviceFormValues(device, initialBranchId ?? defaultBranch)}
       onSubmit={async ({ data }) => {
         // The branch changes only through a transfer, so an edit leaves it out.
         const { branchId: newBranchId, ...details } = toDeviceInput(deviceFormSchema.parse(data));
-        if (device) await apiPatch(`/devices/${device._id}`, details);
-        else await apiPost('/devices', { ...details, branchId: newBranchId });
+        const saved = device
+          ? await apiPatch<Device>(`/devices/${device._id}`, details)
+          : await apiPost<Device>('/devices', { ...details, branchId: newBranchId });
         await queryClient.invalidateQueries({ queryKey: [DEVICES_KEY] });
         toast.success(device ? 'Phone updated' : 'Phone added to stock');
+        if (!device) onCreated?.(saved);
         onDone();
       }}
       component={({ register, errors, loading, error }) => (
         <div className="space-y-4">
-          {!device && (
+          {!device && !initialBranchId && (
             <Select
               label="Branch"
               options={branches.map((branch) => ({ value: branch._id, label: branch.name }))}

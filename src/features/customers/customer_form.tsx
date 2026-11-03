@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { customerCreateSchema, formatCnic, formatMobile, type Customer } from '@shop/shared';
 import { Alert, Button, fieldError, Form, Input, Select, Textarea, toast } from '../../ui';
-import { apiPatch, apiPost } from '../../config/api';
+import { apiGet, apiPatch, apiPost } from '../../config/api';
 import { ALL_BRANCHES, useActiveBranch } from '../../auth';
 import { getErrorDetails } from '../../utils/get_axios_message';
 import GuarantorFields from './guarantor_fields';
@@ -12,6 +12,7 @@ import { CUSTOMERS_KEY } from './queries';
 interface CustomerFormProps {
   customer?: Customer;
   onDone: () => void;
+  onCreated?: (customer: Customer) => void;
 }
 
 /** Shown as typed by people, not as stored: "35202-1234567-1", "0300 1234567". */
@@ -27,7 +28,7 @@ const formValues = (customer: Customer | undefined, homeBranchId: string) => ({
   guarantors: customer?.guarantors.map((g) => ({ ...g, cnic: formatCnic(g.cnic), phone: formatMobile(g.phone) })) ?? [],
 });
 
-export default function CustomerForm({ customer, onDone }: CustomerFormProps) {
+export default function CustomerForm({ customer, onDone, onCreated }: CustomerFormProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { branchId, branches } = useActiveBranch();
@@ -48,7 +49,10 @@ export default function CustomerForm({ customer, onDone }: CustomerFormProps) {
           await queryClient.invalidateQueries({ queryKey: [CUSTOMERS_KEY] });
           toast.success(customer ? 'Customer updated' : 'Customer added');
           onDone();
-          if (!customer) navigate(`/customers/${saved._id}`);
+          if (!customer) {
+            if (onCreated) onCreated(saved);
+            else navigate(`/customers/${saved._id}`);
+          }
         } catch (err) {
           const existing = getErrorDetails(err)?.customerId;
           setDuplicateOf(typeof existing === 'string' ? existing : null);
@@ -80,9 +84,26 @@ export default function CustomerForm({ customer, onDone }: CustomerFormProps) {
               tone="danger"
               action={
                 duplicateOf && (
-                  <Link to={`/customers/${duplicateOf}`} onClick={onDone} className="font-medium underline">
-                    Open
-                  </Link>
+                  onCreated ? (
+                    <button
+                      type="button"
+                      className="min-h-12 font-semibold underline"
+                      onClick={async () => {
+                        try {
+                          onCreated(await apiGet<Customer>(`/customers/${duplicateOf}`));
+                          onDone();
+                        } catch {
+                          toast.error('Could not load the existing customer');
+                        }
+                      }}
+                    >
+                      Select existing customer
+                    </button>
+                  ) : (
+                    <Link to={`/customers/${duplicateOf}`} onClick={onDone} className="font-medium underline">
+                      Open
+                    </Link>
+                  )
                 )
               }
             >

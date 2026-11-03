@@ -6,13 +6,14 @@ import { apiGet } from '../config/api';
  * A list the API returns a page at a time (newest first). `filters` are part of the cache key, so changing a filter
  * starts again from the first page; `loadMore` fetches the next one.
  */
-export default function usePagedList<T>(key: string, url: string, filters: Record<string, string | undefined>, { refetchInterval }: { refetchInterval?: number } = {}) {
+export default function usePagedList<T>(key: string, url: string, filters: Record<string, string | undefined>, { refetchInterval, enabled = true }: { refetchInterval?: number; enabled?: boolean } = {}) {
   const query = useInfiniteQuery({
     queryKey: [key, filters],
     queryFn: ({ pageParam }) => apiGet<Page<T>>(url, { params: { ...filters, cursor: pageParam } }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     refetchInterval,
+    enabled,
   });
 
   return {
