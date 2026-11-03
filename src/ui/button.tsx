@@ -3,7 +3,7 @@ import { useButtonState } from './useButtonState';
 import type { LucideIcon } from 'lucide-react';
 
 const baseClasses =
-  'cursor-pointer rounded-pill inline-flex items-center justify-center gap-2 font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  'cursor-pointer rounded-pill in-[.portal-shell]:rounded-control inline-flex items-center justify-center gap-2 font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',

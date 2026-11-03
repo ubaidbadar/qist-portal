@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import NewContractButton from '../../features/contracts/new_contract_button';
 import { IconButton } from '../../ui';
 import CommandPalette from '../command_palette/modal';
 import SearchButton from '../command_palette/search_button';
@@ -24,20 +25,25 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sticky top-0 hidden h-dvh shrink-0 flex-col gap-4 border-r border-border bg-surface p-3 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex ${
-        collapsed ? 'w-17' : 'w-60'
+      className={`sticky top-0 hidden h-dvh shrink-0 flex-col gap-4 border-e border-border bg-surface px-3 py-5 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex ${
+        collapsed ? 'w-17' : 'w-64'
       }`}
     >
       <div className="px-1.5 pt-1">
         <Brand collapsed={collapsed} />
       </div>
 
-      {!collapsed && <BranchSwitcher />}
+      {!collapsed && (
+        <div className="grid gap-3">
+          <BranchSwitcher />
+          <NewContractButton />
+        </div>
+      )}
 
       <CommandPalette component={({ open }) => <SearchButton open={open} collapsed={collapsed} />} />
 
-      <nav aria-label="Main" className="flex-1 overflow-y-auto">
-        <ul className="space-y-1">
+      <nav aria-label="Main" className="min-h-0 flex-1 overflow-y-auto -ms-3 ps-3 pe-1 -me-1">
+        <ul className="space-y-0.5">
           {navItems.map((item) => (
             <li key={item.to}>
               <SidebarLink item={item} collapsed={collapsed} />
@@ -46,7 +52,7 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      <div className={`flex items-center gap-1 border-t border-border pt-3 ${collapsed ? 'flex-col' : 'justify-between'}`}>
+      <div className={`flex shrink-0 items-center gap-1 border-t border-border pt-3 ${collapsed ? 'flex-col' : 'justify-between'}`}>
         <UserMenu compact={collapsed} />
         <ThemeToggle />
         <IconButton
