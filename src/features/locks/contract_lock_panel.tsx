@@ -16,8 +16,9 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
   const history = useQuery({
     queryKey: [COMMANDS_KEY, 'contract', contract._id],
     queryFn: () => apiGet<Page<DeviceCommand>>('/commands', { params: { contractId: contract._id, limit: 5 } }),
+    enabled: contract.commands === undefined,
   });
-  const latest = history.data?.items[0];
+  const latest = contract.commands?.[0] ?? history.data?.items[0];
   const waiting = latest && (latest.status === 'proposed' || latest.status === 'pending');
   const manage = can('locks.manage') && contract.status === 'active';
 

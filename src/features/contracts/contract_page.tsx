@@ -84,7 +84,7 @@ function ContractDetails({ contract }: { contract: ContractWithSchedule }) {
             <h2 className="mb-3 text-base font-semibold text-ink">Schedule</h2>
             <ScheduleTable installments={contract.installments} />
           </Card>
-          <LedgerCard contractId={contract._id} />
+          <LedgerCard contractId={contract._id} payments={contract.payments} />
         </div>
       </div>
     </div>

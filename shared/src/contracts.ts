@@ -84,6 +84,11 @@ export interface Contract {
   updatedAt: string;
 }
 
+import type { DeviceCommand } from './commands';
+import type { Payment } from './payments';
+
 export interface ContractWithSchedule extends Contract {
   installments: Installment[];
+  payments?: Payment[];
+  commands?: DeviceCommand[];
 }

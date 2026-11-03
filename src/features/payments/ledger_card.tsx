@@ -11,26 +11,47 @@ import { KIND_LABELS, METHOD_LABELS } from './labels';
 import { ledgerQuery } from './queries';
 import VoidPaymentModal from './void_payment_modal';
 
+interface LedgerCardProps {
+  contractId: string;
+  payments?: Payment[];
+}
+
 /** Every payment on a contract, newest first, voided ones crossed out. */
-export default function LedgerCard({ contractId }: { contractId: string }) {
-  const query = useQuery(ledgerQuery(contractId));
+export default function LedgerCard({ contractId, payments: initialPayments }: LedgerCardProps) {
+  const query = useQuery({
+    ...ledgerQuery(contractId),
+    enabled: initialPayments === undefined,
+  });
+  const payments = initialPayments ?? query.data;
 
   return (
     <Card>
       <h2 className="mb-3 text-base font-semibold text-ink">Payments</h2>
-      <QueryView query={query} skeleton={<ListSkeleton rows={2} />}>
-        {(payments) =>
-          payments.length === 0 ? (
-            <p className="text-sm text-muted">No payments yet.</p>
-          ) : (
-            <ul className="divide-y divide-border">
-              {payments.map((payment) => (
-                <LedgerRow key={payment._id} payment={payment} />
-              ))}
-            </ul>
-          )
-        }
-      </QueryView>
+      {payments !== undefined ? (
+        payments.length === 0 ? (
+          <p className="text-sm text-muted">No payments yet.</p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {payments.map((payment) => (
+              <LedgerRow key={payment._id} payment={payment} />
+            ))}
+          </ul>
+        )
+      ) : (
+        <QueryView query={query} skeleton={<ListSkeleton rows={2} />}>
+          {(loaded) =>
+            loaded.length === 0 ? (
+              <p className="text-sm text-muted">No payments yet.</p>
+            ) : (
+              <ul className="divide-y divide-border">
+                {loaded.map((payment) => (
+                  <LedgerRow key={payment._id} payment={payment} />
+                ))}
+              </ul>
+            )
+          }
+        </QueryView>
+      )}
     </Card>
   );
 }
