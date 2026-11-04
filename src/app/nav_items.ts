@@ -20,6 +20,7 @@ export interface NavItem {
   /** Shown in the mobile bottom bar; the rest live under "More". */
   primary?: boolean;
   group?: 'management';
+  comingSoon?: boolean;
   /** Hidden from roles without it (docs/plan.md §4). */
   permission?: Permission;
 }
@@ -31,8 +32,8 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/payments', label: 'Payments', icon: Wallet, primary: true },
   { to: '/inventory', label: 'Inventory', icon: Smartphone },
   { to: '/lock-center', label: 'Lock Center', icon: Lock },
-  { to: '/reminders', label: 'Reminders', icon: BellRing, group: 'management' },
-  { to: '/reports', label: 'Reports', icon: BarChart3, group: 'management', permission: 'reports.view' },
+  { to: '/reminders', label: 'Reminders', comingSoon: true, icon: BellRing, group: 'management' },
+  { to: '/reports', label: 'Reports', comingSoon: true, icon: BarChart3, group: 'management', permission: 'reports.view' },
   { to: '/settings', label: 'Settings', icon: Settings, group: 'management', permission: 'org.manage' },
-  { to: '/audit-log', label: 'Audit log', icon: ScrollText, group: 'management', permission: 'audit.view' },
+  { to: '/audit-log', label: 'Audit log', comingSoon: true, icon: ScrollText, group: 'management', permission: 'audit.view' },
 ];

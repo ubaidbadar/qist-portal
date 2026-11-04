@@ -38,11 +38,13 @@ export default function CommandPalettePanel({ state, close }: OverlayProps) {
     enabled: customerSearch.length >= MIN_CUSTOMER_QUERY,
   });
 
+  const awaitingCustomers = query.trim().length >= MIN_CUSTOMER_QUERY && (query.trim() !== customerSearch || customers.isFetching);
+  const customerSearchFailed = query.trim() === customerSearch && customers.isError;
   const results: PaletteItem[] = [
     ...navItems
       .filter((item) => item.label.toLowerCase().includes(needle))
       .map((item) => ({ key: item.to, label: item.label, icon: item.icon, to: item.to })),
-    ...(customers.data?.items ?? []).map((customer) => ({
+    ...(query.trim() === customerSearch ? customers.data?.items ?? [] : []).map((customer) => ({
       key: customer._id,
       label: customer.fullName,
       detail: formatCnic(customer.cnic),
@@ -50,6 +52,7 @@ export default function CommandPalettePanel({ state, close }: OverlayProps) {
       to: `/customers/${customer._id}`,
     })),
   ];
+  const selectedIndex = Math.min(activeIndex, results.length - 1);
   const optionId = (index: number) => `${listId}-${index}`;
 
   const go = (item: PaletteItem) => {
@@ -61,9 +64,9 @@ export default function CommandPalettePanel({ state, close }: OverlayProps) {
     const step = ARROW_STEPS[e.key];
     if (step && results.length > 0) {
       e.preventDefault();
-      setActiveIndex((activeIndex + step + results.length) % results.length);
-    } else if (e.key === 'Enter' && results[activeIndex]) {
-      go(results[activeIndex]);
+      setActiveIndex((selectedIndex + step + results.length) % results.length);
+    } else if (e.key === 'Enter' && results[selectedIndex]) {
+      go(results[selectedIndex]);
     }
   };
 
@@ -84,7 +87,7 @@ export default function CommandPalettePanel({ state, close }: OverlayProps) {
           role="combobox"
           aria-expanded="true"
           aria-controls={listId}
-          aria-activedescendant={results.length > 0 ? optionId(activeIndex) : undefined}
+          aria-activedescendant={results.length > 0 ? optionId(selectedIndex) : undefined}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -94,7 +97,11 @@ export default function CommandPalettePanel({ state, close }: OverlayProps) {
         />
       </div>
 
-      {results.length === 0 ? (
+      {awaitingCustomers && <p role="status" className="px-4 py-2 text-sm text-muted">Searching customers…</p>}
+      {customerSearchFailed && !awaitingCustomers && (
+        <p role="status" className="px-4 py-2 text-sm text-muted">Customer search is unavailable. Open Customers to try again.</p>
+      )}
+      {results.length === 0 && !awaitingCustomers && !customerSearchFailed ? (
         <EmptyState icon={SearchX} title="No matches" description={`Nothing found for “${query}”.`} className="py-8" />
       ) : (
         <ul id={listId} role="listbox" aria-label="Results" className="max-h-80 overflow-y-auto p-2">
@@ -103,7 +110,7 @@ export default function CommandPalettePanel({ state, close }: OverlayProps) {
               key={item.key}
               id={optionId(index)}
               role="option"
-              aria-selected={index === activeIndex}
+              aria-selected={index === selectedIndex}
               onMouseMove={() => setActiveIndex(index)}
               onClick={() => go(item)}
               className="flex cursor-pointer items-center gap-3 rounded-control px-3 py-2.5 text-sm text-body aria-selected:bg-accent/10 aria-selected:text-accent"
