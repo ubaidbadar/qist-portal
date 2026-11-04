@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Ban, MoreHorizontal, Printer, QrCode } from 'lucide-react';
 import type { ContractWithSchedule } from '@shop/shared';
 import { Button, DropdownMenu, Modal, type DropdownMenuItem } from '../../ui';
@@ -8,11 +8,11 @@ import RecordPaymentModal from '../payments/record_payment_modal';
 import CancelContractModal from './cancel_contract_modal';
 
 /**
- * Payment is the only prominent action. Agreement, first-time setup and the destructive
- * cancellation live in one keyboard-accessible menu at every breakpoint.
+ * Small screens get one prominent payment action plus a compact menu.
+ * On desktop, preserve the original direct Agreement / QR / Cancel actions.
  *
- * Both modals own their open state via withOverlay; the menu invokes their provided open
- * handlers rather than introducing a second modal state or bypassing permission checks.
+ * Both modals use the existing withOverlay trigger pattern and retain all
+ * permission checks and confirmations. No extra open-state hooks are needed.
  */
 export default function ContractActions({ contract }: { contract: ContractWithSchedule }) {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function ContractActions({ contract }: { contract: ContractWithSc
         <CancelContractModal
           contract={contract}
           trigger={(showCancel) => {
-            const items: DropdownMenuItem[] = [
+            const mobileItems: DropdownMenuItem[] = [
               {
                 label: 'View agreement',
                 icon: Printer,
@@ -48,30 +48,45 @@ export default function ContractActions({ contract }: { contract: ContractWithSc
             ];
 
             return (
-              <div className="flex w-full items-center gap-2 sm:w-auto">
-                {canPay && (
-                  <div className="min-w-0 flex-1 sm:flex-none">
-                    <RecordPaymentModal contract={contract} className="w-full sm:w-auto" />
-                  </div>
-                )}
-                <DropdownMenu
-                  align="right"
-                  className={canPay ? 'shrink-0' : 'w-full sm:w-auto'}
-                  items={items}
-                  trigger={(expanded) => (
-                    <Button
-                      variant="outline"
-                      icon={MoreHorizontal}
-                      aria-haspopup="menu"
-                      aria-expanded={expanded}
-                      aria-label="More contract actions"
-                      className={canPay ? '' : 'w-full sm:w-auto'}
-                    >
-                      More
-                    </Button>
+              <>
+                <div className="flex w-full items-center gap-2 lg:hidden">
+                  {canPay && (
+                    <div className="min-w-0 flex-1">
+                      <RecordPaymentModal contract={contract} className="w-full" />
+                    </div>
                   )}
-                />
-              </div>
+                  <DropdownMenu
+                    align="right"
+                    className={canPay ? 'shrink-0' : 'w-full'}
+                    items={mobileItems}
+                    trigger={(expanded) => (
+                      <Button
+                        variant="outline"
+                        icon={MoreHorizontal}
+                        aria-haspopup="menu"
+                        aria-expanded={expanded}
+                        aria-label="More contract actions"
+                        className={canPay ? '' : 'w-full'}
+                      >
+                        More
+                      </Button>
+                    )}
+                  />
+                </div>
+
+                <div className="hidden flex-wrap items-center gap-2 lg:flex">
+                  {canCancel && (
+                    <Button variant="danger" icon={Ban} onClick={showCancel}>Cancel contract</Button>
+                  )}
+                  <Button as={Link} to={`/contracts/${contract._id}/agreement`} variant="outline" icon={Printer}>
+                    Agreement
+                  </Button>
+                  {canEnroll && (
+                    <Button variant="outline" icon={QrCode} onClick={showQr}>Phone setup QR</Button>
+                  )}
+                  {canPay && <RecordPaymentModal contract={contract} />}
+                </div>
+              </>
             );
           }}
         />
