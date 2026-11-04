@@ -34,7 +34,7 @@ describe('contract schedule responsive presentation', () => {
 
   test('saved installments show payment state and late fees in both presentations', () => {
     const html = renderToStaticMarkup(<ScheduleTable installments={saved} />);
-    expect(html).toContain('Partial');
+    expect(html).toContain('Part paid');
     expect(html).toContain('late fee');
     expect(html).toContain('Paid');
   });
