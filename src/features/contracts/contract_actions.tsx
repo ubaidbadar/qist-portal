@@ -55,23 +55,35 @@ export default function ContractActions({ contract }: { contract: ContractWithSc
                       <RecordPaymentModal contract={contract} className="w-full" />
                     </div>
                   )}
-                  <DropdownMenu
-                    align="right"
-                    className={canPay ? 'shrink-0' : 'w-full'}
-                    items={mobileItems}
-                    trigger={(expanded) => (
-                      <Button
-                        variant="outline"
-                        icon={MoreHorizontal}
-                        aria-haspopup="menu"
-                        aria-expanded={expanded}
-                        aria-label="More contract actions"
-                        className={canPay ? '' : 'w-full'}
-                      >
-                        More
-                      </Button>
-                    )}
-                  />
+                  {!canPay && !canEnroll && !canCancel ? (
+                    <Button
+                      as={Link}
+                      to={`/contracts/${contract._id}/agreement`}
+                      variant="outline"
+                      icon={Printer}
+                      className="w-full"
+                    >
+                      View agreement
+                    </Button>
+                  ) : (
+                    <DropdownMenu
+                      align="right"
+                      className={canPay ? 'shrink-0' : 'w-full'}
+                      items={mobileItems}
+                      trigger={(expanded) => (
+                        <Button
+                          variant="outline"
+                          icon={MoreHorizontal}
+                          aria-haspopup="menu"
+                          aria-expanded={expanded}
+                          aria-label="More contract actions"
+                          className={canPay ? '' : 'w-full'}
+                        >
+                          More
+                        </Button>
+                      )}
+                    />
+                  )}
                 </div>
 
                 <div className="hidden flex-wrap items-center gap-2 lg:flex">
