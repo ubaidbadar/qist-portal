@@ -27,7 +27,7 @@ export default function AuthShowcase() {
       <ul className="space-y-5">
         {FEATURES.map(({ icon: Icon, text }) => (
           <li key={text} className="flex items-center gap-4 text-sm font-medium text-on-brand">
-            <span className="grid size-12 shrink-0 place-items-center rounded-pill bg-brand-raised text-primary">
+            <span className="grid size-12 shrink-0 place-items-center rounded-pill bg-brand-raised text-brand-muted">
               <Icon size={20} aria-hidden="true" />
             </span>
             {text}
