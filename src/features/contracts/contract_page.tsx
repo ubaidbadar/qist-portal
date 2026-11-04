@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { ContractWithSchedule } from '@shop/shared';
 import { Alert, Card, Skeleton } from '../../ui';
+import ListSkeleton from '../../shared/list_skeleton';
+import SummarySkeleton from '../../shared/summary_skeleton';
 import Page from '../../shared/page';
 import QueryView from '../../shared/query_view';
 import ContractLockPanel from '../locks/contract_lock_panel';
@@ -25,7 +27,17 @@ export default function ContractPage() {
       breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'Details' }]}
       actions={contract && <ContractActions contract={contract} />}
     >
-      <QueryView query={query} skeleton={<Skeleton className="h-96 w-full" />}>
+      <QueryView query={query} skeleton={
+        <div className="space-y-5" role="status" aria-label="Loading contract details">
+          <SummarySkeleton className="hidden gap-3 sm:grid sm:grid-cols-3" />
+          <Card padding="sm" className="space-y-3 sm:hidden" aria-hidden="true">
+            <Skeleton className="h-12 w-40" />
+            <Skeleton className="h-10 w-full" />
+          </Card>
+          <Card aria-hidden="true"><Skeleton className="h-24 w-full" /></Card>
+          <div aria-hidden="true"><ListSkeleton rows={4} /></div>
+        </div>
+      }>
         {(loaded) => <ContractDetails contract={loaded} />}
       </QueryView>
     </Page>

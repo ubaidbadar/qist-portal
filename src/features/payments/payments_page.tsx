@@ -7,6 +7,7 @@ import { ALL_BRANCHES, useActiveBranch } from '../../auth';
 import usePagedList from '../../hooks/usePagedList';
 import DataTable, { type Column } from '../../shared/data_table';
 import ListSkeleton from '../../shared/list_skeleton';
+import SummarySkeleton from '../../shared/summary_skeleton';
 import MoneyText from '../../shared/money_text';
 import Page from '../../shared/page';
 import QueryView from '../../shared/query_view';
@@ -45,7 +46,7 @@ export default function PaymentsPage() {
             onChange={(event) => setParams(event.target.value ? { date: event.target.value } : {}, { replace: true })}
           />
         </div>
-        <QueryView query={summary} skeleton={<ListSkeleton rows={1} />}>
+        <QueryView query={summary} skeleton={<div role="status" aria-label="Loading collection totals"><SummarySkeleton className="grid gap-4 md:grid-cols-3" /></div>}>
           {(collections) => <CollectionsSummary collections={collections} />}
         </QueryView>
         <QueryView query={{ ...list, data: list.rows }} skeleton={<ListSkeleton rows={4} />}>

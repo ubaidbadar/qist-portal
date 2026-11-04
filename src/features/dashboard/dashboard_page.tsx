@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { AlertTriangle, CalendarClock, Wallet } from 'lucide-react';
 import { todayInShops } from '@shop/shared';
-import { Skeleton, StatCard } from '../../ui';
+import { StatCard } from '../../ui';
 import { ALL_BRANCHES, useActiveBranch } from '../../auth';
+import ListSkeleton from '../../shared/list_skeleton';
+import SummarySkeleton from '../../shared/summary_skeleton';
 import MoneyText from '../../shared/money_text';
 import Page from '../../shared/page';
 import QueryView from '../../shared/query_view';
@@ -22,7 +24,16 @@ export default function DashboardPage() {
   return (
     <Page title="Dashboard" description="Track collections, overdue installments, and recent sales." actions={<NewContractButton />}>
       <div className="space-y-5">
-        <QueryView query={query} skeleton={<Skeleton className="h-96 w-full rounded-card" />}>
+        <QueryView query={query} skeleton={
+          <div className="space-y-5" role="status" aria-label="Loading dashboard">
+            <SummarySkeleton className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" />
+            <div className="grid gap-5 lg:grid-cols-2" aria-hidden="true">
+              <ListSkeleton rows={3} />
+              <ListSkeleton rows={3} />
+            </div>
+            <div aria-hidden="true"><ListSkeleton rows={3} /></div>
+          </div>
+        }>
           {(snapshot) => (
             <>
               <section aria-label="Business overview" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
