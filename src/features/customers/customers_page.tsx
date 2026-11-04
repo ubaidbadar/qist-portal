@@ -35,11 +35,11 @@ export default function CustomersPage() {
   const list = usePagedList<Customer>(CUSTOMERS_KEY, '/customers', { q: search || undefined });
 
   return (
-    <Page title="Customers" actions={<CustomerDrawer />}>
+    <Page title="Customers" description="Find customer records and open their installment history." actions={<CustomerDrawer />}>
       <div className="space-y-4">
         <Input
           icon={Search}
-          aria-label="Search customers"
+          label="Search customers"
           placeholder="Search by name, CNIC or mobile"
           value={q}
           onChange={(event) => setParams(event.target.value ? { q: event.target.value } : {}, { replace: true })}

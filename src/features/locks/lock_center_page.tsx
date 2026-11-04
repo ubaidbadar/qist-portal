@@ -12,7 +12,7 @@ export default function LockCenterPage() {
   const branch = branchId === ALL_BRANCHES ? undefined : branchId;
 
   return (
-    <Page title="Lock Center">
+    <Page title="Lock Center" description="Review overdue accounts and track phone lock commands.">
       <Tabs
         activeTabId={params.get('tab') ?? 'overdue'}
         onChange={(tab) => setParams({ tab }, { replace: true })}

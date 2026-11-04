@@ -65,14 +65,14 @@ export default function InventoryPage() {
   };
 
   return (
-    <Page title="Inventory" actions={can('stock.write') && <DeviceDrawer />}>
+    <Page title="Inventory" description="Find phones, check stock status, and manage device enrollment." actions={can('stock.write') && <DeviceDrawer />}>
       <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row">
           <div className="flex-1">
-            <Input icon={Search} aria-label="Search stock" placeholder="Search by IMEI, brand or model" value={q} onChange={(event) => setParam('q', event.target.value)} />
+            <Input icon={Search} label="Search stock" placeholder="Search by IMEI, brand or model" value={q} onChange={(event) => setParam('q', event.target.value)} />
           </div>
           <div className="sm:w-48">
-            <Select aria-label="Status" options={STATUS_OPTIONS} value={status} onChange={(event) => setParam('status', event.target.value)} />
+            <Select label="Stock status" options={STATUS_OPTIONS} value={status} onChange={(event) => setParam('status', event.target.value)} />
           </div>
         </div>
         <QueryView query={{ ...list, data: list.rows }} skeleton={<ListSkeleton rows={5} />}>

@@ -13,7 +13,7 @@ export default function SettingsPage() {
   const [params, setParams] = useSearchParams();
 
   return (
-    <Page title="Settings">
+    <Page title="Settings" description="Manage your organization, branches, team, and installment plans.">
       <Tabs
         activeTabId={params.get('tab') ?? DEFAULT_TAB}
         onChange={(tab) => setParams({ tab }, { replace: true })}
