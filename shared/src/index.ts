@@ -6,6 +6,7 @@ export * from './constants';
 export * from './commands';
 export * from './contracts';
 export * from './customers';
+export * from './dashboard';
 export * from './dates';
 export * from './device_api';
 export * from './devices';
