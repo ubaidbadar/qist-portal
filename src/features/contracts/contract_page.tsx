@@ -16,12 +16,13 @@ export default function ContractPage() {
   const { contractId = '' } = useParams();
   const query = useQuery(contractQuery(contractId));
   const contract = query.data;
-  const title = contract ? `${contract.customerName} · ${contract.deviceLabel}` : 'Contract';
+  const title = contract?.customerName ?? 'Contract';
 
   return (
     <Page
       title={title}
-      breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: title }]}
+      description={contract?.deviceLabel}
+      breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'Details' }]}
       actions={contract && <ContractActions contract={contract} />}
     >
       <QueryView query={query} skeleton={<Skeleton className="h-96 w-full" />}>
