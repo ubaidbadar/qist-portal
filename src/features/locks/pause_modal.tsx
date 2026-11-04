@@ -10,11 +10,11 @@ import { COMMANDS_KEY, LOCKS_KEY } from './queries';
 const DEFAULT_PAUSE_DAYS = 3;
 
 /** A promise to pay: no automatic lock until the date, and a lock not yet sent is withdrawn. */
-export default function PauseModal({ contractId, customerName }: { contractId: string; customerName: string }) {
+export default function PauseModal({ contractId, customerName, triggerClassName = "" }: { contractId: string; customerName: string; triggerClassName?: string }) {
   const queryClient = useQueryClient();
 
   return (
-    <Modal title="Promise to pay" component={({ open }) => <Button variant="ghost" size="sm" icon={PauseCircle} onClick={open}>Pause</Button>}>
+    <Modal title="Promise to pay" component={({ open }) => <Button variant="outline" icon={PauseCircle} className={triggerClassName} onClick={open}>Pause automatic lock</Button>}>
       {(close) => (
         <Form
           schema={pauseLockSchema}

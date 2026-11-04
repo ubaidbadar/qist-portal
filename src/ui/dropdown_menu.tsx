@@ -24,7 +24,8 @@ export interface DropdownMenuItem extends Omit<ButtonHTMLAttributes<HTMLButtonEl
 }
 
 export interface DropdownMenuProps {
-  trigger?: ReactNode;
+  /** A callback can read the open state for aria-expanded on custom triggers. */
+  trigger?: ReactNode | ((isOpen: boolean) => ReactNode);
   items: DropdownMenuItem[];
   align?: 'left' | 'right';
   className?: string;
@@ -112,7 +113,7 @@ export default function DropdownMenu({ trigger, items, align = 'right', classNam
   return (
     <div className={`inline-block text-left ${className}`} ref={anchorRef} onKeyDown={handleKeyDown}>
       <div onClick={() => (isOpen ? close() : open())} className="cursor-pointer inline-block">
-        {trigger || (
+        {typeof trigger === 'function' ? trigger(isOpen) : trigger || (
           <IconButton icon={MoreVertical} aria-label="More options" aria-haspopup="menu" aria-expanded={isOpen} />
         )}
       </div>
