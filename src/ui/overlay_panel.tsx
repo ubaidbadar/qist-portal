@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import { useLayoutEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import type { OverlayProps } from '../hoc/withOverlay';
 
@@ -21,6 +21,14 @@ interface OverlayPanelProps extends Pick<OverlayProps, 'state' | 'close'>, HTMLA
 export default function OverlayPanel({ state, close, from, className = '', children, ...panelProps }: OverlayPanelProps) {
   const { container, enter, exit } = placements[from];
   const isClosing = state === 'close';
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!isClosing && panel && !panel.contains(document.activeElement)) {
+      panel.focus({ preventScroll: true });
+    }
+  }, [isClosing]);
 
   return createPortal(
     // The container is the backdrop: a click on it, not on the panel, closes.
@@ -30,6 +38,9 @@ export default function OverlayPanel({ state, close, from, className = '', child
     >
       <div
         role="dialog"
+        tabIndex={-1}
+        inert={isClosing}
+        ref={panelRef}
         className={`transition-[translate,scale] duration-300 ease-emphasized motion-reduce:transition-none ${enter} ${isClosing ? exit : ''} ${className}`}
         {...panelProps}
       >

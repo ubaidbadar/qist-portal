@@ -63,7 +63,7 @@ export default function RecordPaymentForm({ contract, onDone }: { contract: Cont
           <Input label="Reference (optional)" placeholder="Transaction ID for JazzCash, Easypaisa or bank" {...register('reference')} error={fieldError(errors, 'reference')} />
           {error && <Alert tone="danger">{error}</Alert>}
           <Button type="submit" loading={loading} className="w-full">
-            Record and print receipt
+            {loading ? 'Recording payment…' : 'Record and print receipt'}
           </Button>
         </div>
       )}

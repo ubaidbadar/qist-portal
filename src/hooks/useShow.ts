@@ -8,16 +8,21 @@ export type ShowState = "active" | "close" | "";
 
 export type ShowTools = {
     state: ShowState;
-    open: () => void;
+    open: (event?: { currentTarget: EventTarget }) => void;
     close: () => void;
 }
 
 export default function useShow(initialState?: ShowState): ShowTools {
     const [state, setState] = useState<ShowState>(initialState || "");
     const exitTimerRef = useRef<number | undefined>(undefined);
+    const openerRef = useRef<HTMLElement | null>(null);
     const isActive = state === "active";
 
-    const open = () => {
+    const open: ShowTools["open"] = (event) => {
+        if (!isActive) {
+            const opener = event?.currentTarget ?? document.activeElement;
+            openerRef.current = opener instanceof HTMLElement ? opener : null;
+        }
         window.clearTimeout(exitTimerRef.current);
         setState("active");
     };
@@ -25,6 +30,9 @@ export default function useShow(initialState?: ShowState): ShowTools {
     const close = () => {
         window.clearTimeout(exitTimerRef.current);
         setState("close");
+        const opener = openerRef.current;
+        openerRef.current = null;
+        if (opener?.isConnected) opener.focus({ preventScroll: true });
         exitTimerRef.current = window.setTimeout(() => setState(""), EXIT_DURATION);
     };
 
