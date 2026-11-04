@@ -1,16 +1,12 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Printer, QrCode } from 'lucide-react';
 import type { ContractWithSchedule } from '@shop/shared';
-import { Alert, Button, Card, Modal, Skeleton } from '../../ui';
-import { useCan } from '../../auth';
+import { Alert, Card, Skeleton } from '../../ui';
 import Page from '../../shared/page';
 import QueryView from '../../shared/query_view';
 import ContractLockPanel from '../locks/contract_lock_panel';
 import LedgerCard from '../payments/ledger_card';
-import RecordPaymentModal from '../payments/record_payment_modal';
-import EnrollmentPanel from '../inventory/enrollment_panel';
-import CancelContractModal from './cancel_contract_modal';
+import ContractActions from './contract_actions';
 import ContractOverview from './contract_overview';
 import ContractInfoCard from './contract_info_card';
 import { contractQuery } from './queries';
@@ -19,7 +15,6 @@ import ScheduleTable from './schedule_table';
 export default function ContractPage() {
   const { contractId = '' } = useParams();
   const query = useQuery(contractQuery(contractId));
-  const can = useCan();
   const contract = query.data;
   const title = contract ? `${contract.customerName} · ${contract.deviceLabel}` : 'Contract';
 
@@ -27,25 +22,7 @@ export default function ContractPage() {
     <Page
       title={title}
       breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: title }]}
-      actions={
-        contract && (
-          <>
-            {contract.status === 'active' && contract.paidTotal === 0 && can('contracts.cancel') && <CancelContractModal contract={contract} />}
-            <Button as={Link} to={`/contracts/${contract._id}/agreement`} variant="outline" icon={Printer}>
-              Agreement
-            </Button>
-            {contract.status === 'active' && can('devices.enroll') && (
-              <Modal
-                title={`Set up ${contract.deviceLabel}`}
-                component={({ open }) => <Button variant="outline" icon={QrCode} onClick={open}>Phone setup QR</Button>}
-              >
-                <EnrollmentPanel deviceId={contract.deviceId} deviceLabel={contract.deviceLabel} />
-              </Modal>
-            )}
-            {contract.status === 'active' && can('payments.record') && <RecordPaymentModal contract={contract} />}
-          </>
-        )
-      }
+      actions={contract && <ContractActions contract={contract} />}
     >
       <QueryView query={query} skeleton={<Skeleton className="h-96 w-full" />}>
         {(loaded) => <ContractDetails contract={loaded} />}

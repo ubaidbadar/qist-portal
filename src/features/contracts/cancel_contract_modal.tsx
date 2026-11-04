@@ -1,4 +1,5 @@
 import { Ban } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { contractCancelSchema, type Contract } from '@shop/shared';
 import { Alert, Button, fieldError, Form, Modal, Textarea, toast } from '../../ui';
@@ -7,11 +8,11 @@ import { DEVICES_KEY } from '../inventory/queries';
 import { CONTRACTS_KEY } from './queries';
 
 /** Undoing a sale before any payment: the phone goes back into stock. The reason is kept on the contract. */
-export default function CancelContractModal({ contract }: { contract: Contract }) {
+export default function CancelContractModal({ contract, trigger }: { contract: Contract; trigger?: (open: () => void) => ReactNode }) {
   const queryClient = useQueryClient();
 
   return (
-    <Modal title="Cancel this contract?" component={({ open }) => <Button variant="danger" icon={Ban} onClick={open}>Cancel contract</Button>}>
+    <Modal title="Cancel this contract?" component={({ open }) => trigger ? trigger(open) : <Button variant="danger" icon={Ban} onClick={open}>Cancel contract</Button>}>
       {(close) => (
         <Form
           schema={contractCancelSchema}

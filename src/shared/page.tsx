@@ -26,7 +26,7 @@ export default function Page({ title, description, breadcrumbs, actions, childre
           <h1 className="break-words text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{title}</h1>
           {description && <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">{description}</p>}
         </div>
-        {actions && <div className="flex min-w-0 flex-wrap items-center gap-2">{actions}</div>}
+        {actions && <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto">{actions}</div>}
       </header>
       {children}
     </div>
