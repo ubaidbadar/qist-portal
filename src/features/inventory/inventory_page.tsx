@@ -87,8 +87,19 @@ export default function InventoryPage() {
               empty={
                 search ? (
                   <EmptyState icon={SearchX} title="No matching phones" description={`Nothing matches “${search}” here. Check the IMEI, or the status filter.`} />
+                ) : status === 'in_stock' ? (
+                  <EmptyState
+                    icon={PackageOpen}
+                    title="No phones in stock"
+                    description="There are no available phones for this branch. Check All phones for sold or released devices, or add a phone to stock."
+                    action={can('stock.write') && <DeviceDrawer />}
+                  />
                 ) : (
-                  <EmptyState icon={PackageOpen} title="No phones here yet" description="Add phones to this branch's stock to sell them on installments." action={can('stock.write') && <DeviceDrawer />} />
+                  <EmptyState
+                    icon={PackageOpen}
+                    title={status === ALL_STATUSES ? 'No phones recorded' : `No ${STATUS_OPTIONS.find((option) => option.value === status)?.label.toLowerCase() ?? 'matching'} phones`}
+                    description="Try All phones or another stock status to find the device."
+                  />
                 )
               }
             />

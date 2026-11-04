@@ -40,7 +40,14 @@ export default function ContractsPage() {
               hasMore={list.hasNextPage}
               loadingMore={list.isFetchingNextPage}
               onLoadMore={list.loadMore}
-              empty={<EmptyState icon={FileText} title="No contracts here yet" description="Sell a phone on installments to create the first one." action={<NewContractButton />} />}
+              empty={
+                <EmptyState
+                  icon={FileText}
+                  title={status ? 'No contracts with this status' : 'No contracts here yet'}
+                  description={status ? 'Try All contracts to see sales in other statuses.' : 'Sell a phone on installments to create the first one.'}
+                  action={!status && <NewContractButton />}
+                />
+              }
             />
           )}
         </QueryView>

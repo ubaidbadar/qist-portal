@@ -44,7 +44,7 @@ function ContractDetails({ contract }: { contract: ContractWithSchedule }) {
               <h2 className="text-base font-semibold text-ink">Installment schedule</h2>
               <p className="mt-1 text-sm text-muted">Due dates, received amounts and payment status.</p>
             </div>
-            <div className="overflow-x-auto px-5 py-3">
+            <div className="px-4 py-3 sm:px-5">
               <ScheduleTable installments={contract.installments} />
             </div>
           </Card>
