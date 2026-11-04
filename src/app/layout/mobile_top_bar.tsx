@@ -3,7 +3,6 @@ import { IconButton } from '../../ui';
 import CommandPalette from '../command_palette/modal';
 import Brand from './brand';
 import BranchSwitcher from './branch_switcher';
-import ThemeToggle from './theme_toggle';
 import UserMenu from './user_menu';
 
 export default function MobileTopBar() {
@@ -13,7 +12,6 @@ export default function MobileTopBar() {
       <BranchSwitcher className="min-w-0 flex-1" />
       <div className="flex shrink-0 items-center gap-1">
         <CommandPalette component={({ open }) => <IconButton icon={Search} aria-label="Search" onClick={open} />} />
-        <ThemeToggle />
         <UserMenu compact />
       </div>
     </div>

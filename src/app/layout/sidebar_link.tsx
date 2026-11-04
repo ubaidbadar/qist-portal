@@ -14,8 +14,8 @@ export default function SidebarLink({ item: { to, label, icon: Icon }, collapsed
       end={to === '/'}
       className={({ isActive }) =>
         `relative flex min-h-12 items-center gap-3 rounded-control px-3 text-sm -outline-offset-2 ${collapsed ? 'justify-center' : ''} transition-colors duration-150 ${
-          isActive ? 'bg-brand-raised font-semibold text-on-brand'
-            : 'font-medium text-brand-muted hover:bg-brand-raised hover:text-on-brand'
+          isActive ? 'bg-primary/10 font-semibold text-primary'
+            : 'font-medium text-muted hover:bg-canvas hover:text-ink'
         }`
       }
     >

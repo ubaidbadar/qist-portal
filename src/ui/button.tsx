@@ -7,12 +7,12 @@ const baseClasses =
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',
-  secondary: 'bg-brand-raised text-on-brand hover:bg-brand-navy',
+  secondary: 'bg-surface text-ink border border-border hover:bg-canvas',
   outline: 'border border-border bg-surface text-ink hover:bg-canvas',
   ghost: 'bg-transparent text-body hover:bg-border',
   link: 'bg-transparent text-accent underline-offset-4 hover:underline',
   danger: 'bg-danger-100 text-danger-800 hover:bg-danger-200',
-  premium: 'bg-brand-raised text-on-brand hover:bg-brand-navy',
+  premium: 'bg-primary text-on-primary hover:bg-primary/90',
 };
 
 const sizes = {

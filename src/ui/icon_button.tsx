@@ -7,7 +7,7 @@ const baseClasses =
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',
-  secondary: 'bg-brand-raised text-on-brand hover:bg-brand-navy',
+  secondary: 'bg-surface text-ink border border-border hover:bg-canvas',
   outline: 'bg-transparent border border-border text-ink hover:bg-border',
   ghost: 'bg-transparent text-muted hover:bg-border hover:text-ink',
   danger: 'bg-danger-50 text-danger-600 hover:bg-danger-100 hover:text-danger-700',

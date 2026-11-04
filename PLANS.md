@@ -9,7 +9,7 @@ A calm, bank-like Qist interface matching the approved references; make everyday
 The legacy design mixes `.portal-shell` token overrides, gradient auth sections, uneven button dimensions, and non-contextual actions. Contract creation sends users to Customers and Inventory when a record is absent; customer form redirects after saving; the Terms step unmounts and loses drafts; Payments has no entry button. Inventory defaults to in-stock, hiding the sold-phone QR. The original dashboard route was Coming Soon; the redesigned dashboard displays only live existing API values, without fabricated metrics. Login is email-only and signup requires first branch: the references' phone login cannot be implemented visually without backend changes.
 
 ## Tokens
-Logo: `#06B6D4` → `#2F3FE0`, white soft keyhole; only logo uses gradient. Navy `#0A1A3F`, raised `#11275A`, muted-on-dark `#A9B8DD`, cyan `#22D3EE` with dark text `#04122E`; coral `#FFA383`, light blue-grey workspace, semantic success/warning/danger/info, Inter. One `src/index.css` token source, dark and light support, at least 4.5:1 text contrast, generous rounding and 48px action targets. Logical CSS for RTL readiness.
+Logo: `#06B6D4` → `#2F3FE0`, white soft keyhole; only logo uses gradient. Navy `#0A1A3F`, raised `#11275A`, muted-on-dark `#A9B8DD`, cyan `#22D3EE` with dark text `#04122E`; coral `#FFA383`, light blue-grey workspace, semantic success/warning/danger/info, Inter. One `src/index.css` token source, light-only interface, at least 4.5:1 text contrast, generous rounding and 48px action targets. Logical CSS for RTL readiness.
 
 ## Ordered milestones
 1. **Foundation:** tokens, one SVG Logo, Inter, remove competing backgrounds/gradients.
@@ -27,7 +27,7 @@ Retailer can begin a sale without preregistered customer or phone, add both in c
 
 ## Implementation summary — 4 November 2026
 
-- Established semantic light/dark Qist tokens and canonical SVG logo.
+- Established semantic light-only Qist tokens and canonical SVG logo.
 - Restyled shared interactive controls, tables, badges and feedback; preserved component APIs.
 - Rebuilt full-bleed navy desktop auth layout, updated login/signup/recovery visuals without changing email-only authentication or mandatory first branch.
 - Built a working dashboard from the existing collections, overdue and daily payments endpoints. All figures are server-derived; no sample totals.
@@ -41,3 +41,6 @@ Retailer can begin a sale without preregistered customer or phone, add both in c
 **Remaining acceptance checks before production:** click through auth, contract creation with a new customer and phone, duplicate customer recovery, payment and receipt, QR enrollment, lock/unlock and role-specific permissions on real connected data; inspect mobile (390px), desktop (1440px), keyboard navigation and Urdu/RTL layouts in a browser. These interactive checks cannot be certified by CI alone. The reference's phone-number login remains out of scope because the actual authentication API is email-based.
 
 **Rollback:** Each feature group is isolated in the redesign branch's commit history. Revert its associated commits if it causes a regression; do not merge to `main` until review.
+
+### Visual preference revision
+The sidebar and mobile navigation are white; primary action buttons use accessible teal with white labels. Dark-mode preferences and toggle controls were removed, including the old stored setting. The navy authentication brand illustration remains as a deliberate identity element, not an alternate color theme.

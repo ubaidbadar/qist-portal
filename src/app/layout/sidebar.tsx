@@ -8,7 +8,6 @@ import useNavItems from '../useNavItems';
 import Brand from './brand';
 import BranchSwitcher from './branch_switcher';
 import SidebarLink from './sidebar_link';
-import ThemeToggle from './theme_toggle';
 import UserMenu from './user_menu';
 
 const COLLAPSED_KEY = 'shop_sidebar_collapsed';
@@ -25,7 +24,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sidebar-shell sticky top-0 hidden h-dvh shrink-0 flex-col gap-4 border-e border-brand-stroke bg-brand-navy px-3 py-5 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex ${
+      className={`sticky top-0 hidden h-dvh shrink-0 flex-col gap-4 border-e border-border bg-surface px-3 py-5 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex ${
         collapsed ? 'w-17' : 'w-64'
       }`}
     >
@@ -54,7 +53,6 @@ export default function Sidebar() {
 
       <div className={`flex shrink-0 items-center gap-1 border-t border-border pt-3 ${collapsed ? 'flex-col' : 'justify-between'}`}>
         <UserMenu compact={collapsed} />
-        <ThemeToggle />
         <IconButton
           icon={collapsed ? PanelLeftOpen : PanelLeftClose}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
