@@ -9,7 +9,7 @@ Preserve the original Qist light design with the newer authentication layout; ma
 The legacy design mixes `.portal-shell` token overrides, gradient auth sections, uneven button dimensions, and non-contextual actions. Contract creation sends users to Customers and Inventory when a record is absent; customer form redirects after saving; the Terms step unmounts and loses drafts; Payments has no entry button. Inventory defaults to in-stock, hiding the sold-phone QR. The original dashboard route was Coming Soon; the redesigned dashboard displays only live existing API values, without fabricated metrics. Login is email-only and signup requires first branch: the references' phone login cannot be implemented visually without backend changes.
 
 ## Tokens
-Logo: `#06B6D4` → `#2F3FE0`, white soft keyhole; only logo uses gradient. Navy `#0A1A3F`, raised `#11275A`, muted-on-dark `#A9B8DD`, cyan `#22D3EE` with dark text `#04122E`; coral `#FFA383`, light blue-grey workspace, semantic success/warning/danger/info, Inter. One `src/index.css` token source, light-only interface, at least 4.5:1 text contrast, generous rounding and 48px action targets. Logical CSS for RTL readiness.
+Logo: `#06B6D4` → `#2F3FE0`, white soft keyhole; only logo uses gradient. Navy `#0A1A3F`, raised `#11275A`, muted-on-dark `#A9B8DD`, cyan `#22D3EE` with dark text `#04122E`; coral `#FFA383`, light blue-grey workspace, semantic success/warning/danger/info, Inter. One `src/index.css` token source, light-and-dark interface, at least 4.5:1 text contrast, generous rounding and 48px action targets. Logical CSS for RTL readiness.
 
 ## Ordered milestones
 1. **Foundation:** tokens, one SVG Logo, Inter, remove competing backgrounds/gradients.
@@ -27,7 +27,7 @@ Retailer can begin a sale without preregistered customer or phone, add both in c
 
 ## Implementation summary — 4 November 2026
 
-- Established semantic light-only Qist tokens and canonical SVG logo.
+- Established semantic Qist semantic light and dark tokens and canonical SVG logo.
 - Restyled shared interactive controls, tables, badges and feedback; preserved component APIs.
 - Rebuilt full-bleed navy desktop auth layout, updated login/signup/recovery visuals without changing email-only authentication or mandatory first branch.
 - Built a working dashboard from the existing collections, overdue and daily payments endpoints. All figures are server-derived; no sample totals.
@@ -43,7 +43,10 @@ Retailer can begin a sale without preregistered customer or phone, add both in c
 **Rollback:** Each feature group is isolated in the redesign branch's commit history. Revert its associated commits if it causes a regression; do not merge to `main` until review.
 
 ### Visual preference revision
-The sidebar and mobile navigation are white; primary action buttons use accessible teal with white labels. Dark-mode preferences and toggle controls were removed, including the old stored setting. The navy authentication brand illustration remains as a deliberate identity element, not an alternate color theme.
+The sidebar and mobile navigation are white; primary action buttons use accessible teal with white labels. Dark mode remains available with an improved neutral palette and a saved preference. The navy authentication brand illustration remains as a deliberate identity element, not an alternate color theme.
 
 ### Final user-approved style direction — 4 Nov 2026
-Restore the original `main` visual styles for the portal: white sidebar, original blue primary buttons, inputs, tables, badges, and spacing. Retain the newer **authentication page layout** (left navy introduction panel on desktop, simplified auth form), with its shared new SVG logo; this is a brand panel, not dark mode. Retain all existing UX workflow improvements (inline customer/stock creation, persistent contract terms, payment launcher, setup QR, live dashboard) and their backend contracts. Dark mode is explicitly disabled; the toggle, stored preference and CSS overrides are removed. Run typecheck, lint, build and tests before merge; verify in browser at mobile/desktop breakpoints.
+Restore the original `main` visual styles for the portal: white sidebar, original blue primary buttons, inputs, tables, badges, and spacing. Retain the newer **authentication page layout** (left navy introduction panel on desktop, simplified auth form), with its shared new SVG logo; this is a brand panel, not dark mode. Retain all existing UX workflow improvements (inline customer/stock creation, persistent contract terms, payment launcher, setup QR, live dashboard) and their backend contracts. Dark mode uses a separate low-glare charcoal palette, with a restored accessible toggle and saved preference. Run typecheck, lint, build and tests before merge; verify in browser at mobile/desktop breakpoints.
+
+### Theme clarification
+The user wants **both themes**. The old dark theme's colors were the problem, not dark mode itself. Preserve the original white/light portal and blue buttons, and implement dark mode with charcoal neutral surfaces, crisp light typography, softly contrasted borders and an accessible lighter-blue accent. Start in light mode until a user explicitly switches. Keep the new auth page layout.

@@ -9,6 +9,7 @@ import Brand from './brand';
 import BranchSwitcher from './branch_switcher';
 import SidebarLink from './sidebar_link';
 import UserMenu from './user_menu';
+import ThemeToggle from './theme_toggle';
 
 const COLLAPSED_KEY = 'shop_sidebar_collapsed';
 
@@ -53,6 +54,7 @@ export default function Sidebar() {
 
       <div className={`flex shrink-0 items-center gap-1 border-t border-border pt-3 ${collapsed ? 'flex-col' : 'justify-between'}`}>
         <UserMenu compact={collapsed} />
+        <ThemeToggle />
         <IconButton
           icon={collapsed ? PanelLeftOpen : PanelLeftClose}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}

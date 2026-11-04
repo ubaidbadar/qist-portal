@@ -3,7 +3,7 @@
 @theme {
   /* Design tokens: this block is the whole look of the design system.
      Components only use these roles (bg-surface, text-ink, rounded-card, …), never raw colors,
-     so re-theming a project means editing this file. Only light mode is supported. */
+     so re-theming a project means editing this file. Both light and dark use the same semantic roles. */
 
   /* Neutrals: cool greys and Qist navy */
   --color-canvas: #F5F8FD;   /* page background, soft tints */
@@ -17,7 +17,7 @@
   --color-glow: rgb(6 182 212 / 0.08);     /* soft light behind the page, top left */
   --color-glow-alt: rgb(47 63 224 / 0.07); /* and top right */
 
-  /* Auth panel and canonical Qist keyhole. The application workspace stays light. */
+  /* Auth panel and canonical Qist keyhole. The workspace palette is independent. */
   --color-brand-navy: #0A1A3F;
   --color-brand-raised: #11275A;
   --color-brand-muted: #A9B8DD;
@@ -89,6 +89,65 @@
   color-scheme: light;
 }
 
+/* A neutral charcoal night palette: legible, restrained, never a navy wash. */
+:root.dark {
+  color-scheme: dark;
+  --color-canvas: #121820;
+  --color-surface: #1D2631;
+  --color-ink: #F6F8FC;
+  --color-body: #D5DCE7;
+  --color-muted: #B0BBCB;
+  --color-subtle: #99A7BA;
+  --color-border: #3B4656;
+  --color-scrim: rgb(0 0 0 / 0.72);
+  --color-glow: transparent;
+  --color-glow-alt: transparent;
+  --color-wordmark: #F6F8FC;
+  --color-accent: #A3BCFF;
+  --color-accent-alt: #8DA7FF;
+  --color-on-accent: #101827;
+  --color-primary: #A3BCFF;
+  --color-on-primary: #101827;
+  --color-hero-start: #1D2631;
+  --color-hero-mid: #121820;
+  --shadow-card: 0 0 0 1px var(--color-border);
+  --shadow-lg: 0 18px 48px -12px rgb(0 0 0 / 0.5);
+  --color-danger-50: #34242C;
+  --color-danger-100: #402930;
+  --color-danger-200: #69424D;
+  --color-danger-300: #925867;
+  --color-danger-500: #FF9EB4;
+  --color-danger-600: #FFACBD;
+  --color-danger-700: #FFC5D1;
+  --color-danger-800: #FFE1E8;
+  --color-success-50: #1C342E;
+  --color-success-100: #244236;
+  --color-success-200: #385A49;
+  --color-success-800: #B8F0CD;
+  --color-warning-50: #3A3225;
+  --color-warning-100: #473B29;
+  --color-warning-200: #645034;
+  --color-warning-500: #F3C47D;
+  --color-warning-800: #FFDEA1;
+  --color-info-50: #243247;
+  --color-info-100: #2D3D54;
+  --color-info-200: #435A7A;
+  --color-info-500: #96BCFF;
+  --color-info-800: #C4D8FF;
+}
+
+/* The portal's light-only neutral overrides must not override dark selections. */
+:root.dark:has(.portal-shell) {
+  --color-canvas: #121820;
+  --color-surface: #1D2631;
+  --color-ink: #F6F8FC;
+  --color-body: #D5DCE7;
+  --color-muted: #B0BBCB;
+  --color-subtle: #99A7BA;
+  --color-border: #3B4656;
+  --shadow-card: 0 0 0 1px var(--color-border);
+}
+
 /* Outside @theme so they are always emitted: FloatingElement references them from an inline style. */
 @keyframes pop-in {
   from { opacity: 0; scale: 0.95; }
@@ -119,7 +178,7 @@
 }
 
 @layer components {
-  /* Neutral workspace surfaces with Qist blue reserved for actions and selection. */
+  /* Light portal workspace; :root.dark:has(.portal-shell) above overrides it in dark mode. */
   :root:has(.portal-shell) {
     --color-canvas: #F6F7F9;
     --color-ink: #0F172A;
