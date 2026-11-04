@@ -105,9 +105,17 @@ export default function App() {
               </RequirePermission>
             }
           />
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Route>
+
+      <Route
+        path="*"
+        element={
+          <Suspense fallback={<FullPageLoader />}>
+            <NotFoundPage />
+          </Suspense>
+        }
+      />
 
       {import.meta.env.DEV && <Route path="/design-system" element={<ShowcasePage />} />}
     </Routes>
