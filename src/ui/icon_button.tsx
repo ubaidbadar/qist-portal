@@ -54,7 +54,7 @@ export default function IconButton<T extends ElementType = 'button'>({
 
   return (
     <Component
-      {...(!as ? { type: 'button' } : {})}
+      {...(as && as !== 'button' ? {} : { type: 'button' })}
       className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={isDisabled}
       aria-busy={isPending ? 'true' : undefined}
