@@ -67,6 +67,7 @@ export default function Button<T extends ElementType = 'button'>({
 
   return (
     <Component
+      {...(!as ? { type: 'button' } : {})}
       className={`${baseClasses} ${variants[variant]} ${(variant === 'link' ? linkSizes : sizes)[size]} ${className}`}
       disabled={isDisabled}
       aria-busy={isPending ? 'true' : undefined}
