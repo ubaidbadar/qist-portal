@@ -1,4 +1,4 @@
-import { Lock, Unlock } from 'lucide-react';
+import { Lock, Unlock, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import type { ContractWithSchedule, DeviceCommand, Page } from '@shop/shared';
 import { Button, Card } from '../../ui';
@@ -26,21 +26,44 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
   const knownState = contract.deviceLockState === 'locked' || contract.deviceLockState === 'unlocked';
 
   return (
-    <Card className="space-y-3">
-      <h2 className="text-base font-semibold text-ink">Phone lock</h2>
-      <p className="text-sm text-body">
-        Current state: <span className="font-semibold">{knownState ? (locked ? 'Locked' : 'Unlocked') : 'Unknown'}</span>
-      </p>
-      {latest ? (
-        <p className="flex flex-wrap items-center gap-2 text-sm text-body">
-          Last: {latest.type} <StatusBadge status={latest.status} /> <span className="text-muted">{formatDate(latest.updatedAt)}</span>
+    <Card className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-base font-semibold text-ink">Phone controls</h2>
+          <p className="mt-1 text-sm text-muted">Remote lock status and available actions.</p>
+        </div>
+        <span className={`inline-flex items-center gap-2 rounded-pill px-3 py-2 text-sm font-semibold ${
+          locked ? 'bg-danger-100 text-danger-800' : knownState ? 'bg-success-100 text-success-800' : 'bg-border text-muted'
+        }`}>
+          {locked ? <ShieldAlert size={17} aria-hidden="true" /> : <ShieldCheck size={17} aria-hidden="true" />}
+          {knownState ? (locked ? 'Locked' : 'Unlocked') : 'State unknown'}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center gap-3 text-sm text-body">
+        {latest ? (
+          <>
+            <span>Last request: <span className="font-semibold capitalize">{latest.type}</span></span>
+            <StatusBadge status={latest.status} />
+            <span className="text-muted">{formatDate(latest.updatedAt)}</span>
+          </>
+        ) : <span className="text-muted">No lock activity yet.</span>}
+      </div>
+      {waiting && <p role="status" className="rounded-control bg-info-50 px-4 py-3 text-sm text-info-800">
+        {latest.status === 'delivered'
+          ? 'The command was delivered. Waiting for the phone to confirm it.'
+          : latest.status === 'proposed'
+            ? 'Lock request is awaiting approval.'
+            : latest.type === 'lock'
+              ? 'The lock command is queued and has not reached the phone yet.'
+              : 'The command is queued and waiting for the phone.'}
+      </p>}
+      {contract.autoLockPausedUntil && (
+        <p className="rounded-control bg-warning-50 px-4 py-3 text-sm text-warning-800">
+          Automatic lock paused until {formatDate(contract.autoLockPausedUntil)}{contract.pauseReason ? `: ${contract.pauseReason}` : ''}
         </p>
-      ) : (
-        <p className="text-sm text-muted">No lock activity.</p>
       )}
-      {contract.autoLockPausedUntil && <p className="text-sm text-muted">Automatic lock paused until {formatDate(contract.autoLockPausedUntil)}: {contract.pauseReason}</p>}
       {manage && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
           {knownState && !waiting && !locked && (
             <ReasonModal
               title={`Lock ${contract.customerName}'s phone?`}
@@ -49,7 +72,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
               confirmVariant="danger"
               url={`/contracts/${contract._id}/lock`}
               done="Lock queued"
-              trigger={(open) => <Button size="sm" variant="danger" icon={Lock} onClick={open}>Lock now</Button>}
+              trigger={(open) => <Button variant="danger" icon={Lock} onClick={open}>Lock phone</Button>}
             />
           )}
           {knownState && !waiting && locked && (
@@ -59,7 +82,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
               confirmText="Unlock phone"
               url={`/contracts/${contract._id}/unlock`}
               done="Unlock queued"
-              trigger={(open) => <Button size="sm" variant="outline" icon={Unlock} onClick={open}>Unlock now</Button>}
+              trigger={(open) => <Button variant="outline" icon={Unlock} onClick={open}>Unlock phone</Button>}
             />
           )}
           {waiting && latest.type === 'lock' && latest.status === 'pending' && (
@@ -69,10 +92,9 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
               confirmText="Withdraw lock"
               url={`/contracts/${contract._id}/unlock`}
               done="Lock withdrawn"
-              trigger={(open) => <Button size="sm" variant="outline" icon={Unlock} onClick={open}>Withdraw lock</Button>}
+              trigger={(open) => <Button variant="outline" icon={Unlock} onClick={open}>Withdraw lock</Button>}
             />
           )}
-          {waiting && <span className="self-center text-sm text-muted">{latest.status === 'delivered' ? 'Waiting for phone confirmation' : latest.status === 'proposed' ? 'Lock approval pending' : latest.type !== 'lock' ? 'Command pending' : ''}</span>}
           <PauseModal contractId={contract._id} customerName={contract.customerName} />
         </div>
       )}
