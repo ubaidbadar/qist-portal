@@ -32,38 +32,40 @@ export default function DataTable<T>({ rows, columns, rowKey, rowHref, empty, ha
   const [titleColumn, ...detailColumns] = columns;
   // Clicks on a link or button inside the row do their own thing.
   const openRow = (row: T) => (event: MouseEvent) => {
-    if (rowHref && !(event.target as HTMLElement).closest('a, button')) navigate(rowHref(row));
+    if (rowHref && !(event.target as Element).closest('a, button, input, select, textarea, label, summary, [role=button]')) navigate(rowHref(row));
   };
-  const clickable = rowHref ? 'cursor-pointer transition-colors duration-150 hover:bg-canvas' : '';
+  const clickable = rowHref ? 'cursor-pointer transition-colors duration-150 hover:bg-canvas focus-within:bg-canvas' : '';
 
   return (
     <Card padding="none" className="overflow-hidden">
-      <table className="hidden w-full text-start text-sm md:table">
-        <thead className="border-b border-border bg-canvas text-xs text-muted">
-          <tr>
-            {columns.map((column) => (
-              <th key={column.header} scope="col" className={`px-5 py-3 font-semibold ${column.className ?? ''}`}>
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {rows.map((row) => (
-            <tr key={rowKey(row)} onClick={openRow(row)} className={clickable}>
+      <div className="hidden overflow-x-auto md:block">
+        <table className="w-full text-start text-sm">
+          <thead className="border-b border-border bg-canvas text-xs text-muted">
+            <tr>
               {columns.map((column) => (
-                <td key={column.header} className={`px-5 py-3 align-middle text-body ${column.className ?? ''}`}>
-                  {column.cell(row)}
-                </td>
+                <th key={column.header} scope="col" className={`px-4 py-3 font-semibold xl:px-5 ${column.className ?? ''}`}>
+                  {column.header}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {rows.map((row) => (
+              <tr key={rowKey(row)} onClick={openRow(row)} className={clickable}>
+                {columns.map((column) => (
+                  <td key={column.header} className={`px-4 py-3.5 align-middle text-body xl:px-5 ${column.className ?? ''}`}>
+                    {column.cell(row)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <ul className="divide-y divide-border md:hidden">
         {rows.map((row) => (
-          <li key={rowKey(row)} onClick={openRow(row)} className={`space-y-2 px-4 py-3 ${clickable}`}>
+          <li key={rowKey(row)} onClick={openRow(row)} className={`space-y-3 px-4 py-4 ${clickable}`}>
             <div className="text-ink">{titleColumn.cell(row)}</div>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
               {detailColumns
@@ -71,7 +73,7 @@ export default function DataTable<T>({ rows, columns, rowKey, rowHref, empty, ha
                 .map((column) => (
                   <div key={column.header} className="min-w-0">
                     <dt className="text-xs text-muted">{column.header}</dt>
-                    <dd className="truncate text-body">{column.cell(row)}</dd>
+                    <dd className="mt-0.5 break-words text-body">{column.cell(row)}</dd>
                   </div>
                 ))}
             </dl>

@@ -17,6 +17,10 @@ const COLLAPSED_KEY = 'shop_sidebar_collapsed';
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSED_KEY) === 'true');
   const navItems = useNavItems();
+  const groups = [
+    { label: 'Workspace', items: navItems.filter((item) => !item.group) },
+    { label: 'Management', items: navItems.filter((item) => item.group === 'management') },
+  ].filter(({ items }) => items.length);
 
   const toggleCollapsed = () => {
     localStorage.setItem(COLLAPSED_KEY, String(!collapsed));
@@ -43,13 +47,18 @@ export default function Sidebar() {
       <CommandPalette component={({ open }) => <SearchButton open={open} collapsed={collapsed} />} />
 
       <nav aria-label="Main" className="min-h-0 flex-1 overflow-y-auto -ms-3 ps-3 pe-1 -me-1">
-        <ul className="space-y-0.5">
-          {navItems.map((item) => (
-            <li key={item.to}>
-              <SidebarLink item={item} collapsed={collapsed} />
-            </li>
-          ))}
-        </ul>
+        {groups.map(({ label, items }) => (
+          <div key={label} className="mb-4 last:mb-0">
+            <p className={collapsed ? 'sr-only' : 'mb-1 px-3 text-xs font-semibold text-muted'}>{label}</p>
+            <ul aria-label={label} className="space-y-0.5">
+              {items.map((item) => (
+                <li key={item.to}>
+                  <SidebarLink item={item} collapsed={collapsed} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </nav>
 
       <div className={`flex shrink-0 items-center gap-1 border-t border-border pt-3 ${collapsed ? 'flex-col' : 'justify-between'}`}>

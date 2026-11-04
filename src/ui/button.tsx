@@ -3,12 +3,12 @@ import { useButtonState } from './useButtonState';
 import type { LucideIcon } from 'lucide-react';
 
 const baseClasses =
-  'cursor-pointer rounded-pill in-[.portal-shell]:rounded-control inline-flex items-center justify-center gap-2 font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  'cursor-pointer rounded-control inline-flex items-center justify-center gap-2 font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',
   secondary: 'bg-accent text-on-accent hover:bg-accent/90',
-  outline: 'bg-transparent border border-ink text-ink hover:bg-ink hover:text-surface',
+  outline: 'bg-transparent border border-control-border text-ink hover:bg-canvas',
   ghost: 'bg-transparent text-body hover:bg-border',
   link: 'bg-transparent text-accent underline-offset-4 hover:underline',
   danger: 'bg-danger-50 text-danger-600 hover:bg-danger-100 hover:text-danger-700',
@@ -18,7 +18,7 @@ const variants = {
 
 const sizes = {
   sm: 'h-7 px-3 text-xs',
-  md: 'h-10 px-5 text-sm',
+  md: 'min-h-11 px-4 py-2 text-sm',
   lg: 'h-12 px-6 text-base',
 };
 

@@ -20,9 +20,8 @@ export default function DashboardPage() {
   const query = useQuery(dashboardQuery(date, branch));
 
   return (
-    <Page title="Dashboard" actions={<NewContractButton />}>
+    <Page title="Dashboard" description="Track collections, overdue installments, and recent sales." actions={<NewContractButton />}>
       <div className="space-y-5">
-        <p className="-mt-3 text-sm text-muted">Your collections, overdue installments and recent sales in one place.</p>
         <QueryView query={query} skeleton={<Skeleton className="h-96 w-full rounded-card" />}>
           {(snapshot) => (
             <>

@@ -34,8 +34,17 @@ export default function PaymentsPage() {
   const list = usePagedList<Payment>(PAYMENTS_KEY, '/payments', { date, branchId: branch });
 
   return (
-    <Page title="Payments" actions={<div className="flex flex-wrap items-end gap-3"><PaymentLauncher /><Input type="date" aria-label="Day" value={date} max={todayInShops()} onChange={(e) => setParams(e.target.value ? { date: e.target.value } : {}, { replace: true })} /></div>}>
+    <Page title="Payments" description="Record installments, review collections, and open receipts." actions={<PaymentLauncher />}>
       <div className="space-y-6">
+        <div className="max-w-56">
+          <Input
+            label="Collection date"
+            type="date"
+            value={date}
+            max={todayInShops()}
+            onChange={(event) => setParams(event.target.value ? { date: event.target.value } : {}, { replace: true })}
+          />
+        </div>
         <QueryView query={summary} skeleton={<ListSkeleton rows={1} />}>
           {(collections) => <CollectionsSummary collections={collections} />}
         </QueryView>
