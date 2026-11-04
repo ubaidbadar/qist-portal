@@ -99,8 +99,8 @@
   --color-body: #D5DCE7;
   --color-muted: #B0BBCB;
   --color-subtle: #99A7BA;
-  --color-control-border: #77869B;
-  --color-border: #3B4656;
+  --color-control-border: rgb(255 255 255 / 0.18);
+  --color-border: rgb(255 255 255 / 0.08);
   --color-scrim: rgb(0 0 0 / 0.72);
   --color-glow: transparent;
   --color-glow-alt: transparent;
@@ -108,8 +108,8 @@
   --color-accent: #A3BCFF;
   --color-accent-alt: #8DA7FF;
   --color-on-accent: #101827;
-  --color-primary: #A3BCFF;
-  --color-on-primary: #101827;
+  --color-primary: #2F3FE0;
+  --color-on-primary: #FFFFFF;
   --color-hero-start: #1D2631;
   --color-hero-mid: #121820;
   --shadow-card: 0 0 0 1px var(--color-border);
@@ -138,7 +138,7 @@
   --color-info-800: #C4D8FF;
 }
 
-/* The portal's light-only neutral overrides must not override dark selections. */
+/* Keep the same subdued dark borders within the portal's light-mode token overrides. */
 :root.dark:has(.portal-shell) {
   --color-canvas: #121820;
   --color-surface: #1D2631;
@@ -146,8 +146,8 @@
   --color-body: #D5DCE7;
   --color-muted: #B0BBCB;
   --color-subtle: #99A7BA;
-  --color-control-border: #77869B;
-  --color-border: #3B4656;
+  --color-control-border: rgb(255 255 255 / 0.18);
+  --color-border: rgb(255 255 255 / 0.08);
   --shadow-card: 0 0 0 1px var(--color-border);
 }
 
