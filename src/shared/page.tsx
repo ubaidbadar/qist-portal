@@ -9,6 +9,7 @@ export interface Breadcrumb {
 
 interface PageProps {
   title: string;
+  description?: string;
   breadcrumbs?: Breadcrumb[];
   /** The page's primary action(s), shown at the right of the header. */
   actions?: ReactNode;
@@ -16,13 +17,14 @@ interface PageProps {
 }
 
 /** Every screen's frame: title and actions above a shared content column. */
-export default function Page({ title, breadcrumbs, actions, children }: PageProps) {
+export default function Page({ title, description, breadcrumbs, actions, children }: PageProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:px-6 lg:px-8 lg:pb-12 lg:pt-8">
-      <header className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-6">
+      <header className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-b border-border pb-5 sm:mb-7">
         <div className="min-w-0">
           {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-          <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{title}</h1>
+          <h1 className="break-words text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{title}</h1>
+          {description && <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">{description}</p>}
         </div>
         {actions && <div className="flex min-w-0 flex-wrap items-center gap-2">{actions}</div>}
       </header>

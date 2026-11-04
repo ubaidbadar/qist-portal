@@ -39,7 +39,7 @@ export default function NewContractPage() {
   const copy = STEP_COPY[draft.step];
 
   return (
-    <Page title="New contract" breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'New contract' }]}>
+    <Page title="New contract" description="Choose a customer and a phone, then review the installment terms." breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'New contract' }]}>
       <div className="mx-auto max-w-6xl space-y-5">
         <p className="text-sm leading-relaxed text-muted sm:text-base">
           Complete a new installment sale in three simple steps.

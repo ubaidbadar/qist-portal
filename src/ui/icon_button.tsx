@@ -7,7 +7,7 @@ const baseClasses =
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',
-  secondary: 'bg-accent text-surface hover:bg-accent/80 hover:text-ink',
+  secondary: 'bg-accent text-on-accent hover:bg-accent/90',
   outline: 'bg-transparent border border-border text-ink hover:bg-border',
   ghost: 'bg-transparent text-muted hover:bg-border hover:text-ink',
   danger: 'bg-danger-50 text-danger-600 hover:bg-danger-100 hover:text-danger-700',
@@ -15,7 +15,7 @@ const variants = {
 
 const sizes = {
   sm: 'p-1.5',
-  md: 'p-2',
+  md: 'min-h-10 min-w-10 p-2',
   lg: 'p-3',
 };
 

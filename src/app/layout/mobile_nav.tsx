@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { BottomSheet } from '../../ui';
 import type { NavItem } from '../nav_items';
@@ -10,8 +10,10 @@ const tabTone = (isActive: boolean) => (isActive ? 'font-semibold text-accent' :
 /** Bottom tab bar below lg: the primary pages plus a "More" sheet for the rest. */
 export default function MobileNav() {
   const navItems = useNavItems();
+  const { pathname } = useLocation();
   const primaryItems = navItems.filter((item) => item.primary);
   const moreItems = navItems.filter((item) => !item.primary);
+  const moreIsActive = moreItems.some((item) => matchPath({ path: item.to, end: false }, pathname));
 
   return (
     <nav
@@ -33,8 +35,8 @@ export default function MobileNav() {
 
       <BottomSheet
         component={({ open }) => (
-          <button type="button" onClick={open} className={`${TAB_CLASSES} ${tabTone(false)} cursor-pointer`}>
-            <span className="grid h-7 place-items-center">
+          <button type="button" onClick={open} className={`${TAB_CLASSES} ${tabTone(moreIsActive)} cursor-pointer`}>
+            <span className={`grid h-7 w-11 place-items-center rounded-pill ${moreIsActive ? 'bg-accent/10' : ''}`}>
               <Menu size={20} strokeWidth={1.75} aria-hidden="true" />
             </span>
             More

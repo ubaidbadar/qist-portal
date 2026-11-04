@@ -22,10 +22,8 @@ export default function DashboardPage() {
   const overdue = useQuery(overdueQuery(branch));
 
   return (
-    <Page title="Dashboard" actions={<NewContractButton />}>
+    <Page title="Dashboard" description="Track collections, overdue installments, and recent sales." actions={<NewContractButton />}>
       <div className="space-y-5">
-        <p className="-mt-3 text-sm text-muted">Your collections, overdue installments and recent sales in one place.</p>
-
         <section aria-label="Business overview" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <QueryView query={collections} skeleton={<Skeleton className="h-32 w-full rounded-card" />}>
             {(data) => (

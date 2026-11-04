@@ -11,7 +11,8 @@
   --color-ink: #0B1F4B;      /* strongest text: the logo's navy */
   --color-body: #334155;     /* regular text */
   --color-muted: #526178;    /* secondary text and icons */
-  --color-subtle: #94A3AB;   /* placeholders and hints */
+  --color-subtle: #64748B;   /* placeholders and hints */
+  --color-control-border: #8491A5;
   --color-border: #DDE5F2;   /* borders, dividers, resting fills */
   --color-scrim: rgb(11 31 75 / 0.45);      /* backdrop behind overlays */
   --color-glow: rgb(6 182 212 / 0.08);     /* soft light behind the page, top left */
@@ -98,6 +99,7 @@
   --color-body: #D5DCE7;
   --color-muted: #B0BBCB;
   --color-subtle: #99A7BA;
+  --color-control-border: #77869B;
   --color-border: #3B4656;
   --color-scrim: rgb(0 0 0 / 0.72);
   --color-glow: transparent;
@@ -144,6 +146,7 @@
   --color-body: #D5DCE7;
   --color-muted: #B0BBCB;
   --color-subtle: #99A7BA;
+  --color-control-border: #77869B;
   --color-border: #3B4656;
   --shadow-card: 0 0 0 1px var(--color-border);
 }

@@ -12,7 +12,7 @@ export default function DetailList({ items }: { items: Detail[] }) {
       {items.map(({ label, value }) => (
         <div key={label} className="min-w-0">
           <dt className="text-xs text-muted">{label}</dt>
-          <dd className="mt-0.5 break-words text-ink">{value || '–'}</dd>
+          <dd className="mt-0.5 break-words text-ink">{value == null || value === '' ? '–' : value}</dd>
         </div>
       ))}
     </dl>

@@ -25,10 +25,10 @@ export default function ContractsPage() {
   const list = usePagedList<Contract>(CONTRACTS_KEY, '/contracts', { branchId: allBranches ? undefined : branchId, status: status || undefined });
 
   return (
-    <Page title="Contracts" actions={<NewContractButton />}>
+    <Page title="Contracts" description="Browse installment sales and track contract status." actions={<NewContractButton />}>
       <div className="space-y-4">
         <div className="sm:w-56">
-          <Select aria-label="Status" options={STATUS_OPTIONS} value={status} onChange={(event) => setParams(event.target.value ? { status: event.target.value } : {}, { replace: true })} />
+          <Select label="Contract status" options={STATUS_OPTIONS} value={status} onChange={(event) => setParams(event.target.value ? { status: event.target.value } : {}, { replace: true })} />
         </div>
         <QueryView query={{ ...list, data: list.rows }} skeleton={<ListSkeleton rows={5} />}>
           {(rows) => (
