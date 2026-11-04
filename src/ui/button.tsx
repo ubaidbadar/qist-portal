@@ -3,22 +3,23 @@ import { useButtonState } from './useButtonState';
 import type { LucideIcon } from 'lucide-react';
 
 const baseClasses =
-  'cursor-pointer rounded-pill inline-flex min-h-12 items-center justify-center gap-2 font-semibold transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  'cursor-pointer rounded-pill in-[.portal-shell]:rounded-control inline-flex items-center justify-center gap-2 font-medium transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variants = {
   primary: 'bg-primary text-on-primary hover:bg-primary/85',
-  secondary: 'bg-surface text-ink border border-border hover:bg-canvas',
-  outline: 'border border-border bg-surface text-ink hover:bg-canvas',
+  secondary: 'bg-accent text-on-accent hover:bg-accent/90',
+  outline: 'bg-transparent border border-ink text-ink hover:bg-ink hover:text-surface',
   ghost: 'bg-transparent text-body hover:bg-border',
   link: 'bg-transparent text-accent underline-offset-4 hover:underline',
-  danger: 'bg-danger-100 text-danger-800 hover:bg-danger-200',
-  premium: 'bg-primary text-on-primary hover:bg-primary/90',
+  danger: 'bg-danger-50 text-danger-600 hover:bg-danger-100 hover:text-danger-700',
+  premium:
+    'bg-linear-to-r from-accent to-accent-alt text-on-accent shadow-xl shadow-accent/20 hover:shadow-2xl hover:-translate-y-0.5',
 };
 
 const sizes = {
-  sm: 'px-4 text-xs',
-  md: 'px-5 text-sm',
-  lg: 'px-7 text-base',
+  sm: 'h-7 px-3 text-xs',
+  md: 'h-10 px-5 text-sm',
+  lg: 'h-12 px-6 text-base',
 };
 
 /** A link reads as text, so it takes the size's font but no fixed height or padding. */

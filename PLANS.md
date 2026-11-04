@@ -1,9 +1,9 @@
 # Qist portal redesign — execution plan
 
-**Status:** Redesign implementation complete on `redesign/qist-ui`; final browser/device QA pending. **Scope:** Frontend only. Do not merge or deploy without review.
+**Status:** Original portal design restored; new auth layout and UX workflows retained. Browser/device QA pending. **Scope:** Frontend only. Do not merge or deploy without review.
 
 ## Goals and boundaries
-A calm, bank-like Qist interface matching the approved references; make everyday retailer workflows possible with minimal backtracking. Preserve all route URLs, backend endpoints, request/response data, existing user permissions, session handling, calculations, error handling, and manual payment processing. Contextual creation and auto-selection are approved frontend workflow improvements, not changes to backend behavior. Respect all five `.claude/skills` documents.
+Preserve the original Qist light design with the newer authentication layout; make everyday retailer workflows possible with minimal backtracking. Preserve all route URLs, backend endpoints, request/response data, existing user permissions, session handling, calculations, error handling, and manual payment processing. Contextual creation and auto-selection are approved frontend workflow improvements, not changes to backend behavior. Respect all five `.claude/skills` documents.
 
 ## Findings
 The legacy design mixes `.portal-shell` token overrides, gradient auth sections, uneven button dimensions, and non-contextual actions. Contract creation sends users to Customers and Inventory when a record is absent; customer form redirects after saving; the Terms step unmounts and loses drafts; Payments has no entry button. Inventory defaults to in-stock, hiding the sold-phone QR. The original dashboard route was Coming Soon; the redesigned dashboard displays only live existing API values, without fabricated metrics. Login is email-only and signup requires first branch: the references' phone login cannot be implemented visually without backend changes.
@@ -44,3 +44,6 @@ Retailer can begin a sale without preregistered customer or phone, add both in c
 
 ### Visual preference revision
 The sidebar and mobile navigation are white; primary action buttons use accessible teal with white labels. Dark-mode preferences and toggle controls were removed, including the old stored setting. The navy authentication brand illustration remains as a deliberate identity element, not an alternate color theme.
+
+### Final user-approved style direction — 4 Nov 2026
+Restore the original `main` visual styles for the portal: white sidebar, original blue primary buttons, inputs, tables, badges, and spacing. Retain the newer **authentication page layout** (left navy introduction panel on desktop, simplified auth form), with its shared new SVG logo; this is a brand panel, not dark mode. Retain all existing UX workflow improvements (inline customer/stock creation, persistent contract terms, payment launcher, setup QR, live dashboard) and their backend contracts. Dark mode is explicitly disabled; the toggle, stored preference and CSS overrides are removed. Run typecheck, lint, build and tests before merge; verify in browser at mobile/desktop breakpoints.

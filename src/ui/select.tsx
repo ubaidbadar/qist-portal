@@ -35,7 +35,7 @@ export default function Select({
         <select
           {...controlProps}
           name={name}
-          className={`${formInputBaseClasses} py-2.5 pe-10 appearance-none cursor-pointer ${className}`}
+          className={`${formInputBaseClasses} py-2.5 pr-10 appearance-none cursor-pointer ${className}`}
           {...props}
         >
           {placeholder && (
@@ -52,7 +52,7 @@ export default function Select({
         <ChevronDown
           size={18}
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 end-3 -translate-y-1/2 text-muted"
+          className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-muted"
         />
       </div>
     </FieldShell>

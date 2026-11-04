@@ -58,7 +58,7 @@ export default function Tabs({ tabs, activeTabId, defaultTabId, onChange, classN
               id={tabId(tab.id)}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setSelectedId(tab.id)}
-              className={`min-h-12 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -outline-offset-2 rounded-t-small ${
+              className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -outline-offset-2 rounded-t-small ${
                 isActive
                   ? 'border-accent text-ink bg-accent/5 cursor-default'
                   : 'border-transparent text-muted hover:text-ink hover:border-border hover:bg-border/50 cursor-pointer'

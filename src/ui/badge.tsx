@@ -1,6 +1,6 @@
 import { type HTMLAttributes } from 'react';
 
-const baseClasses = 'inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold';
+const baseClasses = 'inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-medium';
 
 const variants = {
   primary: 'bg-primary text-on-primary',

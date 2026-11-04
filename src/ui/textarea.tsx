@@ -24,7 +24,7 @@ export default function Textarea({
       <textarea
         {...controlProps}
         name={name}
-        className={`${formInputBaseClasses} py-3 resize-y min-h-28 ${className}`}
+        className={`${formInputBaseClasses} py-3 resize-y min-h-25 ${className}`}
         {...props}
       />
     </FieldShell>

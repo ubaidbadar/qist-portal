@@ -38,7 +38,7 @@ export default function NewContractPage() {
             <li
               key={label}
               aria-current={index === draft.step ? 'step' : undefined}
-              className={`rounded-pill px-4 py-2 font-medium ${index === draft.step ? 'bg-brand-raised text-on-brand' : index < draft.step ? 'bg-success-100 text-success-800' : 'bg-border text-muted'}`}
+              className={`rounded-pill px-4 py-2 font-medium ${index === draft.step ? 'bg-accent text-on-accent' : index < draft.step ? 'bg-success-100 text-success-800' : 'bg-border text-muted'}`}
             >
               {index + 1}. {label}
             </li>

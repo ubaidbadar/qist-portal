@@ -42,7 +42,7 @@ export default function SegmentedControl({
         {options.map((option) => (
           <label
             key={option}
-            className="relative flex min-h-12 items-center justify-center px-4 py-1.5 text-center text-sm font-medium text-muted transition-colors rounded-pill cursor-pointer hover:text-ink has-checked:text-ink has-focus-visible:outline-2 has-focus-visible:outline-accent"
+            className="relative px-4 py-1.5 text-center text-sm font-medium text-muted transition-colors rounded-pill cursor-pointer hover:text-ink has-checked:text-ink has-focus-visible:outline-2 has-focus-visible:outline-accent"
           >
             <input
               type="radio"

@@ -12,7 +12,7 @@ export default function PasswordInput(props: InputProps) {
       rightElement={
         <button
           type="button"
-          className="flex size-12 items-center justify-center rounded-pill text-muted hover:bg-border hover:text-ink transition-colors cursor-pointer"
+          className="rounded-small text-muted hover:text-ink transition-colors cursor-pointer"
           onClick={() => setShowPassword((prev) => !prev)}
           aria-label={showPassword ? 'Hide password' : 'Show password'}
           aria-pressed={showPassword}

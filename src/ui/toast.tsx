@@ -38,8 +38,8 @@ export const toast = {
 
 const toastStyles: Record<ToastType, { container: string; icon: ReactNode }> = {
   success: {
-    container: 'border-s-4 border-s-accent bg-canvas',
-    icon: <CheckCircle2 className="text-success-800 shrink-0" size={20} aria-hidden="true" />,
+    container: 'border-l-4 border-l-accent bg-canvas',
+    icon: <CheckCircle2 className="text-accent shrink-0" size={20} aria-hidden="true" />,
   },
   error: {
     container: 'border-l-4 border-l-danger-500 bg-danger-50',
@@ -67,7 +67,7 @@ function Toast({ id, type, message }: ToastMessage) {
       <button
         type="button"
         onClick={() => dismiss(id)}
-        className="flex size-12 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-border hover:text-ink transition-colors cursor-pointer"
+        className="rounded-small text-muted hover:text-ink transition-colors cursor-pointer"
         aria-label="Close"
       >
         <X size={16} aria-hidden="true" />
@@ -85,7 +85,7 @@ export function ToastContainer() {
     <div
       aria-live="polite"
       aria-atomic="false"
-      className="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:end-4 z-100 flex flex-col gap-2 pointer-events-none"
+      className="fixed bottom-4 right-4 z-100 flex flex-col gap-2 pointer-events-none"
     >
       {toasts.map((t) => (
         <Toast key={t.id} {...t} />
