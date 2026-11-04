@@ -10,11 +10,10 @@ interface ChoiceListProps {
   choices: Choice[];
   selectedKey: string | undefined;
   onChoose: (key: string) => void;
-  /** Read by screen readers as the list's name. */
   label: string;
 }
 
-/** A list to pick one item from, used by the sale wizard's customer and phone steps. */
+/** A consistent single-choice list for customers and stock phones. */
 export default function ChoiceList({ choices, selectedKey, onChoose, label }: ChoiceListProps) {
   return (
     <ul aria-label={label} className="divide-y divide-border overflow-hidden rounded-card border border-border bg-surface">
@@ -26,15 +25,20 @@ export default function ChoiceList({ choices, selectedKey, onChoose, label }: Ch
               type="button"
               aria-pressed={selected}
               onClick={() => onChoose(choice.key)}
-              className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors duration-150 -outline-offset-2 ${
+              className={`flex min-h-18 w-full cursor-pointer items-center gap-3 px-4 py-4 text-start transition-colors duration-150 -outline-offset-2 sm:px-5 ${
                 selected ? 'bg-accent/10' : 'hover:bg-canvas'
               }`}
             >
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium text-ink">{choice.title}</span>
-                <span className="block truncate text-sm text-muted">{choice.detail}</span>
+                <span className="block truncate text-sm font-semibold text-ink sm:text-base">{choice.title}</span>
+                <span className="mt-1 block truncate text-sm text-muted">{choice.detail}</span>
               </span>
-              {selected && <Check size={18} className="shrink-0 text-accent" aria-hidden="true" />}
+              {selected && (
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-pill bg-surface px-3 py-1 text-xs font-semibold text-accent">
+                  <Check size={15} aria-hidden="true" />
+                  Selected
+                </span>
+              )}
             </button>
           </li>
         );

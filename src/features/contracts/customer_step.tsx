@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, UsersRound } from 'lucide-react';
 import { formatCnic, formatMobile, type Customer } from '@shop/shared';
-import { Input } from '../../ui';
+import { EmptyState, Input } from '../../ui';
 import { useCan } from '../../auth';
 import CustomerDrawer from '../customers/customer_drawer';
 import useDebouncedValue from '../../hooks/useDebouncedValue';
@@ -16,45 +16,55 @@ interface CustomerStepProps {
   onSelect: (customer: Customer) => void;
 }
 
-/** Step 1: who is buying. New customers are added from the Customers page first. */
+/** Find or create a customer without leaving the new-contract workflow. */
 export default function CustomerStep({ selected, onSelect }: CustomerStepProps) {
   const [q, setQ] = useState(selected?.fullName ?? '');
   const can = useCan();
+  const search = useDebouncedValue(q.trim());
+  const list = usePagedList<Customer>(CUSTOMERS_KEY, '/customers', { q: search || undefined });
+
   const onCreated = (customer: Customer) => {
     onSelect(customer);
     setQ(customer.fullName);
   };
-  const search = useDebouncedValue(q.trim());
-  const list = usePagedList<Customer>(CUSTOMERS_KEY, '/customers', { q: search || undefined });
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="min-w-0 flex-1">
-          <Input icon={Search} label="Find customer" placeholder="Name, CNIC or mobile" value={q} onChange={(event) => setQ(event.target.value)} autoFocus />
+          <Input
+            icon={Search}
+            label="Search customers"
+            placeholder="Search by name, CNIC or mobile"
+            value={q}
+            onChange={(event) => setQ(event.target.value)}
+            autoFocus
+          />
         </div>
         {can('customers.write') && <CustomerDrawer onCreated={onCreated} />}
       </div>
-      {selected && <p className="rounded-control bg-success-50 px-4 py-3 text-sm text-success-800">Selected: <strong>{selected.fullName}</strong></p>}
       <QueryView query={{ ...list, data: list.rows }} skeleton={<ListSkeleton rows={3} />}>
-        {(customers) =>
-          customers.length === 0 ? (
-            <div className="rounded-card border border-border bg-surface p-6 text-center">
-              <p className="mb-4 text-sm text-muted">No matching customer. Check the search or add them here.</p>
-              {can('customers.write') && <CustomerDrawer onCreated={onCreated} />}
-            </div>
-          ) : (
-            <ChoiceList
-              label="Customers"
-              selectedKey={selected?._id}
-              onChoose={(id) => {
-                const customer = customers.find((c) => c._id === id);
-                if (customer) onSelect(customer);
-              }}
-              choices={customers.map((c) => ({ key: c._id, title: c.fullName, detail: `${formatCnic(c.cnic)} · ${formatMobile(c.phone)}` }))}
-            />
-          )
-        }
+        {(customers) => customers.length === 0 ? (
+          <EmptyState
+            icon={UsersRound}
+            title="No customers found"
+            description="Try another search, or add the customer without leaving this contract."
+          />
+        ) : (
+          <ChoiceList
+            label="Select a customer"
+            selectedKey={selected?._id}
+            onChoose={(id) => {
+              const customer = customers.find((item) => item._id === id);
+              if (customer) onSelect(customer);
+            }}
+            choices={customers.map((item) => ({
+              key: item._id,
+              title: item.fullName,
+              detail: `${formatCnic(item.cnic)} · ${formatMobile(item.phone)}`,
+            }))}
+          />
+        )}
       </QueryView>
     </div>
   );
