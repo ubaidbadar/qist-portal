@@ -63,7 +63,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
         </p>
       )}
       {manage && (
-        <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
+        <div className="flex flex-col gap-2 border-t border-border pt-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
           {knownState && !waiting && !locked && (
             <ReasonModal
               title={`Lock ${contract.customerName}'s phone?`}
@@ -72,7 +72,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
               confirmVariant="danger"
               url={`/contracts/${contract._id}/lock`}
               done="Lock queued"
-              trigger={(open) => <Button variant="danger" icon={Lock} onClick={open}>Lock phone</Button>}
+              trigger={(open) => <Button variant="danger" icon={Lock} className="w-full sm:w-auto" onClick={open}>Lock phone</Button>}
             />
           )}
           {knownState && !waiting && locked && (
@@ -82,7 +82,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
               confirmText="Unlock phone"
               url={`/contracts/${contract._id}/unlock`}
               done="Unlock queued"
-              trigger={(open) => <Button variant="outline" icon={Unlock} onClick={open}>Unlock phone</Button>}
+              trigger={(open) => <Button variant="outline" icon={Unlock} className="w-full sm:w-auto" onClick={open}>Unlock phone</Button>}
             />
           )}
           {waiting && latest.type === 'lock' && latest.status === 'pending' && (
@@ -92,10 +92,10 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
               confirmText="Withdraw lock"
               url={`/contracts/${contract._id}/unlock`}
               done="Lock withdrawn"
-              trigger={(open) => <Button variant="outline" icon={Unlock} onClick={open}>Withdraw lock</Button>}
+              trigger={(open) => <Button variant="outline" icon={Unlock} className="w-full sm:w-auto" onClick={open}>Withdraw lock</Button>}
             />
           )}
-          <PauseModal contractId={contract._id} customerName={contract.customerName} />
+          <PauseModal contractId={contract._id} customerName={contract.customerName} triggerClassName="w-full sm:w-auto" />
         </div>
       )}
     </Card>

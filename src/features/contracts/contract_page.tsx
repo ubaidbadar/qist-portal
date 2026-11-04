@@ -38,7 +38,7 @@ function ContractDetails({ contract }: { contract: ContractWithSchedule }) {
       <ContractOverview contract={contract} />
       <ContractLockPanel contract={contract} />
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(300px,1fr)]">
-        <div className="min-w-0 space-y-5">
+        <div className="order-2 min-w-0 space-y-5 lg:order-1">
           <Card padding="none" className="overflow-hidden">
             <div className="border-b border-border px-5 py-4">
               <h2 className="text-base font-semibold text-ink">Installment schedule</h2>
@@ -50,7 +50,9 @@ function ContractDetails({ contract }: { contract: ContractWithSchedule }) {
           </Card>
           <LedgerCard contractId={contract._id} payments={contract.payments} />
         </div>
-        <ContractInfoCard contract={contract} />
+        <div className="order-1 min-w-0 lg:order-2">
+          <ContractInfoCard contract={contract} />
+        </div>
       </div>
     </div>
   );
