@@ -6,6 +6,7 @@ import { NAV_ITEMS } from './app/nav_items';
 import AuthLayout from './features/auth/auth_layout';
 import FullPageLoader from './shared/full_page_loader';
 
+const CustomerPrivacyPolicyPage = lazy(() => import('./features/legal/customer_privacy_policy_page'));
 const LoginPage = lazy(() => import('./features/auth/login_page'));
 const SignupPage = lazy(() => import('./features/auth/signup_page'));
 const ForgotPasswordPage = lazy(() => import('./features/auth/forgot_password_page'));
@@ -35,6 +36,14 @@ const UPCOMING = NAV_ITEMS.filter((item) => !BUILT.has(item.to));
 export default function App() {
   return (
     <Routes>
+      <Route
+        path="/privacy-policy"
+        element={
+          <Suspense fallback={<FullPageLoader />}>
+            <CustomerPrivacyPolicyPage />
+          </Suspense>
+        }
+      />
       <Route element={<AuthLayout />}>
         <Route element={<GuestOnly />}>
           <Route path="/login" element={<LoginPage />} />

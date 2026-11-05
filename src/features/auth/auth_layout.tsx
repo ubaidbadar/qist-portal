@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import Brand from '../../app/layout/brand';
 import { Skeleton } from '../../ui';
 import AuthShowcase from './auth_showcase';
@@ -18,6 +18,11 @@ export default function AuthLayout() {
             <Outlet />
           </Suspense>
         </div>
+        <footer className="mx-auto w-full max-w-md text-center text-sm text-muted">
+          <Link to="/privacy-policy" className="inline-flex min-h-12 items-center text-accent underline underline-offset-4">
+            Customer app privacy policy
+          </Link>
+        </footer>
       </main>
     </div>
   );
