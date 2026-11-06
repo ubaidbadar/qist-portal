@@ -3,6 +3,7 @@ import { pageQuerySchema } from './api';
 import { DEVICE_STOCK_STATUSES, type DeviceLockState, type DeviceStockStatus } from './constants';
 import { objectIdSchema, textSchema } from './fields';
 import { imeiSchema } from './identifiers';
+import type { CustomerAppReport } from './customer_install';
 
 /** Prices are integer paisa; this caps a single phone at Rs 10 million. */
 export const MAX_PRICE_PAISA = 1_000_000_000;
@@ -64,7 +65,7 @@ export interface Device {
   stockStatus: DeviceStockStatus;
   lockState: DeviceLockState;
   /** Set once the device app has enrolled with the setup QR (Phase 2). */
-  enrollment: { enrolledAt: string; lastCheckInAt: string | null; appVersion: string } | null;
+  enrollment: { enrolledAt: string; lastCheckInAt: string | null; appVersion: string; customerApp?: CustomerAppReport & { reportedAt: string } } | null;
   createdBy: string;
   createdAt: string;
   updatedAt: string;
