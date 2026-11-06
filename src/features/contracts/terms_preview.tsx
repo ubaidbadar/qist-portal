@@ -2,6 +2,7 @@ import { useWatch, type Control, type FieldValues } from 'react-hook-form';
 import { buildSchedule, priceContract } from '@shop/shared';
 import { Card } from '../../ui';
 import DetailList from '../../shared/detail_list';
+import { markupBasisLabel } from './markup_basis';
 import MoneyText from '../../shared/money_text';
 import ScheduleTable from './schedule_table';
 import { termsFormSchema, toContractTerms } from './terms_form_schema';
@@ -31,7 +32,9 @@ export default function TermsPreview({ control }: { control: Control<FieldValues
           { label: 'Cash price', value: <MoneyText amount={terms.cashPrice} /> },
           { label: 'Down payment', value: <MoneyText amount={terms.downPayment} /> },
           { label: 'Financed', value: <MoneyText amount={pricing.financedAmount} /> },
+          { label: `Markup base (${markupBasisLabel(terms.markupBasis)})`, value: <MoneyText amount={terms.markupBasis === 'cash_price' ? terms.cashPrice : pricing.financedAmount} /> },
           { label: `Markup (${terms.markupPercent}%)`, value: <MoneyText amount={pricing.markupAmount} /> },
+          { label: 'Total including down payment', value: <MoneyText amount={terms.downPayment + pricing.totalPayable} /> },
           { label: 'Paid in installments', value: <MoneyText amount={pricing.totalPayable} className="font-semibold" /> },
         ]}
       />

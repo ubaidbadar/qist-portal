@@ -1,3 +1,4 @@
+import type { MarkupBasis } from './plans';
 import type { Frequency } from './constants';
 import { addDays, addMonths, type CalendarDate } from './dates';
 import type { Paisa } from './money';
@@ -5,7 +6,9 @@ import type { Paisa } from './money';
 export interface Terms {
   cashPrice: Paisa;
   downPayment: Paisa;
-  /** Percentage added to the financed amount, e.g. 25 for 25%. */
+  /** Missing basis retains the original balance-only calculation. */
+  markupBasis?: MarkupBasis;
+  /** Percentage added to the selected base, e.g. 25 for 25%. */
   markupPercent: number;
 }
 
@@ -16,10 +19,11 @@ export interface Pricing {
   totalPayable: Paisa;
 }
 
-/** Cash price minus down payment, plus markup on that. Rounded to whole paisa once, here. */
-export function priceContract({ cashPrice, downPayment, markupPercent }: Terms): Pricing {
+/** Down payment reduces principal; markup uses the chosen base. Rounded to whole paisa once. */
+export function priceContract({ cashPrice, downPayment, markupPercent, markupBasis = 'financed' }: Terms): Pricing {
   const financedAmount = cashPrice - downPayment;
-  const markupAmount = Math.round((financedAmount * markupPercent) / 100);
+  const base = markupBasis === 'cash_price' ? cashPrice : financedAmount;
+  const markupAmount = Math.round((base * markupPercent) / 100);
   return { financedAmount, markupAmount, totalPayable: financedAmount + markupAmount };
 }
 

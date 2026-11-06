@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { FREQUENCIES, planCreateSchema, type InstallmentPlan } from '@shop/shared';
 import { Alert, Button, Drawer, fieldError, Form, IconButton, Input, Select, toast, Toggle } from '../../ui';
 import { apiPatch, apiPost } from '../../config/api';
+import { MARKUP_BASIS_OPTIONS } from '../contracts/markup_basis';
 import { FREQUENCY_LABELS } from '../../shared/labels';
 import { plansQuery } from '../contracts/queries';
 
@@ -33,6 +34,7 @@ export default function PlanDrawer({ plan }: { plan?: InstallmentPlan }) {
             frequency: plan?.frequency ?? 'monthly',
             count: plan?.count ?? 6,
             markupPercent: plan?.markupPercent ?? 25,
+            markupBasis: plan?.markupBasis ?? 'financed',
             minDownPaymentPercent: plan?.minDownPaymentPercent ?? 0,
             active: plan?.active ?? true,
           }}
@@ -50,6 +52,7 @@ export default function PlanDrawer({ plan }: { plan?: InstallmentPlan }) {
               <div className="grid gap-4 sm:grid-cols-2">
                 <Input label="Number of installments" type="number" min={1} {...register('count', { valueAsNumber: true })} error={fieldError(errors, 'count')} />
                 <Select label="Paid" options={FREQUENCY_OPTIONS} {...register('frequency')} error={fieldError(errors, 'frequency')} />
+                <Select label="Calculate markup on" options={MARKUP_BASIS_OPTIONS} {...register('markupBasis')} error={fieldError(errors, 'markupBasis')} />
                 <Input label="Markup %" type="number" step="0.01" min={0} {...register('markupPercent', { valueAsNumber: true })} error={fieldError(errors, 'markupPercent')} />
                 <Input
                   label="Minimum down payment %"

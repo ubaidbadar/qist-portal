@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { RetailerPaymentMethod } from './org';
 import type { CommandType, DeviceLockState } from './constants';
 
 /** A freshly issued enrolment QR is only valid this long; the phone must be provisioned at the counter. */
@@ -10,11 +11,12 @@ export const DEVICE_CHECKIN_SECONDS = 15 * 60;
 /** A phone the device app may describe about itself. Free text is kept short and optional. */
 const platformSchema = z.enum(['android']).default('android');
 const shortText = z.string().trim().max(80);
+const pushTokenSchema = z.string().trim().max(4096);
 
 /** Device app → server, once, to redeem the one-time enrolment token from the QR. */
 export const deviceEnrollSchema = z.object({
   token: z.string().min(1),
-  pushToken: shortText.optional(),
+  pushToken: pushTokenSchema.optional(),
   appVersion: shortText.optional(),
   androidVersion: shortText.optional(),
   platform: platformSchema,
@@ -23,7 +25,7 @@ export type DeviceEnrollInput = z.infer<typeof deviceEnrollSchema>;
 
 /** Device app → server, on every check-in; all fields optional so an old app still checks in. */
 export const deviceCheckinSchema = z.object({
-  pushToken: shortText.optional(),
+  pushToken: pushTokenSchema.optional(),
   appVersion: shortText.optional(),
   lockState: z.enum(['unlocked', 'locked']).optional(),
 });
@@ -53,6 +55,9 @@ export interface LockScreen {
   nextDueDate: string | null;
   branchName: string;
   branchPhone: string;
+  retailerName?: string;
+  branchAddress?: string;
+  paymentMethods?: RetailerPaymentMethod[];
   message: string;
 }
 

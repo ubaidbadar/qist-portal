@@ -4,6 +4,7 @@ import { FREQUENCIES, type ContractWithSchedule, type Customer, type Device } fr
 import { Alert, Button, fieldError, Form, Input, Select, toast } from '../../ui';
 import { apiPost } from '../../config/api';
 import { useMe } from '../../auth';
+import { MARKUP_BASIS_OPTIONS } from './markup_basis';
 import { FREQUENCY_LABELS } from '../../shared/labels';
 import { DEVICES_KEY } from '../inventory/queries';
 import { CONTRACTS_KEY, plansQuery } from './queries';
@@ -53,6 +54,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                     setValue('count', plan.count);
                     setValue('frequency', plan.frequency);
                     setValue('markupPercent', plan.markupPercent);
+                    setValue('markupBasis', plan.markupBasis ?? 'financed');
                   },
                 })}
               />
@@ -60,6 +62,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                 <Input label="Cash price (Rs)" type="number" min={0} {...register('cashRupees', { valueAsNumber: true })} error={fieldError(errors, 'cashRupees')} />
                 <Input label="Down payment (Rs)" type="number" min={0} {...register('downRupees', { valueAsNumber: true })} error={fieldError(errors, 'downRupees')} />
                 <Select label="Down payment paid by" options={METHOD_OPTIONS} {...register('downPaymentMethod')} />
+                <Select label="Calculate markup on" options={MARKUP_BASIS_OPTIONS} {...register('markupBasis')} error={fieldError(errors, 'markupBasis')} />
                 <Input label="Markup %" type="number" step="0.01" min={0} {...register('markupPercent', { valueAsNumber: true })} error={fieldError(errors, 'markupPercent')} />
                 <Input label="Installments" type="number" min={1} {...register('count', { valueAsNumber: true })} error={fieldError(errors, 'count')} />
                 <Select label="Paid" options={FREQUENCY_OPTIONS} {...register('frequency')} error={fieldError(errors, 'frequency')} />

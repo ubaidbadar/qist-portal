@@ -7,6 +7,7 @@ import { scheduleLabel } from '../../shared/labels';
 import QueryView from '../../shared/query_view';
 import SectionHeader from '../../shared/section_header';
 import { plansQuery } from '../contracts/queries';
+import { markupBasisLabel } from '../contracts/markup_basis';
 import PlanDrawer from './plan_drawer';
 
 export default function PlansTab() {
@@ -49,7 +50,7 @@ function PlanRow({ plan }: { plan: InstallmentPlan }) {
           {!plan.active && <Badge variant="neutral" pill>Inactive</Badge>}
         </p>
         <p className="mt-0.5 text-sm text-muted">
-          {scheduleLabel(plan.count, plan.frequency)} · {plan.markupPercent}% markup
+          {scheduleLabel(plan.count, plan.frequency)} · {plan.markupPercent}% markup on {markupBasisLabel(plan.markupBasis).toLowerCase()}
           {plan.minDownPaymentPercent > 0 && ` · at least ${plan.minDownPaymentPercent}% down`}
         </p>
       </div>

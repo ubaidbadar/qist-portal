@@ -50,3 +50,8 @@ Restore the original `main` visual styles for the portal: white sidebar, origina
 
 ### Theme clarification
 The user wants **both themes**. The old dark theme's colors were the problem, not dark mode itself. Preserve the original white/light portal and blue buttons, and implement dark mode with charcoal neutral surfaces, crisp light typography, softly contrasted borders and an accessible lighter-blue accent. Start in light mode until a user explicitly switches. Keep the new auth page layout.
+
+
+## Payment instructions and markup basis (6 November 2026)
+
+Owner payment settings, customer/locker payment details and selectable markup basis are implemented across the four Qist repositories. See `docs/PAYMENTS_AND_MARKUP.md` for scope, formulas, rollout, kiosk implications and pending device/database verification. Existing contracts retain their stored totals and schedules.
