@@ -52,6 +52,21 @@ Restore the original `main` visual styles for the portal: white sidebar, origina
 The user wants **both themes**. The old dark theme's colors were the problem, not dark mode itself. Preserve the original white/light portal and blue buttons, and implement dark mode with charcoal neutral surfaces, crisp light typography, softly contrasted borders and an accessible lighter-blue accent. Start in light mode until a user explicitly switches. Keep the new auth page layout.
 
 
+## Deferred customer app installation — 6 November 2026
+
+Scope: QR setup downloads only the locker. Customer app installation is a separate durable job, first eligible 15 minutes after enrollment, on unmetered connections by default. Enrollment and lock commands never wait for it. No fabricated customer web portal link.
+
+1. Add an optional validated customer release manifest delivered through existing authenticated check-ins; persist sanitized customer-app reports during existing check-ins. Existing devices and unset configuration remain compatible.
+2. Extend locker scheduling with unique delayed installation work. Resume HTTP Range downloads, validate package/version/checksum/signing certificate, then use public PackageInstaller sessions and an explicit result receiver. Reconcile sessions after restart; retry transient errors with backoff and surface permanent failures. Stop installation management after release/revocation.
+3. Show reported customer-app status separately from successful device enrollment in the existing portal components and tokens.
+4. Add targeted tests for manifest validation, range handling, retry/state behavior, enrollment independence, API authorization and portal labels. No extra release request is needed. Run available type, lint, build and test tasks; document SDK/device/network limitations.
+5. Prepare reviewable branches/PRs; do not deploy or merge to production during this implementation. Deployment requires a real approved APK and its signing information, which must never be invented.
+
+Use existing dependencies and current public APIs. No dependency migration, deprecated install intents, Accessibility automation, or changes to existing lock/release behavior.
+
+### Deferred installation verification
+Implemented independent customer-app reports, live enrollment-panel refresh, and removal of QR steps after enrollment succeeds. TypeScript, ESLint, production build and 92 Bun tests passed. Browser checks at 390px and 1440px passed with mocked device responses: no overflow, no runtime errors, and download failure preserves successful enrollment. Full production data and physical Device Owner installation are not certified by these UI checks. No merge or deployment performed.
+
 ## Payment instructions and markup basis (6 November 2026)
 
 Owner payment settings, customer/locker payment details and selectable markup basis are implemented across the four Qist repositories. See `docs/PAYMENTS_AND_MARKUP.md` for scope, formulas, rollout, kiosk implications and pending device/database verification. Existing contracts retain their stored totals and schedules.

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { RetailerPaymentMethod } from './org';
 import type { CommandType, DeviceLockState } from './constants';
+import { customerAppReportSchema, type CustomerAppRelease } from './customer_install';
 
 /** A freshly issued enrolment QR is only valid this long; the phone must be provisioned at the counter. */
 export const ENROLLMENT_TOKEN_TTL_MINUTES = 60;
@@ -25,6 +26,8 @@ export type DeviceEnrollInput = z.infer<typeof deviceEnrollSchema>;
 
 /** Device app → server, on every check-in; all fields optional so an old app still checks in. */
 export const deviceCheckinSchema = z.object({
+  customerApp: customerAppReportSchema.optional(),
+
   pushToken: pushTokenSchema.optional(),
   appVersion: shortText.optional(),
   lockState: z.enum(['unlocked', 'locked']).optional(),
@@ -69,6 +72,7 @@ export interface PendingCommand {
 
 /** Server → device app on each check-in: what to do, how it should look, and when to come back. */
 export interface DeviceCheckin {
+  customerAppRelease?: CustomerAppRelease | null;
   lockState: DeviceLockState;
   lockScreen: LockScreen;
   commands: PendingCommand[];

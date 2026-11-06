@@ -14,6 +14,7 @@ import StatusBadge from '../../shared/status_badge';
 import DeviceActions from './device_actions';
 import DeviceDrawer from './device_drawer';
 import { DEVICES_KEY } from './queries';
+import CustomerAppStatus from './customer_app_status';
 
 const ALL_STATUSES = 'all';
 const STATUS_LABELS = { in_stock: 'In stock', sold: 'Sold', released: 'Released', returned: 'Returned' } as const;
@@ -36,7 +37,7 @@ function deviceColumns({ showBranch, showCost }: { showBranch: boolean; showCost
     { header: 'IMEI', cell: (device) => <span className="font-mono text-xs leading-5 whitespace-pre">{device.imeis.join('\n')}</span> },
     ...(showBranch ? [{ header: 'Branch', cell: (device: Device) => device.branch?.name ?? '–' }] : []),
     { header: 'PTA', cell: (device) => <Badge variant={device.ptaApproved ? 'success' : 'warning'}>{device.ptaApproved ? 'Approved' : 'Not approved'}</Badge> },
-    { header: 'Status', cell: (device) => <StatusBadge status={device.stockStatus} /> },
+    { header: 'Status', cell: (device) => <><StatusBadge status={device.stockStatus} />{device.enrollment && <CustomerAppStatus enrollment={device.enrollment} compact />}</> },
     ...(showCost ? [{ header: 'Cost', cell: (device: Device) => (device.costPrice == null ? '–' : <MoneyText amount={device.costPrice} />), className: 'text-right' }] : []),
     { header: 'Actions', cell: (device) => <DeviceActions device={device} />, className: 'text-right', hideOnMobile: false },
   ];
