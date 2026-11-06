@@ -3,6 +3,7 @@ import { formatCnic, type ContractWithSchedule } from '@shop/shared';
 import { Card } from '../../ui';
 import DetailList from '../../shared/detail_list';
 import { scheduleLabel } from '../../shared/labels';
+import { markupBasisLabel } from './markup_basis';
 import MoneyText from '../../shared/money_text';
 import StatusBadge from '../../shared/status_badge';
 import { formatDate } from '../../utils/dates';
@@ -31,6 +32,7 @@ export default function ContractInfoCard({ contract }: { contract: ContractWithS
         <DetailList items={[
           { label: 'Cash price', value: <MoneyText amount={contract.cashPrice} /> },
           { label: 'Down payment', value: <MoneyText amount={contract.downPayment} /> },
+          { label: 'Markup calculated on', value: markupBasisLabel(contract.markupBasis) },
           { label: `Markup (${contract.markupPercent}%)`, value: <MoneyText amount={contract.markupAmount} /> },
           { label: 'Payment frequency', value: scheduleLabel(contract.count, contract.frequency) },
           ...(contract.lateFees ? [{ label: 'Late fees', value: <MoneyText amount={contract.lateFees} /> }] : []),

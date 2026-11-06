@@ -6,6 +6,7 @@ import { Button, Skeleton } from '../../ui';
 import { useMe } from '../../auth';
 import DetailList from '../../shared/detail_list';
 import { scheduleLabel } from '../../shared/labels';
+import { markupBasisLabel } from './markup_basis';
 import MoneyText from '../../shared/money_text';
 import QueryView from '../../shared/query_view';
 import { formatDate } from '../../utils/dates';
@@ -73,6 +74,8 @@ function Agreement({ contract, customer }: { contract: ContractWithSchedule; cus
             { label: 'IMEI', value: contract.imeis.join(', ') },
             { label: 'Cash price', value: <MoneyText amount={contract.cashPrice} /> },
             { label: 'Down payment (paid today)', value: <MoneyText amount={contract.downPayment} /> },
+            { label: 'Markup calculated on', value: markupBasisLabel(contract.markupBasis) },
+            { label: `Markup (${contract.markupPercent}%)`, value: <MoneyText amount={contract.markupAmount} /> },
             { label: 'Installments', value: scheduleLabel(contract.count, contract.frequency) },
             { label: 'Total payable in installments', value: <MoneyText amount={contract.totalPayable} /> },
           ]}

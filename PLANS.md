@@ -66,3 +66,7 @@ Use existing dependencies and current public APIs. No dependency migration, depr
 
 ### Deferred installation verification
 Implemented independent customer-app reports, live enrollment-panel refresh, and removal of QR steps after enrollment succeeds. TypeScript, ESLint, production build and 92 Bun tests passed. Browser checks at 390px and 1440px passed with mocked device responses: no overflow, no runtime errors, and download failure preserves successful enrollment. Full production data and physical Device Owner installation are not certified by these UI checks. No merge or deployment performed.
+
+## Payment instructions and markup basis (6 November 2026)
+
+Owner payment settings, customer/locker payment details and selectable markup basis are implemented across the four Qist repositories. See `docs/PAYMENTS_AND_MARKUP.md` for scope, formulas, rollout, kiosk implications and pending device/database verification. Existing contracts retain their stored totals and schedules.

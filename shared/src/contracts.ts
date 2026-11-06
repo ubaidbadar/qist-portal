@@ -4,7 +4,7 @@ import { CONTRACT_STATUSES, FREQUENCIES, PAYMENT_METHODS, type ContractStatus, t
 import { isCalendarDate } from './dates';
 import { MAX_PRICE_PAISA } from './devices';
 import { objectIdSchema, textSchema } from './fields';
-import { installmentCountSchema, markupPercentSchema } from './plans';
+import { installmentCountSchema, markupBasisSchema, markupPercentSchema, type MarkupBasis } from './plans';
 
 const paisaSchema = z.number().int().min(0).max(MAX_PRICE_PAISA);
 export const calendarDateSchema = z.string().refine(isCalendarDate, 'Choose a date');
@@ -22,6 +22,7 @@ export const contractCreateSchema = z
     /** How the down payment was received; it gets a receipt like any payment. */
     downPaymentMethod: z.enum(PAYMENT_METHODS).default('cash'),
     markupPercent: markupPercentSchema,
+    markupBasis: markupBasisSchema.default('financed'),
     count: installmentCountSchema,
     frequency: z.enum(FREQUENCIES),
     firstDueDate: calendarDateSchema,
@@ -65,6 +66,7 @@ export interface Contract {
   cashPrice: number;
   downPayment: number;
   markupPercent: number;
+  markupBasis?: MarkupBasis;
   financedAmount: number;
   markupAmount: number;
   totalPayable: number;
