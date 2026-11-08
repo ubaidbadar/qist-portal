@@ -1,18 +1,23 @@
-import { KeyRound, LogOut } from 'lucide-react';
+import { Download, KeyRound, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CHANGE_PASSWORD_PATH, logOut, useMe } from '../../auth';
 import { Avatar, DropdownMenu } from '../../ui';
+import { useStore } from '../../utils/store';
+import { canInstallOnIos, installPortal, pwaStore } from '../../pwa/runtime';
 import { initialsOf, ROLE_LABELS } from '../../shared/labels';
 
 /** The signed-in person: change password and sign out. `compact` shows the avatar only. */
 export default function UserMenu({ compact = false }: { compact?: boolean }) {
   const { user } = useMe();
   const navigate = useNavigate();
+  const { install, installed } = useStore(pwaStore);
+  const showInstall = !installed && (install || canInstallOnIos());
 
   return (
     <DropdownMenu
       align="left"
       items={[
+        ...(showInstall ? [{ label: 'Install Qist app', icon: Download, onClick: () => void installPortal() }] : []),
         { label: 'Change password', icon: KeyRound, onClick: () => navigate(CHANGE_PASSWORD_PATH) },
         { label: 'Sign out', icon: LogOut, danger: true, onClick: () => void logOut() },
       ]}

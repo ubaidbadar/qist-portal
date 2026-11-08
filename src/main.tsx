@@ -8,6 +8,8 @@ import { initTheme } from './utils/theme';
 import { queryClient } from './app/query_client';
 import { restoreSession } from './auth';
 import App from './app';
+import { startPwa } from './pwa/runtime';
+import PwaStatus from './pwa/pwa_status';
 
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
@@ -20,6 +22,7 @@ if (!rootElement) {
   throw new Error('Root element not found');
 }
 
+startPwa();
 initTheme();
 void restoreSession();
 
@@ -29,6 +32,7 @@ createRoot(rootElement).render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <ToastContainer />
+          <PwaStatus />
           <App />
         </BrowserRouter>
       </QueryClientProvider>
