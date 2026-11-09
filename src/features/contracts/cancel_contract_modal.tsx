@@ -1,3 +1,4 @@
+import { CUSTOMERS_KEY } from '../customers/queries';
 import { Ban } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -19,7 +20,7 @@ export default function CancelContractModal({ contract, trigger }: { contract: C
           defaultValues={{ reason: '' }}
           onSubmit={async ({ data }) => {
             await apiPost(`/contracts/${contract._id}/cancel`, contractCancelSchema.parse(data));
-            await Promise.all([queryClient.invalidateQueries({ queryKey: [CONTRACTS_KEY] }), queryClient.invalidateQueries({ queryKey: [DEVICES_KEY] })]);
+            await Promise.all([queryClient.invalidateQueries({ queryKey: [CUSTOMERS_KEY] }), queryClient.invalidateQueries({ queryKey: [CONTRACTS_KEY] }), queryClient.invalidateQueries({ queryKey: [DEVICES_KEY] })]);
             toast.success('Contract cancelled; the phone is back in stock');
             close();
           }}

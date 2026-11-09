@@ -1,3 +1,4 @@
+import { CUSTOMERS_KEY } from '../customers/queries';
 import { Undo2 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { paymentVoidSchema, type Payment } from '@shop/shared';
@@ -19,7 +20,7 @@ export default function VoidPaymentModal({ payment }: { payment: Payment }) {
           defaultValues={{ reason: '' }}
           onSubmit={async ({ data }) => {
             await apiPost(`/payments/${payment._id}/void`, paymentVoidSchema.parse(data));
-            await Promise.all([queryClient.invalidateQueries({ queryKey: [CONTRACTS_KEY] }), queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] })]);
+            await Promise.all([queryClient.invalidateQueries({ queryKey: [CUSTOMERS_KEY] }), queryClient.invalidateQueries({ queryKey: [CONTRACTS_KEY] }), queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] })]);
             toast.success(`Receipt ${payment.receiptNumber} voided`);
             close();
           }}

@@ -21,7 +21,8 @@ export default function CustomerStep({ selected, onSelect }: CustomerStepProps) 
   const [q, setQ] = useState(selected?.fullName ?? '');
   const can = useCan();
   const search = useDebouncedValue(q.trim());
-  const list = usePagedList<Customer>(CUSTOMERS_KEY, '/customers', { q: search || undefined });
+  const showingSelected = Boolean(selected && search === selected.fullName);
+  const list = usePagedList<Customer>(CUSTOMERS_KEY, '/customers', { q: search || undefined }, { enabled: !showingSelected });
 
   const onCreated = (customer: Customer) => {
     onSelect(customer);
@@ -43,7 +44,7 @@ export default function CustomerStep({ selected, onSelect }: CustomerStepProps) 
         </div>
         {can('customers.write') && <CustomerDrawer onCreated={onCreated} />}
       </div>
-      <QueryView query={{ ...list, data: list.rows }} skeleton={<ListSkeleton rows={3} />}>
+      <QueryView query={{ ...list, data: showingSelected && selected ? [selected] : list.rows }} skeleton={<ListSkeleton rows={3} />}>
         {(customers) => customers.length === 0 ? (
           <EmptyState
             icon={UsersRound}

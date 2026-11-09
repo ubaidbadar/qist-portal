@@ -5,3 +5,8 @@ import { apiGet } from '../../config/api';
 export const orgQuery = queryOptions({ queryKey: ['org'], queryFn: () => apiGet<Org>('/org') });
 export const branchesQuery = queryOptions({ queryKey: ['branches'], queryFn: () => apiGet<Branch[]>('/branches') });
 export const membersQuery = queryOptions({ queryKey: ['members'], queryFn: () => apiGet<User[]>('/users') });
+
+export const teamQuery = queryOptions({
+  queryKey: ['members', 'overview'],
+  queryFn: () => apiGet<{ members: User[]; branches: Branch[] }>('/users/overview'),
+});

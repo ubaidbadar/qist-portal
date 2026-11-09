@@ -4,7 +4,7 @@ import { branchCreateSchema, type Branch } from '@shop/shared';
 import { Alert, Button, fieldError, Form, Input, Textarea, toast, Toggle } from '../../ui';
 import { apiPatch, apiPost } from '../../config/api';
 import { ME_KEY } from '../../auth';
-import { branchesQuery } from './queries';
+import { branchesQuery, teamQuery } from './queries';
 
 // `active` only matters when editing; the create endpoint ignores it.
 const branchFormSchema = branchCreateSchema.extend({ active: z.boolean() });
@@ -34,6 +34,7 @@ export default function BranchForm({ branch, onDone }: BranchFormProps) {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: branchesQuery.queryKey }),
           queryClient.invalidateQueries({ queryKey: ME_KEY }),
+          queryClient.invalidateQueries({ queryKey: teamQuery.queryKey }),
         ]);
         toast.success(branch ? 'Branch updated' : 'Branch added');
         onDone();

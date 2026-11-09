@@ -1,7 +1,5 @@
-import { Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from '../../ui';
-import PageSkeleton from '../../shared/page_skeleton';
 import MobileNav from './mobile_nav';
 import MobileTopBar from './mobile_top_bar';
 import Sidebar from './sidebar';
@@ -25,9 +23,7 @@ export default function AppLayout() {
           <VerifyEmailBanner />
           {/* Keyed by path so a crashed page recovers when the user navigates away. */}
           <ErrorBoundary key={pathname}>
-            <Suspense fallback={<PageSkeleton />}>
-              <Outlet />
-            </Suspense>
+            <Outlet />
           </ErrorBoundary>
         </main>
       </div>

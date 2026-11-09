@@ -30,7 +30,7 @@ If the answer isn't a subscription, timer, DOM measurement/focus, network reques
 Every effect cleans up after itself (remove the listener, clear the timer, abort the request).
 - **`useEffectEvent`** for a callback an effect needs to *call* without re-running when it changes (`useDismiss`, `useOverlay`, `useAnchoredPosition`, `AuthListener`). It must only be called from inside effects, never passed down or put in deps.
 - `useLayoutEffect` only for measuring/positioning before paint.
-- Data fetching: abort with `AbortController` in cleanup and ignore aborted results (`useGet`).
+- Data fetching: use the shared TanStack Query options and stable query keys; do not add component effects or a second data-fetching hook. Let matching observers share the in-flight request.
 
 ## Other conventions
 - `ref` is a prop; no `forwardRef`. `useId` for ids. Context is read with `use(Context)`, and rendered as `<Ctx value={…}>` (no `.Provider`).
@@ -47,8 +47,8 @@ Every effect cleans up after itself (remove the listener, clear the timer, abort
 | `useOptimistic` | a list/toggle should update before the server confirms | there's no mutation yet |
 | `use(promise)` + `<Suspense>` | the data is fetched by a *parent* and passed as a promise | plain `useGet` is enough |
 | `startTransition` / `useTransition` | a state update triggers expensive rendering you want interruptible | trivial updates |
-| `lazy` | there are multiple routes with heavy pages | single-route app (today) |
-Don't add one just because it's new. Extend `useGet`/`usePost`/`Form` first (see `base-data-forms-auth`).
+| `lazy` | only if explicitly requested for a future measured need | portal routes; the user requires static route imports |
+Don't add one just because it's new. Extend TanStack Query options, the shared API client and `Form` first (see `base-data-forms-auth`).
 
 ## Before you say it's done
 `yarn typecheck && yarn lint && yarn build`, then use the feature in the browser (`yarn dev`) for anything interactive.

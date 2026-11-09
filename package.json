@@ -9,8 +9,9 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "check": "bun run typecheck && bun run lint && bun run build && node --test tests/pwa*.test.mjs",
-    "test:pwa": "npm run build && node --test tests/pwa*.test.mjs"
+    "check": "bun run typecheck && bun run lint && bun run test:navigation && bun run build && node --test tests/pwa*.test.mjs",
+    "test:pwa": "npm run build && node --test tests/pwa*.test.mjs",
+    "test:navigation": "vitest run"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
@@ -31,6 +32,7 @@
     "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.4",
     "@tailwindcss/vite": "^4.3.2",
+    "@testing-library/react": "^16.3.3",
     "@types/babel__core": "^7.20.5",
     "@types/node": "^22.13.0",
     "@types/react": "^19.2.17",
@@ -39,9 +41,11 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^10.11.0",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^31.0.0",
     "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.0",
-    "vite": "^8.1.3"
+    "vite": "^8.1.3",
+    "vitest": "^5.1.0"
   }
 }

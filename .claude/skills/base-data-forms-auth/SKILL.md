@@ -28,7 +28,7 @@ const query = useQuery(branchesQuery);
 ```
 - `shared/query_view.tsx` renders the loading skeleton, the error state with retry, then your content. Use it for
   every data screen; add an empty state inside the content when the list can be empty.
-- Defaults (`app/query_client.ts`): 30 s stale time; 4xx answers are not retried.
+- Defaults (`app/query_client.ts`): 30 s stale time; no automatic retries, retry-on-mount, focus or reconnect refetches. Explicit Retry and mutation invalidation still work. Session metadata uses `staleTime: Infinity` and explicit `ME_KEY` invalidation.
 - After a change, invalidate what it affects: `queryClient.invalidateQueries({ queryKey: branchesQuery.queryKey })`,
   plus `ME_KEY` when the signed-in user's org or branches change.
 
@@ -89,3 +89,14 @@ const list = usePagedList<Customer>(CUSTOMERS_KEY, '/customers', { q: search || 
 ## Notifications: `toast` and `Alert`
 `toast.success|error|warning|info(message)` from `ui` for transient feedback. `Alert` for messages that belong
 on the page (form errors, banners). Mutation errors already toast; don't toast them again.
+
+
+## Page loading and request budget
+- Use one page-owned query and one layout-shaped skeleton for initial screen data. Keep the shell mounted. Never show a logo/spinner for route code and then a data skeleton on ordinary portal navigation.
+- Import the signed-in portal screens statically in `src/app.tsx`; do not add route lazy loading or a code-loading fallback. Reassess the production gzip size when changing this boundary.
+- Pass snapshot data to child panels; never fetch the same entity independently in each panel or start a child request only after the parent resolves.
+- Use `/dashboard`, `/customers/:id/overview`, `/payments/overview`, and `/users/overview` for their respective screens. Preserve tenant/branch permissions, bounded cursor pagination, voided receipt handling and full-day collection totals.
+- Keep related composite query keys under the entity prefix used by mutations. Invalidate customer overviews when contracts change, and team overviews when branches change.
+- Count one page-data request per cold visit/filter/explicit page operation. Fresh cached visits need zero. Authentication recovery, writes, user-triggered pagination/search/retry, and existing lock polling are separate operations; never claim the entire session makes one HTTP request.
+- Keep already rendered data visible during background refresh. On initial failure show one actionable error; on refresh failure keep existing content. Do not disable financial/lock refreshes just to reduce a counter.
+- Verify actual request counts with delayed responses, StrictMode, a warm revisit, failure + Retry, pagination, and branch/date/ID changes. Build/typecheck/lint alone do not verify this behavior.
