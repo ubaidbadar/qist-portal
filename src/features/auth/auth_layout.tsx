@@ -1,7 +1,5 @@
-import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import Brand from '../../app/layout/brand';
-import { Skeleton } from '../../ui';
 import AuthShowcase from './auth_showcase';
 
 /** Branded navy introduction beside a quiet, distraction-free form workspace. */
@@ -14,9 +12,7 @@ export default function AuthLayout() {
           <Brand />
         </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">
-          <Suspense fallback={<Skeleton className="h-96 w-full rounded-card" />}>
-            <Outlet />
-          </Suspense>
+          <Outlet />
         </div>
         <footer className="mx-auto w-full max-w-md text-center text-sm text-muted">
           <Link to="/privacy-policy" className="inline-flex min-h-12 items-center text-accent underline underline-offset-4">

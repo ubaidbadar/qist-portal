@@ -4,7 +4,7 @@ import { can, type Me, type Permission } from '@shop/shared';
 import { apiGet } from '../config/api';
 import { ME_KEY } from './session';
 
-export const meQuery = queryOptions({ queryKey: ME_KEY, queryFn: () => apiGet<Me>('/me') });
+export const meQuery = queryOptions({ queryKey: ME_KEY, staleTime: Infinity, queryFn: () => apiGet<Me>('/me') });
 
 /** Provided by RequireAuth, so every signed-in screen can read the user without null checks. */
 export const MeContext = createContext<Me | null>(null);

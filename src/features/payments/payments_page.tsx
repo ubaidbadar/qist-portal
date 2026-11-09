@@ -1,10 +1,9 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { Banknote, Receipt, Wallet } from 'lucide-react';
 import { todayInShops, type Collections, type Payment } from '@shop/shared';
 import { Badge, Card, EmptyState, Input, StatCard } from '../../ui';
 import { ALL_BRANCHES, useActiveBranch } from '../../auth';
-import usePagedList from '../../hooks/usePagedList';
 import DataTable, { type Column } from '../../shared/data_table';
 import ListSkeleton from '../../shared/list_skeleton';
 import SummarySkeleton from '../../shared/summary_skeleton';
@@ -13,7 +12,7 @@ import Page from '../../shared/page';
 import QueryView from '../../shared/query_view';
 import { METHOD_LABELS } from './labels';
 import PaymentLauncher from './payment_launcher';
-import { collectionsQuery, PAYMENTS_KEY } from './queries';
+import { paymentsOverviewQuery } from './queries';
 
 const COLUMNS: Column<Payment>[] = [
   { header: 'Receipt', cell: (p) => <Link to={`/payments/${p._id}/receipt`} className="font-medium text-ink hover:underline">{p.receiptNumber}</Link> },
@@ -31,8 +30,7 @@ export default function PaymentsPage() {
   const [params, setParams] = useSearchParams();
   const date = params.get('date') ?? todayInShops();
   const branch = branchId === ALL_BRANCHES ? undefined : branchId;
-  const summary = useQuery(collectionsQuery(date, branch));
-  const list = usePagedList<Payment>(PAYMENTS_KEY, '/payments', { date, branchId: branch });
+  const query = useInfiniteQuery(paymentsOverviewQuery(date, branch));
 
   return (
     <Page title="Payments" description="Record installments, review collections, and open receipts." actions={<PaymentLauncher />}>
@@ -46,21 +44,26 @@ export default function PaymentsPage() {
             onChange={(event) => setParams(event.target.value ? { date: event.target.value } : {}, { replace: true })}
           />
         </div>
-        <QueryView query={summary} skeleton={<div role="status" aria-label="Loading collection totals"><SummarySkeleton className="grid gap-4 md:grid-cols-3" /></div>}>
-          {(collections) => <CollectionsSummary collections={collections} />}
-        </QueryView>
-        <QueryView query={{ ...list, data: list.rows }} skeleton={<ListSkeleton rows={4} />}>
-          {(rows) => (
+        <QueryView query={query} skeleton={
+          <div className="space-y-6" role="status" aria-label="Loading payments">
+            <SummarySkeleton className="grid gap-4 md:grid-cols-3" />
+            <ListSkeleton rows={4} />
+          </div>
+        }>
+          {(loaded) => (
+            <div className="space-y-6">
+              <CollectionsSummary collections={loaded.pages[0].collections} />
             <DataTable
-              rows={rows}
+              rows={loaded.pages.flatMap((page) => page.items)}
               columns={COLUMNS}
               rowKey={(p) => p._id}
               rowHref={(p) => `/payments/${p._id}/receipt`}
-              hasMore={list.hasNextPage}
-              loadingMore={list.isFetchingNextPage}
-              onLoadMore={list.loadMore}
+              hasMore={query.hasNextPage}
+              loadingMore={query.isFetchingNextPage}
+              onLoadMore={() => void query.fetchNextPage()}
               empty={<EmptyState icon={Receipt} title="No payments this day" description="Use Record payment above to add a payment." />}
             />
+            </div>
           )}
         </QueryView>
       </div>

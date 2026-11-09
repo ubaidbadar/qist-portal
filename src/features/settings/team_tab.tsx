@@ -5,11 +5,11 @@ import QueryView from '../../shared/query_view';
 import SectionHeader from '../../shared/section_header';
 import MemberDrawer from './member_drawer';
 import MemberRow from './member_row';
-import { branchesQuery, membersQuery } from './queries';
+import { teamQuery } from './queries';
 
 export default function TeamTab() {
-  const members = useQuery(membersQuery);
-  const { data: branches = [] } = useQuery(branchesQuery);
+  const query = useQuery(teamQuery);
+  const branches = query.data?.branches ?? [];
   const activeBranches = branches.filter((branch) => branch.active);
 
   return (
@@ -19,11 +19,11 @@ export default function TeamTab() {
         description="Managers and staff work only in the branches you give them."
         action={<MemberDrawer branches={activeBranches} />}
       />
-      <QueryView query={members} skeleton={<ListSkeleton rows={3} />}>
-        {(list) => (
+      <QueryView query={query} skeleton={<ListSkeleton rows={3} />}>
+        {(loaded) => (
           <Card padding="none">
             <ul className="divide-y divide-border">
-              {list.map((member) => (
+              {loaded.members.map((member) => (
                 <MemberRow key={member._id} member={member} branches={branches} activeBranches={activeBranches} />
               ))}
             </ul>

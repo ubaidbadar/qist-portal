@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatCnic, formatMobile, type Customer } from '@shop/shared';
 import { Card, Skeleton } from '../../ui';
 import { useCan } from '../../auth';
@@ -10,14 +10,14 @@ import { formatDate } from '../../utils/dates';
 import CustomerDrawer from './customer_drawer';
 import CustomerContracts from '../contracts/customer_contracts';
 import DeleteCustomerAction from './delete_customer_action';
-import { customerQuery } from './queries';
+import { customerOverviewQuery } from './queries';
 
 /** One customer's profile, guarantors and contracts at every branch. */
 export default function CustomerPage() {
   const { customerId = '' } = useParams();
-  const query = useQuery(customerQuery(customerId));
+  const query = useInfiniteQuery(customerOverviewQuery(customerId));
   const can = useCan();
-  const customer = query.data;
+  const customer = query.data?.pages[0].customer;
 
   return (
     <Page
@@ -36,10 +36,11 @@ export default function CustomerPage() {
         {(loaded) => (
           <div className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-3">
-              <ProfileCard customer={loaded} />
-              <GuarantorsCard customer={loaded} />
+              <ProfileCard customer={loaded.pages[0].customer} />
+              <GuarantorsCard customer={loaded.pages[0].customer} />
             </div>
-            <CustomerContracts customerId={loaded._id} />
+            <CustomerContracts customerId={customerId} contracts={loaded.pages.flatMap((page) => page.contracts.items)}
+              hasMore={query.hasNextPage} loadingMore={query.isFetchingNextPage} onLoadMore={() => void query.fetchNextPage()} />
           </div>
         )}
       </QueryView>

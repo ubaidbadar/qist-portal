@@ -66,3 +66,10 @@ export interface Customer {
   createdAt: string;
   updatedAt: string;
 }
+
+
+/** One profile screen, including its cursor-paged contract history. */
+export interface CustomerOverview {
+  customer: Customer;
+  contracts: import('./api').Page<import('./contracts').Contract>;
+}

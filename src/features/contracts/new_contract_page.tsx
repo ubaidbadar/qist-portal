@@ -5,6 +5,8 @@ import { type Customer, type Device } from '@shop/shared';
 import { Button, Card } from '../../ui';
 import { ALL_BRANCHES, useActiveBranch } from '../../auth';
 import Page from '../../shared/page';
+import QueryView from '../../shared/query_view';
+import ListSkeleton from '../../shared/list_skeleton';
 import { customerQuery } from '../customers/queries';
 import CustomerStep from './customer_step';
 import DeviceStep from './device_step';
@@ -37,6 +39,10 @@ export default function NewContractPage() {
   const branchName = branches.find((branch) => branch._id === branchId)?.name ?? null;
   const canContinue = draft.step === 0 ? Boolean(customer) : Boolean(branchId && draft.device?.branchId === branchId);
   const copy = STEP_COPY[draft.step];
+
+  if (presetId && !preset.data) {
+    return <Page title="New contract"><QueryView query={preset} skeleton={<ListSkeleton rows={3} />}>{() => null}</QueryView></Page>;
+  }
 
   return (
     <Page title="New contract" description="Choose a customer and a phone, then review the installment terms." breadcrumbs={[{ label: 'Contracts', to: '/contracts' }, { label: 'New contract' }]}>

@@ -1,3 +1,4 @@
+import { CUSTOMERS_KEY } from '../customers/queries';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FREQUENCIES, type ContractWithSchedule, type Customer, type Device } from '@shop/shared';
@@ -36,7 +37,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
       onSubmit={async ({ data }) => {
         const terms = toContractTerms(termsFormSchema.parse(data));
         const contract = await apiPost<ContractWithSchedule>('/contracts', { ...terms, branchId, customerId: customer._id, deviceId: device._id });
-        await Promise.all([queryClient.invalidateQueries({ queryKey: [CONTRACTS_KEY] }), queryClient.invalidateQueries({ queryKey: [DEVICES_KEY] })]);
+        await Promise.all([queryClient.invalidateQueries({ queryKey: [CUSTOMERS_KEY] }), queryClient.invalidateQueries({ queryKey: [CONTRACTS_KEY] }), queryClient.invalidateQueries({ queryKey: [DEVICES_KEY] })]);
         toast.success('Contract created');
         navigate(`/contracts/${contract._id}`, { replace: true });
       }}

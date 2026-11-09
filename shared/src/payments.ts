@@ -69,3 +69,11 @@ export interface Collections {
   byMethod: { method: PaymentMethod; total: number; count: number }[];
   byStaff: { userId: string; name: string; total: number; count: number }[];
 }
+
+
+/** Daily totals and receipt rows for the same date and branch scope. */
+export interface PaymentsOverview {
+  items: Payment[];
+  nextCursor: string | null;
+  collections: Collections;
+}
