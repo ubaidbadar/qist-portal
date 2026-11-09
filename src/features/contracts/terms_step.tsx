@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FREQUENCIES, type ContractWithSchedule, type Customer, type Device } from '@shop/shared';
-import { Alert, Button, fieldError, Form, Input, Select, toast } from '../../ui';
+import { Alert, Button, fieldError, Form, Input, Radio, Select, toast } from '../../ui';
 import { apiPost } from '../../config/api';
 import { useMe } from '../../auth';
 import { MARKUP_BASIS_OPTIONS } from './markup_basis';
@@ -62,7 +62,25 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                 <Input label="Cash price (Rs)" type="number" min={0} {...register('cashRupees', { valueAsNumber: true })} error={fieldError(errors, 'cashRupees')} />
                 <Input label="Down payment (Rs)" type="number" min={0} {...register('downRupees', { valueAsNumber: true })} error={fieldError(errors, 'downRupees')} />
                 <Select label="Down payment paid by" options={METHOD_OPTIONS} {...register('downPaymentMethod')} />
-                <Select label="Calculate markup on" options={MARKUP_BASIS_OPTIONS} {...register('markupBasis')} error={fieldError(errors, 'markupBasis')} />
+                <fieldset className="space-y-2 sm:col-span-2">
+                  <legend className="text-sm font-medium text-ink">Calculate markup on</legend>
+                  <p className="text-xs text-muted" id="contract-markup-basis-help">
+                    The down payment always reduces the installment principal. Choose whether markup is calculated on the remaining balance or the full cash price.
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {MARKUP_BASIS_OPTIONS.map((option) => (
+                      <Radio
+                        key={option.value}
+                        label={option.label}
+                        value={option.value}
+                        {...register('markupBasis')}
+                        aria-describedby="contract-markup-basis-help"
+                        className="rounded-control border border-border bg-surface px-3 py-3 transition-colors hover:border-accent/50 has-checked:border-accent has-checked:bg-canvas"
+                      />
+                    ))}
+                  </div>
+                  {fieldError(errors, 'markupBasis') && <p className="text-sm text-danger-600" role="alert">{fieldError(errors, 'markupBasis')}</p>}
+                </fieldset>
                 <Input label="Markup %" type="number" step="0.01" min={0} {...register('markupPercent', { valueAsNumber: true })} error={fieldError(errors, 'markupPercent')} />
                 <Input label="Installments" type="number" min={1} {...register('count', { valueAsNumber: true })} error={fieldError(errors, 'count')} />
                 <Select label="Paid" options={FREQUENCY_OPTIONS} {...register('frequency')} error={fieldError(errors, 'frequency')} />
