@@ -41,6 +41,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
         navigate(`/contracts/${contract._id}`, { replace: true });
       }}
       component={({ register, errors, control, setValue, loading, error }) => {
+        const markupBasisError = fieldError(errors, 'markupBasis');
         return (
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-4">
@@ -79,7 +80,7 @@ export default function TermsStep({ branchId, customer, device }: TermsStepProps
                       />
                     ))}
                   </div>
-                  {fieldError(errors, 'markupBasis') && <p className="text-sm text-danger-600" role="alert">{fieldError(errors, 'markupBasis')}</p>}
+                  {markupBasisError && <p className="text-sm text-danger-600" role="alert">{markupBasisError}</p>}
                 </fieldset>
                 <Input label="Markup %" type="number" step="0.01" min={0} {...register('markupPercent', { valueAsNumber: true })} error={fieldError(errors, 'markupPercent')} />
                 <Input label="Installments" type="number" min={1} {...register('count', { valueAsNumber: true })} error={fieldError(errors, 'count')} />
