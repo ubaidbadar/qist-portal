@@ -7,34 +7,38 @@ interface SaleProgressProps {
   onBack: (step: number) => void;
 }
 
-/** Completed steps are navigable; future steps remain gated by selection. */
+/** Connected steps keep labels readable on narrow screens; only completed steps navigate. */
 export default function SaleProgress({ current, onBack }: SaleProgressProps) {
   return (
-    <ol aria-label="Contract setup progress" className="grid grid-cols-3 gap-2 sm:gap-3">
+    <ol aria-label="Contract setup progress" className="grid grid-cols-3">
       {STEPS.map((label, index) => {
         const active = current === index;
         const completed = index < current;
         return (
-          <li key={label}>
+          <li
+            key={label}
+            className={`relative min-w-0 before:absolute before:start-1/2 before:top-5 before:h-0.5 before:w-full before:content-[''] last:before:hidden ${
+              completed ? 'before:bg-primary' : 'before:bg-border'
+            }`}
+          >
             <button
               type="button"
               disabled={!completed}
               aria-current={active ? 'step' : undefined}
+              aria-label={completed ? `${label}, completed. Go back` : label}
               onClick={() => onBack(index)}
-              className={`flex min-h-15 w-full items-center gap-2 rounded-card border px-3 py-3 text-start text-sm transition-colors sm:gap-3 sm:px-4 ${
-                active
-                  ? 'border-accent bg-accent/10 font-semibold text-ink'
-                  : completed
-                    ? 'cursor-pointer border-success-200 bg-surface text-ink hover:bg-success-50'
-                    : 'border-border bg-surface font-medium text-muted'
+              className={`relative flex min-h-20 w-full min-w-0 flex-col items-center gap-2 px-1 pb-1 text-center text-xs sm:text-sm ${
+                active ? 'font-semibold text-ink' : completed ? 'cursor-pointer font-medium text-body' : 'font-medium text-muted'
               }`}
             >
-              <span className={`grid size-7 shrink-0 place-items-center rounded-pill text-xs font-bold ${
-                active ? 'bg-accent text-on-accent' : completed ? 'bg-success-100 text-success-800' : 'bg-border text-muted'
+              <span className={`grid size-10 shrink-0 place-items-center rounded-full border-2 text-sm font-semibold transition-colors ${
+                active || completed
+                  ? 'border-primary bg-primary text-on-primary'
+                  : 'border-border bg-canvas text-muted'
               }`}>
-                {completed ? <Check size={15} aria-hidden="true" /> : index + 1}
+                {completed ? <Check size={18} strokeWidth={2.5} aria-hidden="true" /> : index + 1}
               </span>
-              <span className="leading-tight">{label}</span>
+              <span className="max-w-full text-balance leading-5">{label}</span>
             </button>
           </li>
         );
