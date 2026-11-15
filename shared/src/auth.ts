@@ -42,7 +42,7 @@ export const orgLogoInputSchema = z.object({
 export type OrgLogoInput = z.infer<typeof orgLogoInputSchema>;
 
 /** The one-time retailer setup after Google has verified the account. */
-export const googleOnboardingSchema = z.object({
+const googleOnboardingFieldsSchema = z.object({
   fullName: nameSchema,
   shopName: nameSchema,
   phone: phoneSchema.refine((value) => value.length > 0, 'Enter your shop contact number'),
@@ -50,7 +50,19 @@ export const googleOnboardingSchema = z.object({
   password: passwordSchema,
   confirmPassword: z.string().min(1, 'Confirm your password').max(PASSWORD_MAX_LENGTH),
   logo: orgLogoInputSchema.optional(),
-}).refine((value) => value.password === value.confirmPassword, {
+});
+
+/** Validate only the visible group before moving to the next onboarding step. */
+export const googleOnboardingStepSchemas = [
+  googleOnboardingFieldsSchema.pick({ shopName: true, fullName: true }),
+  googleOnboardingFieldsSchema.pick({ phone: true, address: true }),
+  googleOnboardingFieldsSchema.pick({ password: true, confirmPassword: true }).refine(
+    (value) => value.password === value.confirmPassword,
+    { path: ['confirmPassword'], message: 'Passwords do not match' },
+  ),
+] as const;
+
+export const googleOnboardingSchema = googleOnboardingFieldsSchema.refine((value) => value.password === value.confirmPassword, {
   path: ['confirmPassword'],
   message: 'Passwords do not match',
 });
