@@ -74,9 +74,11 @@ export default function GoogleSignInButton({ onCredential, busy = false }: Googl
   const [loadError, setLoadError] = useState('');
   const configQuery = useQuery(googleAuthConfigQuery);
   const config = configQuery.data;
+  const clientId = config?.clientId;
+  const enabled = config?.enabled;
 
   useEffect(() => {
-    if (!config?.enabled || !config.clientId || !containerRef.current) return;
+    if (!enabled || !clientId || !containerRef.current) return;
 
     let disposed = false;
     let observer: ResizeObserver | undefined;
@@ -86,12 +88,12 @@ export default function GoogleSignInButton({ onCredential, busy = false }: Googl
       .then(() => {
         if (disposed || !containerRef.current || !window.google) return;
 
-        if (initializedClientId !== config.clientId) {
+        if (initializedClientId !== clientId) {
           window.google.accounts.id.initialize({
-            client_id: config.clientId,
+            client_id: clientId,
             callback: dispatchGoogleCredential,
           });
-          initializedClientId = config.clientId;
+          initializedClientId = clientId;
         }
 
         const render = () => {
@@ -124,13 +126,13 @@ export default function GoogleSignInButton({ onCredential, busy = false }: Googl
       observer?.disconnect();
       if (activeCredentialHandler === onCredential) activeCredentialHandler = null;
     };
-  }, [config?.clientId, config?.enabled, onCredential]);
+  }, [clientId, enabled, onCredential]);
 
   if (configQuery.isPending) return <Skeleton className="h-11 w-full rounded-control" />;
   if (configQuery.isError) {
     return <Alert tone="warning">Google sign-in is temporarily unavailable. You can still use email and password.</Alert>;
   }
-  if (!config?.enabled || !config.clientId) {
+  if (!enabled || !clientId) {
     return <Alert tone="info">Google sign-in is not configured yet. You can still use email and password.</Alert>;
   }
   if (loadError) return <Alert tone="warning">{loadError}</Alert>;
