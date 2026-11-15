@@ -57,6 +57,11 @@ export const googleAuthSchema = z.object({
 });
 export type GoogleAuthInput = z.infer<typeof googleAuthSchema>;
 
+/** Explicit Google account linking, only for authenticated Qist users. */
+export const googleLinkSchema = googleAuthSchema.pick({ credential: true });
+/** An explicit null removes the logo. */
+export const orgLogoUpdateSchema = z.object({ logo: orgLogoInputSchema.nullable() });
+
 export interface GoogleAuthConfig {
   enabled: boolean;
   clientId: string | null;

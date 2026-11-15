@@ -37,6 +37,8 @@ export interface User {
   active: boolean;
   /** True when this Qist account was explicitly connected to a Google identity. */
   googleLinked?: boolean;
+  /** False until a Google-created user sets a password using an email reset link. */
+  passwordEnabled?: boolean;
   emailVerifiedAt: string | null;
   mustChangePassword: boolean;
   lastLoginAt: string | null;
