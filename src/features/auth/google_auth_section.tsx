@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { GoogleAuthResponse } from '@shop/shared';
 import { Alert } from '../../ui';
@@ -15,10 +15,13 @@ interface GoogleAuthSectionProps {
 /** Shared Google sign-in/sign-up flow. New accounts continue to the short shop onboarding screen. */
 export default function GoogleAuthSection({ redirectTo }: GoogleAuthSectionProps) {
   const navigate = useNavigate();
+  const busyRef = useRef(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
   const handleCredential = async (credential: string) => {
+    if (busyRef.current) return;
+    busyRef.current = true;
     setBusy(true);
     setError('');
     try {
@@ -36,6 +39,7 @@ export default function GoogleAuthSection({ redirectTo }: GoogleAuthSectionProps
     } catch (cause) {
       setError(getAxiosMessage(cause));
     } finally {
+      busyRef.current = false;
       setBusy(false);
     }
   };
