@@ -10,7 +10,7 @@ export default function MobileTopBar() {
   return (
     <div className="flex items-center gap-2 border-b border-border bg-surface px-4 py-2 lg:hidden">
       <Brand collapsed />
-      <BranchSwitcher className="min-w-0 flex-1" />
+      <BranchSwitcher compact className="min-w-0 flex-1" />
       <div className="flex shrink-0 items-center gap-1">
         <CommandPalette component={({ open }) => <IconButton icon={Search} aria-label="Search" onClick={open} />} />
         <ThemeToggle />

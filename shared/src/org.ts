@@ -12,6 +12,8 @@ export interface Org {
   _id: string;
   name: string;
   status: OrgStatus;
+  /** Null until the retailer chooses an optional shop logo. */
+  logoUpdatedAt?: string | null;
   paymentMethods?: RetailerPaymentMethod[];
   createdAt: string;
   updatedAt: string;

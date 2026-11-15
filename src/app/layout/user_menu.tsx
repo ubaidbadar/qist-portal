@@ -1,7 +1,9 @@
-import { Download, KeyRound, LogOut } from 'lucide-react';
+import { Download, KeyRound, Link2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { CHANGE_PASSWORD_PATH, logOut, useMe } from '../../auth';
-import { Avatar, DropdownMenu } from '../../ui';
+import { Avatar, DropdownMenu, toast } from '../../ui';
+import { apiPost } from '../../config/api';
 import { useStore } from '../../utils/store';
 import { canInstallOnIos, installPortal, pwaStore } from '../../pwa/runtime';
 import { initialsOf, ROLE_LABELS } from '../../shared/labels';
@@ -12,13 +14,20 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
   const navigate = useNavigate();
   const { install, installed } = useStore(pwaStore);
   const showInstall = !installed && (install || canInstallOnIos());
+  const passwordLink = useMutation({
+    mutationFn: () => apiPost('/auth/forgot-password', { email: user.email }, { skipAuthRefresh: true }),
+    onSuccess: () => toast.success(`Password setup instructions sent to ${user.email}`),
+  });
 
   return (
     <DropdownMenu
       align="left"
       items={[
         ...(showInstall ? [{ label: 'Install Qist app', icon: Download, onClick: () => void installPortal() }] : []),
-        { label: 'Change password', icon: KeyRound, onClick: () => navigate(CHANGE_PASSWORD_PATH) },
+        ...(!user.googleLinked ? [{ label: 'Connect Google', icon: Link2, onClick: () => navigate('/connect-google') }] : []),
+        ...(user.passwordEnabled === false
+          ? [{ label: 'Set password by email', icon: KeyRound, disabled: passwordLink.isPending, onClick: () => passwordLink.mutate() }]
+          : [{ label: 'Change password', icon: KeyRound, onClick: () => navigate(CHANGE_PASSWORD_PATH) }]),
         { label: 'Sign out', icon: LogOut, danger: true, onClick: () => void logOut() },
       ]}
       trigger={

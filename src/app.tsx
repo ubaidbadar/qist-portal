@@ -7,6 +7,8 @@ import AuthLayout from './features/auth/auth_layout';
 import CustomerPrivacyPolicyPage from './features/legal/customer_privacy_policy_page';
 import LoginPage from './features/auth/login_page';
 import SignupPage from './features/auth/signup_page';
+import GoogleOnboardingPage from './features/auth/google_onboarding_page';
+import GoogleConnectPage from './features/auth/google_connect_page';
 import ForgotPasswordPage from './features/auth/forgot_password_page';
 import ResetPasswordPage from './features/auth/reset_password_page';
 import VerifyEmailPage from './features/auth/verify_email_page';
@@ -42,6 +44,7 @@ export default function App() {
         <Route element={<GuestOnly />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/onboarding" element={<GoogleOnboardingPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Route>
         <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -51,6 +54,7 @@ export default function App() {
       <Route element={<RequireAuth />}>
         <Route element={<AuthLayout />}>
           <Route path="/change-password" element={<ChangePasswordPage />} />
+          <Route path="/connect-google" element={<GoogleConnectPage />} />
         </Route>
         <Route
           path="/payments/:paymentId/receipt"

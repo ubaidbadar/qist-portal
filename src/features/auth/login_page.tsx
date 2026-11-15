@@ -4,6 +4,7 @@ import { Alert, Button, fieldError, Form, Input, PasswordInput } from '../../ui'
 import { apiPost } from '../../config/api';
 import { signIn } from '../../auth';
 import AuthCard, { authLinkClasses } from './auth_card';
+import GoogleAuthSection from './google_auth_section';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -12,9 +13,17 @@ export default function LoginPage() {
   return (
     <AuthCard
       title="Welcome back"
-      subtitle="Sign in to manage your customers and installments."
+      subtitle="Sign in to manage your shop and installments."
       footer={<>New to Qist? <Link className={authLinkClasses} to="/signup">Create an account</Link></>}
     >
+      <GoogleAuthSection redirectTo={from} />
+
+      <div className="my-6 flex items-center gap-3 text-xs font-medium text-muted">
+        <span className="h-px flex-1 bg-border" />
+        <span>OR SIGN IN WITH EMAIL</span>
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
       <Form
         schema={loginSchema}
         defaultValues={{ email: '', password: '' }}
@@ -24,7 +33,7 @@ export default function LoginPage() {
         }}
         component={({ register, errors, loading, error }) => (
           <div className="space-y-5">
-            <Input label="Email" type="email" autoComplete="email" autoFocus {...register('email')} error={fieldError(errors, 'email')} />
+            <Input label="Email" type="email" autoComplete="email" {...register('email')} error={fieldError(errors, 'email')} />
             <div>
               <PasswordInput label="Password" autoComplete="current-password" {...register('password')} error={fieldError(errors, 'password')} />
               <div className="mt-1 text-end">
@@ -32,7 +41,7 @@ export default function LoginPage() {
               </div>
             </div>
             {error && <Alert tone="danger">{error}</Alert>}
-            <Button type="submit" loading={loading} className="w-full">Sign in</Button>
+            <Button type="submit" loading={loading} className="w-full">Sign in with email</Button>
           </div>
         )}
       />
