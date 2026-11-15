@@ -51,7 +51,7 @@ beforeEach(() => {
     return { data: { data: responses[config.url!] }, status: 200, statusText: 'OK', headers: {}, config };
   };
 });
-afterEach(() => { cleanup(); signOut(); });
+afterEach(() => { cleanup(); signOut(); window.google = undefined; responses['/auth/google/config'] = { enabled: false, clientId: null }; });
 
 describe('portal navigation request budget', () => {
   it.each(['/', '/customers', '/inventory', '/contracts', '/payments', `/customers/${customerId}`, '/settings?tab=team', '/contracts/new', `/contracts/new?customerId=${customerId}`])('loads %s with one data request under StrictMode', async (path) => {
@@ -71,6 +71,24 @@ describe('portal navigation request budget', () => {
     expect(screen.queryByText(/create an account/i)).toBeNull();
     expect(screen.queryByLabelText(/phone/i)).toBeNull();
     expect(screen.getByLabelText('Email address')).toBeTruthy();
+  });
+
+  it('starts Google One Tap from the footer text action', async () => {
+    signOut();
+    queryClient.removeQueries({ queryKey: ['auth', 'google-config'] });
+    const initialize = vi.fn();
+    const renderButton = vi.fn();
+    const prompt = vi.fn();
+    window.google = { accounts: { id: { initialize, renderButton, prompt } } };
+    responses['/auth/google/config'] = { enabled: true, clientId: 'test-client-id' };
+
+    mount('/login');
+    await waitFor(() => expect(requests).toContain('/auth/google/config'));
+    await release();
+    await waitFor(() => expect(renderButton).toHaveBeenCalled());
+
+    fireEvent.click(screen.getByRole('button', { name: 'Continue with Google' }));
+    expect(prompt).toHaveBeenCalledOnce();
   });
 
   it('keeps the shell mounted and uses zero requests on a fresh cached revisit', async () => {

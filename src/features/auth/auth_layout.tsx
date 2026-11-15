@@ -11,7 +11,7 @@ export default function AuthLayout() {
         <div className="lg:hidden">
           <Brand />
         </div>
-        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">
+        <div className="mx-auto flex w-full max-w-auth flex-1 flex-col justify-center py-10">
           <Outlet />
         </div>
         <footer className="mx-auto w-full max-w-md text-center text-sm text-muted">

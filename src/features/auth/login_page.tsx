@@ -5,6 +5,7 @@ import { apiPost } from '../../config/api';
 import { signIn } from '../../auth';
 import AuthCard, { authLinkClasses } from './auth_card';
 import GoogleAuthSection from './google_auth_section';
+import { promptGoogleSignIn } from './google_sign_in_button';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -14,7 +15,24 @@ export default function LoginPage() {
     <AuthCard
       title="Sign in to Qist"
       subtitle="Use Google or your email and password to access your shop."
-      footer={<>New to Qist? Continue with Google to set up your shop.</>}
+      footer={
+        <>
+          New to Qist?{' '}
+          <Button
+            variant="link"
+            size="md"
+            className="p-0 align-baseline"
+            onClick={() => {
+              if (!promptGoogleSignIn()) {
+                document.getElementById('google-sign-in')?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+              }
+            }}
+          >
+            Continue with Google
+          </Button>
+          {' '}to set up your shop.
+        </>
+      }
     >
       <GoogleAuthSection redirectTo={from} />
 
