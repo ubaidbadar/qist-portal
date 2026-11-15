@@ -12,9 +12,9 @@ export default function LoginPage() {
 
   return (
     <AuthCard
-      title="Welcome back"
-      subtitle="Sign in to manage your shop and installments."
-      footer={<>New to Qist? <Link className={authLinkClasses} to="/signup">Create an account</Link></>}
+      title="Sign in to Qist"
+      subtitle="Use Google or your email and password to access your shop."
+      footer={<>New to Qist? Continue with Google to set up your shop.</>}
     >
       <GoogleAuthSection redirectTo={from} />
 
@@ -33,7 +33,7 @@ export default function LoginPage() {
         }}
         component={({ register, errors, loading, error }) => (
           <div className="space-y-5">
-            <Input label="Email" type="email" autoComplete="email" {...register('email')} error={fieldError(errors, 'email')} />
+            <Input label="Email address" type="email" autoComplete="username" {...register('email')} error={fieldError(errors, 'email')} />
             <div>
               <PasswordInput label="Password" autoComplete="current-password" {...register('password')} error={fieldError(errors, 'password')} />
               <div className="mt-1 text-end">
@@ -41,7 +41,7 @@ export default function LoginPage() {
               </div>
             </div>
             {error && <Alert tone="danger">{error}</Alert>}
-            <Button type="submit" loading={loading} className="w-full">Sign in with email</Button>
+            <Button type="submit" loading={loading} className="w-full">Sign in</Button>
           </div>
         )}
       />

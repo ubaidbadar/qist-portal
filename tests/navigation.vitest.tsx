@@ -23,6 +23,7 @@ const responses: Record<string, unknown> = {
   '/payments/overview': { items: [], nextCursor: null, collections },
   [`/customers/${customerId}/overview`]: { customer, contracts: { items: [], nextCursor: null } },
   '/users/overview': { members: [], branches: [] },
+  '/auth/google/config': { enabled: false, clientId: null },
 };
 let requests: string[];
 let pending: (() => void)[];
@@ -63,6 +64,15 @@ describe('portal navigation request budget', () => {
     expect(requests).toHaveLength(1);
     expect(screen.queryByRole('alert')).toBeNull();
   });
+  it('redirects the legacy signup URL to the single sign-in screen', async () => {
+    signOut();
+    mount('/signup');
+    expect(await screen.findByRole('heading', { name: 'Sign in to Qist' })).toBeTruthy();
+    expect(screen.queryByText(/create an account/i)).toBeNull();
+    expect(screen.queryByLabelText(/phone/i)).toBeNull();
+    expect(screen.getByLabelText('Email address')).toBeTruthy();
+  });
+
   it('keeps the shell mounted and uses zero requests on a fresh cached revisit', async () => {
     const app = mount('/'); await release();
     await waitFor(() => expect(queryClient.isFetching()).toBe(0));

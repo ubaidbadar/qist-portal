@@ -24,7 +24,6 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
-
 export const forgotPasswordSchema = z.object({ email: emailSchema });
 export const resetPasswordSchema = z.object({ token: tokenSchema, password: passwordSchema });
 export const verifyEmailSchema = z.object({ token: tokenSchema });
@@ -42,11 +41,18 @@ export const orgLogoInputSchema = z.object({
 });
 export type OrgLogoInput = z.infer<typeof orgLogoInputSchema>;
 
+/** The one-time retailer setup after Google has verified the account. */
 export const googleOnboardingSchema = z.object({
+  fullName: nameSchema,
   shopName: nameSchema,
-  phone: phoneSchema.refine((value) => value.length > 0, 'Enter your shop phone number'),
+  phone: phoneSchema.refine((value) => value.length > 0, 'Enter your shop contact number'),
   address: textSchema(200).min(5, 'Enter your shop address'),
+  password: passwordSchema,
+  confirmPassword: z.string().min(1, 'Confirm your password').max(PASSWORD_MAX_LENGTH),
   logo: orgLogoInputSchema.optional(),
+}).refine((value) => value.password === value.confirmPassword, {
+  path: ['confirmPassword'],
+  message: 'Passwords do not match',
 });
 export type GoogleOnboardingInput = z.infer<typeof googleOnboardingSchema>;
 
@@ -57,9 +63,9 @@ export const googleAuthSchema = z.object({
 });
 export type GoogleAuthInput = z.infer<typeof googleAuthSchema>;
 
-/** Explicit Google account linking, only for authenticated Qist users. */
+/** Existing users must authenticate to Qist before they link a Google identity. */
 export const googleLinkSchema = googleAuthSchema.pick({ credential: true });
-/** An explicit null removes the logo. */
+/** Explicit null deletes the logo; omission is never treated as a destructive request. */
 export const orgLogoUpdateSchema = z.object({ logo: orgLogoInputSchema.nullable() });
 
 export interface GoogleAuthConfig {
@@ -86,7 +92,7 @@ export interface Me {
   branches: Branch[];
 }
 
-/** Returned by signup, login, refresh and change-password. */
+/** Returned by login, refresh and password changes. */
 export interface Session extends Me {
   accessToken: string;
   refreshToken?: string;
