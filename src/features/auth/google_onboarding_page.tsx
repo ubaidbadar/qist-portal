@@ -13,6 +13,7 @@ export default function GoogleOnboardingPage() {
   const pending = getPendingGoogleAuth();
   const [logo, setLogo] = useState<PreparedOrgLogo | null>(null);
   const [logoError, setLogoError] = useState('');
+  const [logoPreparing, setLogoPreparing] = useState(false);
 
   const handleLogoChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0];
@@ -20,11 +21,14 @@ export default function GoogleOnboardingPage() {
     if (!file) return;
 
     setLogoError('');
+    setLogoPreparing(true);
     try {
       setLogo(await prepareOrgLogo(file));
     } catch (error) {
       setLogo(null);
       setLogoError(error instanceof Error ? error.message : 'The logo could not be prepared.');
+    } finally {
+      setLogoPreparing(false);
     }
   };
 
@@ -104,6 +108,7 @@ export default function GoogleOnboardingPage() {
                 label="Shop logo (optional)"
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
+                disabled={logoPreparing}
                 onChange={handleLogoChange}
               />
               {logo && (
@@ -118,12 +123,13 @@ export default function GoogleOnboardingPage() {
                   </button>
                 </div>
               )}
+              {logoPreparing && <p role="status" className="text-xs text-muted">Optimizing your logo…</p>}
               {logoError && <Alert tone="danger">{logoError}</Alert>}
               <p className="text-xs leading-relaxed text-muted">PNG, JPG or WebP. We'll resize it and keep it under 64 KB.</p>
             </div>
 
             {error && <Alert tone="danger">{error}</Alert>}
-            <Button type="submit" loading={loading} className="w-full">
+            <Button type="submit" loading={loading} disabled={logoPreparing} className="w-full">
               Create my shop
             </Button>
           </div>

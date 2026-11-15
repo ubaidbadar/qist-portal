@@ -33,7 +33,7 @@ export default function LoginPage() {
         }}
         component={({ register, errors, loading, error }) => (
           <div className="space-y-5">
-            <Input label="Email" type="email" autoComplete="email" autoFocus {...register('email')} error={fieldError(errors, 'email')} />
+            <Input label="Email" type="email" autoComplete="email" {...register('email')} error={fieldError(errors, 'email')} />
             <div>
               <PasswordInput label="Password" autoComplete="current-password" {...register('password')} error={fieldError(errors, 'password')} />
               <div className="mt-1 text-end">
