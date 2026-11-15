@@ -118,7 +118,7 @@ export default function GoogleOnboardingPage() {
                     <p className="text-sm font-medium text-ink">Logo ready</p>
                     <p className="text-xs text-muted">Optimized for fast loading</p>
                   </div>
-                  <button type="button" onClick={() => setLogo(null)} className="ms-auto rounded-control px-2 py-2 text-sm font-medium text-muted hover:bg-border/60 hover:text-ink">
+                  <button type="button" onClick={() => { setLogo(null); setLogoError(''); }} className="ms-auto rounded-control px-2 py-2 text-sm font-medium text-muted hover:bg-border/60 hover:text-ink">
                     Remove
                   </button>
                 </div>
