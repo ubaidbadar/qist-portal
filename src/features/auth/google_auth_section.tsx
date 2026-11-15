@@ -12,7 +12,7 @@ interface GoogleAuthSectionProps {
   redirectTo: string;
 }
 
-/** Shared Google sign-in/sign-up flow. New accounts continue to the short shop onboarding screen. */
+/** Shared Google sign-in flow. First-time Google users continue to the shop onboarding screen. */
 export default function GoogleAuthSection({ redirectTo }: GoogleAuthSectionProps) {
   const navigate = useNavigate();
   const busyRef = useRef(false);

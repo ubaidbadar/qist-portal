@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { googleOnboardingSchema, type Session } from '@shop/shared';
-import { Alert, Button, fieldError, Form, Input, Textarea } from '../../ui';
+import { PASSWORD_MIN_LENGTH, googleOnboardingSchema, type Session } from '@shop/shared';
+import { Alert, Button, fieldError, Form, Input, PasswordInput, Textarea } from '../../ui';
 import { signIn } from '../../auth';
 import { apiPost } from '../../config/api';
 import { clearPendingGoogleAuth, getPendingGoogleAuth } from './google_auth';
@@ -36,27 +36,34 @@ export default function GoogleOnboardingPage() {
 
   return (
     <AuthCard
-      title="Set up your shop"
-      subtitle="Just a few details. You can change them later in settings."
+      title="Let's set up your shop"
+      subtitle="Just a few details. Your shop details can be updated later."
       footer={
         <Link to="/login" onClick={clearPendingGoogleAuth} className={authLinkClasses}>
           Use a different Google account
         </Link>
       }
     >
-      <div className="mb-6 flex min-w-0 items-center gap-3 rounded-control border border-border bg-surface p-3">
+      <div className="mb-5 flex min-w-0 items-center gap-3 rounded-control border border-border bg-surface p-3">
         <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
           {pending.profile.fullName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-ink">{pending.profile.fullName}</p>
+          <p className="truncate text-sm font-semibold text-ink">Google account verified</p>
           <p className="truncate text-sm text-muted">{pending.profile.email}</p>
         </div>
       </div>
 
       <Form
         schema={googleOnboardingSchema}
-        defaultValues={{ shopName: '', phone: '', address: '' }}
+        defaultValues={{
+          fullName: pending.profile.fullName,
+          shopName: '',
+          phone: '',
+          address: '',
+          password: '',
+          confirmPassword: '',
+        }}
         onSubmit={async ({ data }) => {
           const onboarding = googleOnboardingSchema.parse(data);
           const session = await apiPost<Session>(
@@ -77,16 +84,23 @@ export default function GoogleOnboardingPage() {
         component={({ register, errors, loading, error }) => (
           <div className="space-y-4">
             <Input
+              label="Your full name"
+              autoComplete="name"
+              autoFocus
+              required
+              {...register('fullName')}
+              error={fieldError(errors, 'fullName')}
+            />
+            <Input
               label="Shop name"
               placeholder="e.g. Al-Madina Mobiles"
               autoComplete="organization"
-              autoFocus
               required
               {...register('shopName')}
               error={fieldError(errors, 'shopName')}
             />
             <Input
-              label="Shop phone number"
+              label="Shop contact number"
               type="tel"
               placeholder="03XX XXXXXXX"
               autoComplete="tel"
@@ -108,7 +122,7 @@ export default function GoogleOnboardingPage() {
                 label="Shop logo (optional)"
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
-                disabled={logoPreparing}
+                disabled={logoPreparing || loading}
                 onChange={handleLogoChange}
               />
               {logo && (
@@ -125,7 +139,26 @@ export default function GoogleOnboardingPage() {
               )}
               {logoPreparing && <p role="status" className="text-xs text-muted">Optimizing your logo…</p>}
               {logoError && <Alert tone="danger">{logoError}</Alert>}
-              <p className="text-xs leading-relaxed text-muted">PNG, JPG or WebP. We'll resize it and keep it under 64 KB.</p>
+              <p className="text-xs leading-relaxed text-muted">PNG, JPG or WebP. Optional — you can add it later.</p>
+            </div>
+
+            <div className="space-y-3 border-t border-border pt-4">
+              <div>
+                <h2 className="text-sm font-semibold text-ink">Create your password</h2>
+                <p className="mt-1 text-xs text-muted">Use this password to sign in with your email next time. At least {PASSWORD_MIN_LENGTH} characters.</p>
+              </div>
+              <PasswordInput
+                label="Password"
+                autoComplete="new-password"
+                {...register('password')}
+                error={fieldError(errors, 'password')}
+              />
+              <PasswordInput
+                label="Confirm password"
+                autoComplete="new-password"
+                {...register('confirmPassword')}
+                error={fieldError(errors, 'confirmPassword')}
+              />
             </div>
 
             {error && <Alert tone="danger">{error}</Alert>}

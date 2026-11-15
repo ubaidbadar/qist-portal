@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { GuestOnly, RequireAuth, RequirePermission } from './auth';
 import AppLayout from './app/layout/app_layout';
 import { NAV_ITEMS } from './app/nav_items';
@@ -6,7 +6,6 @@ import AuthLayout from './features/auth/auth_layout';
 
 import CustomerPrivacyPolicyPage from './features/legal/customer_privacy_policy_page';
 import LoginPage from './features/auth/login_page';
-import SignupPage from './features/auth/signup_page';
 import GoogleOnboardingPage from './features/auth/google_onboarding_page';
 import GoogleConnectPage from './features/auth/google_connect_page';
 import ForgotPasswordPage from './features/auth/forgot_password_page';
@@ -43,7 +42,7 @@ export default function App() {
       <Route element={<AuthLayout />}>
         <Route element={<GuestOnly />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signup" element={<Navigate to="/login" replace />} />
           <Route path="/onboarding" element={<GoogleOnboardingPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Route>
