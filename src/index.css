@@ -76,6 +76,9 @@
   --shadow-lg: 0 12px 32px -8px rgb(16 24 40 / 0.18);
   --shadow-sheet: 0 -8px 30px rgb(0 0 0 / 0.12);
 
+  /* Shared auth form width matches the Google Identity Services button maximum. */
+  --container-auth: 25rem;
+
   /* Typography */
   --font-display: "Inter", sans-serif;  /* headings */
   --font-body: "Inter", sans-serif;     /* everything else */

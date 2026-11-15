@@ -21,6 +21,7 @@ interface GoogleIdentityApi {
     id: {
       initialize: (options: { client_id: string; callback: (response: GoogleCredentialResponse) => void }) => void;
       renderButton: (parent: HTMLElement, options: GoogleButtonOptions) => void;
+      prompt: () => void;
     };
   };
 }
@@ -61,6 +62,14 @@ function dispatchGoogleCredential(response: GoogleCredentialResponse) {
   if (response.credential && activeCredentialHandler) {
     void activeCredentialHandler(response.credential);
   }
+}
+
+/** Opens Google's One Tap prompt for the secondary text CTA; the official button remains the fallback. */
+export function promptGoogleSignIn(): boolean {
+  const googleId = window.google?.accounts.id;
+  if (!googleId || !initializedClientId || !activeCredentialHandler) return false;
+  googleId.prompt();
+  return true;
 }
 
 interface GoogleSignInButtonProps {
@@ -138,8 +147,12 @@ export default function GoogleSignInButton({ onCredential, busy = false }: Googl
   if (loadError) return <Alert tone="warning">{loadError}</Alert>;
 
   return (
-    <div aria-busy={busy} className={busy ? 'pointer-events-none opacity-60' : ''}>
-      <div ref={containerRef} className="min-h-11 w-full" />
+    <div
+      id="google-sign-in"
+      aria-busy={busy}
+      className={busy ? 'w-full pointer-events-none opacity-60' : 'w-full'}
+    >
+      <div ref={containerRef} className="flex min-h-11 w-full items-center justify-center" />
     </div>
   );
 }
