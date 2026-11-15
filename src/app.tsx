@@ -39,11 +39,13 @@ export default function App() {
         path="/privacy-policy"
         element={<CustomerPrivacyPolicyPage />}
       />
+      <Route element={<GuestOnly />}>
+        <Route path="/onboarding" element={<GoogleOnboardingPage />} />
+      </Route>
       <Route element={<AuthLayout />}>
         <Route element={<GuestOnly />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<Navigate to="/login" replace />} />
-          <Route path="/onboarding" element={<GoogleOnboardingPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Route>
         <Route path="/reset-password" element={<ResetPasswordPage />} />
