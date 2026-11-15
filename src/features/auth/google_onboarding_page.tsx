@@ -6,7 +6,7 @@ import { signIn } from '../../auth';
 import { apiPost } from '../../config/api';
 import { clearPendingGoogleAuth, getPendingGoogleAuth } from './google_auth';
 import AuthCard, { authLinkClasses } from './auth_card';
-import { prepareOrgLogo, type PreparedOrgLogo } from './prepare_logo';
+import { prepareOrgLogo, type PreparedOrgLogo } from '../../utils/prepare_org_logo';
 
 export default function GoogleOnboardingPage() {
   const navigate = useNavigate();

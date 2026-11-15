@@ -28,6 +28,16 @@ describe('pending Google onboarding', () => {
     expect(getPendingGoogleAuth()).toEqual(pending);
   });
 
+  test('rejects stale Google identity tokens before onboarding', () => {
+    const pending = {
+      credential: 'expired-id-token',
+      profile: { fullName: 'Ayesha Khan', email: 'ayesha@example.com' },
+      savedAt: Date.now() - 20 * 60 * 1000,
+    };
+    sessionStorage.setItem('qist_google_onboarding', JSON.stringify(pending));
+    expect(getPendingGoogleAuth()).toBeNull();
+  });
+
   test('clears the credential after onboarding or when the user starts over', () => {
     savePendingGoogleAuth({
       credential: 'short-lived-google-id-token',

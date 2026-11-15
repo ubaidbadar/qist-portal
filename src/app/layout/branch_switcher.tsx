@@ -1,6 +1,6 @@
 import { Store } from 'lucide-react';
 import { ALL_BRANCHES, useActiveBranch, useMe } from '../../auth';
-import { API_BASE_URL } from '../../config/urls';
+import { orgLogoUrl } from '../../utils/org_logo_url';
 import { Select } from '../../ui';
 
 interface BranchSwitcherProps {
@@ -12,9 +12,7 @@ interface BranchSwitcherProps {
 export default function BranchSwitcher({ className = '', compact = false }: BranchSwitcherProps) {
   const { org } = useMe();
   const { branchId, canSeeAll, branches, select } = useActiveBranch();
-  const logoUrl = org.logoUpdatedAt
-    ? API_BASE_URL.replace(/\/+$/, '') + '/public/orgs/' + org._id + '/logo?v=' + encodeURIComponent(org.logoUpdatedAt)
-    : null;
+  const logoUrl = orgLogoUrl(org);
 
   const options = [
     ...(canSeeAll ? [{ value: ALL_BRANCHES, label: 'All branches' }] : []),

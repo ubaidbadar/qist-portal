@@ -35,6 +35,8 @@ export interface User {
   /** Branches a manager or staff member works in; empty for the owner, who sees every branch. */
   branchIds: string[];
   active: boolean;
+  /** True when this Qist account was explicitly connected to a Google identity. */
+  googleLinked?: boolean;
   emailVerifiedAt: string | null;
   mustChangePassword: boolean;
   lastLoginAt: string | null;

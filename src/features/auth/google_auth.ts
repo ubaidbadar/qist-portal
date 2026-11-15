@@ -3,6 +3,7 @@ import type { GoogleAuthConfig, GoogleProfile } from '@shop/shared';
 import { apiGet } from '../../config/api';
 
 const PENDING_GOOGLE_AUTH_KEY = 'qist_google_onboarding';
+const PENDING_TTL_MS = 15 * 60 * 1000;
 
 export interface PendingGoogleAuth {
   credential: string;
@@ -18,7 +19,7 @@ export const googleAuthConfigQuery = queryOptions({
 /** Keep the short-lived Google ID token out of the URL and clear it as soon as onboarding completes. */
 export function savePendingGoogleAuth(value: PendingGoogleAuth): boolean {
   try {
-    sessionStorage.setItem(PENDING_GOOGLE_AUTH_KEY, JSON.stringify(value));
+    sessionStorage.setItem(PENDING_GOOGLE_AUTH_KEY, JSON.stringify({ ...value, savedAt: Date.now() }));
     return true;
   } catch {
     return false;
@@ -31,6 +32,10 @@ export function getPendingGoogleAuth(): PendingGoogleAuth | null {
     if (
       typeof value === 'object' &&
       value !== null &&
+      'savedAt' in value &&
+      typeof value.savedAt === 'number' &&
+      Date.now() >= value.savedAt &&
+      Date.now() - value.savedAt <= PENDING_TTL_MS &&
       'credential' in value &&
       typeof value.credential === 'string' &&
       'profile' in value &&
@@ -41,8 +46,9 @@ export function getPendingGoogleAuth(): PendingGoogleAuth | null {
       'email' in value.profile &&
       typeof value.profile.email === 'string'
     ) {
-      return value as PendingGoogleAuth;
+      return { credential: value.credential, profile: { fullName: value.profile.fullName, email: value.profile.email } };
     }
+    clearPendingGoogleAuth();
     return null;
   } catch {
     return null;

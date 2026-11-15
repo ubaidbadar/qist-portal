@@ -1,4 +1,4 @@
-import { Download, KeyRound, LogOut } from 'lucide-react';
+import { Download, KeyRound, Link2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CHANGE_PASSWORD_PATH, logOut, useMe } from '../../auth';
 import { Avatar, DropdownMenu } from '../../ui';
@@ -18,6 +18,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
       align="left"
       items={[
         ...(showInstall ? [{ label: 'Install Qist app', icon: Download, onClick: () => void installPortal() }] : []),
+        ...(!user.googleLinked ? [{ label: 'Connect Google', icon: Link2, onClick: () => navigate('/connect-google') }] : []),
         { label: 'Change password', icon: KeyRound, onClick: () => navigate(CHANGE_PASSWORD_PATH) },
         { label: 'Sign out', icon: LogOut, danger: true, onClick: () => void logOut() },
       ]}
