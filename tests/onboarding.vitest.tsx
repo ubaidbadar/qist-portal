@@ -61,12 +61,12 @@ describe('Qist shop onboarding', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
     expect(await screen.findByText('Enter at least 2 characters')).toBeTruthy();
 
-    fireEvent.change(screen.getByLabelText('Shop name'), { target: { value: 'Al-Madina Mobiles' } });
+    fireEvent.change(screen.getByLabelText(/Shop name/), { target: { value: 'Al-Madina Mobiles' } });
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
     expect(screen.getByRole('heading', { name: 'Where can we reach you?' })).toBeTruthy();
 
-    fireEvent.change(screen.getByLabelText('Shop contact number'), { target: { value: '03001234567' } });
-    fireEvent.change(screen.getByLabelText('Shop address'), { target: { value: 'Shop 2, Jinnah Road, Faisalabad' } });
+    fireEvent.change(screen.getByLabelText(/Shop contact number/), { target: { value: '03001234567' } });
+    fireEvent.change(screen.getByLabelText(/Shop address/), { target: { value: 'Shop 2, Jinnah Road, Faisalabad' } });
     fireEvent.click(screen.getByRole('button', { name: 'Back' }));
 
     expect(screen.getByDisplayValue('Al-Madina Mobiles')).toBeTruthy();
@@ -78,8 +78,8 @@ describe('Qist shop onboarding', () => {
 
     expect(screen.getByRole('heading', { name: 'Secure your account' })).toBeTruthy();
     expect(screen.getByText('Step 3 of 3')).toBeTruthy();
-    expect(screen.getByLabelText('Password')).toBeTruthy();
-    expect(screen.getByLabelText('Confirm password')).toBeTruthy();
+    expect(screen.getByLabelText(/^Password/)).toBeTruthy();
+    expect(screen.getByLabelText(/Confirm password/)).toBeTruthy();
   });
 
   it('shows the selected logo in the square preview and lets the user remove it', async () => {
