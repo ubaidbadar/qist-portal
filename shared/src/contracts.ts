@@ -93,6 +93,8 @@ import type { Payment } from './payments';
 export interface ContractWithSchedule extends Contract {
   /** Last lock state acknowledged by the enrolled phone, null when unavailable. */
   deviceLockState: DeviceLockState | null;
+  /** Confirmed management enrollment; absent on older API versions. No device credentials. */
+  deviceEnrollment?: { enrolledAt: string; lastCheckInAt: string | null; appVersion: string } | null;
   installments: Installment[];
   payments?: Payment[];
   commands?: DeviceCommand[];

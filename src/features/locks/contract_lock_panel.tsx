@@ -1,6 +1,6 @@
 import { Lock, Unlock, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import type { ContractWithSchedule, DeviceCommand, Page } from '@shop/shared';
+import type { ContractWithSchedule, Device, DeviceCommand, Page } from '@shop/shared';
 import { Button, Card } from '../../ui';
 import { apiGet } from '../../config/api';
 import { useCan } from '../../auth';
@@ -9,6 +9,7 @@ import { formatDate } from '../../utils/dates';
 import PauseModal from './pause_modal';
 import { COMMANDS_KEY, LOCK_CENTER_REFRESH_MS } from './queries';
 import ReasonModal from './reason_modal';
+import DeviceLinkStatus from './device_link_status';
 
 /** Acknowledgements determine the actual lock state; command history only describes requests in flight. */
 export default function ContractLockPanel({ contract }: { contract: ContractWithSchedule }) {
@@ -19,6 +20,13 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
     enabled: contract.commands === undefined,
     refetchInterval: contract.commands === undefined ? LOCK_CENTER_REFRESH_MS : false,
   });
+  const device = useQuery({
+    queryKey: ['contract-device-status', contract.deviceId],
+    queryFn: () => apiGet<Device>(`/devices/${contract.deviceId}`),
+    enabled: contract.deviceEnrollment === undefined,
+    refetchInterval: LOCK_CENTER_REFRESH_MS,
+  });
+  const enrollment = contract.deviceEnrollment === undefined ? device.data?.enrollment : contract.deviceEnrollment;
   const latest = contract.commands?.[0] ?? history.data?.items[0];
   const waiting = latest && (latest.status === 'proposed' || latest.status === 'pending' || latest.status === 'delivered');
   const manage = can('locks.manage') && contract.status === 'active';
@@ -39,6 +47,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
           {knownState ? (locked ? 'Locked' : 'Unlocked') : 'State unknown'}
         </span>
       </div>
+      <DeviceLinkStatus enrollment={enrollment} loading={contract.deviceEnrollment === undefined && device.isPending} now={new Date().getTime()} />
       <div className="flex flex-wrap items-center gap-3 text-sm text-body">
         {latest ? (
           <>
