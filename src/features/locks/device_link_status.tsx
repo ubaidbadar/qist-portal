@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { ContractWithSchedule } from '@shop/shared';
 import { formatDateTime } from '../../utils/dates';
 
@@ -14,8 +15,13 @@ export function deviceContact(enrollment: Enrollment, now: number) {
   return { label: now - Date.parse(seen) <= 30 * 60_000 ? 'Seen recently' : 'No recent check-in', lastSeen: seen };
 }
 
-export default function DeviceLinkStatus({ enrollment, loading, now }: { enrollment: Enrollment; loading: boolean; now: number }) {
-  const contact = deviceContact(enrollment, now);
+export default function DeviceLinkStatus({ enrollment, loading, now }: { enrollment: Enrollment; loading: boolean; now?: number }) {
+  const [clock, setClock] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setClock(Date.now()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+  const contact = deviceContact(enrollment, now ?? clock);
   const linked = enrollment !== undefined && enrollment !== null;
   return (
     <div className="grid gap-4 rounded-control border border-border bg-canvas p-4 text-sm sm:grid-cols-3" aria-label="Device connection status">
