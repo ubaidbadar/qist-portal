@@ -1,11 +1,10 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { loginSchema, type Session } from '@shop/shared';
-import { Alert, Button, fieldError, Form, Input, PasswordInput } from '../../ui';
+import { Alert, Button, fieldError, Form, Input, Modal, PasswordInput } from '../../ui';
 import { apiPost } from '../../config/api';
 import { signIn } from '../../auth';
 import AuthCard, { authLinkClasses } from './auth_card';
 import GoogleAuthSection from './google_auth_section';
-import { promptGoogleSignIn } from './google_sign_in_button';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -18,18 +17,19 @@ export default function LoginPage() {
       footer={
         <>
           New to Qist?{' '}
-          <Button
-            variant="link"
-            size="md"
-            className="p-0 align-baseline"
-            onClick={() => {
-              if (!promptGoogleSignIn()) {
-                document.getElementById('google-sign-in')?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
-              }
-            }}
+          <Modal
+            title="Continue with Google"
+            component={({ open }) => (
+              <Button variant="link" size="md" className="p-0 align-baseline" onClick={open}>
+                Continue with Google
+              </Button>
+            )}
           >
-            Continue with Google
-          </Button>
+            <p className="mb-5 text-sm leading-relaxed text-muted">
+              Choose your Google account to sign in, or set up your shop if you're new to Qist.
+            </p>
+            <GoogleAuthSection redirectTo={from} priority={1} />
+          </Modal>
           {' '}to set up your shop.
         </>
       }

@@ -51,7 +51,7 @@ beforeEach(() => {
     return { data: { data: responses[config.url!] }, status: 200, statusText: 'OK', headers: {}, config };
   };
 });
-afterEach(() => { cleanup(); signOut(); window.google = undefined; responses['/auth/google/config'] = { enabled: false, clientId: null }; });
+afterEach(() => { cleanup(); signOut(); window.google = undefined; vi.unstubAllGlobals(); responses['/auth/google/config'] = { enabled: false, clientId: null }; });
 
 describe('portal navigation request budget', () => {
   it.each(['/', '/customers', '/inventory', '/contracts', '/payments', `/customers/${customerId}`, '/settings?tab=team', '/contracts/new', `/contracts/new?customerId=${customerId}`])('loads %s with one data request under StrictMode', async (path) => {
@@ -73,22 +73,63 @@ describe('portal navigation request budget', () => {
     expect(screen.getByLabelText('Email address')).toBeTruthy();
   });
 
-  it('starts Google One Tap from the footer text action', async () => {
+  it('opens the Google sign-in dialog immediately even when the config request is slow', async () => {
+    signOut();
+    queryClient.removeQueries({ queryKey: ['auth', 'google-config'] });
+    mount('/login');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Continue with Google' }));
+    expect(screen.getByRole('heading', { name: 'Continue with Google' })).toBeTruthy();
+    expect(screen.getByText(/Choose your Google account to sign in/)).toBeTruthy();
+
+    await waitFor(() => expect(requests).toEqual(['/auth/google/config']));
+    await release();
+    await waitFor(() => expect(queryClient.isFetching()).toBe(0));
+    expect(requests).toHaveLength(1);
+  });
+
+  it('starts the SDK before the Google configuration API responds, then renders the official button', async () => {
     signOut();
     queryClient.removeQueries({ queryKey: ['auth', 'google-config'] });
     const initialize = vi.fn();
     const renderButton = vi.fn();
-    const prompt = vi.fn();
-    window.google = { accounts: { id: { initialize, renderButton, prompt } } };
+    window.google = { accounts: { id: { initialize, renderButton } } };
     responses['/auth/google/config'] = { enabled: true, clientId: 'test-client-id' };
 
     mount('/login');
     await waitFor(() => expect(requests).toContain('/auth/google/config'));
+    expect(renderButton).not.toHaveBeenCalled();
     await release();
-    await waitFor(() => expect(renderButton).toHaveBeenCalled());
+    await waitFor(() => expect(renderButton).toHaveBeenCalledTimes(1));
+    expect(initialize).toHaveBeenCalledWith(expect.objectContaining({ client_id: 'test-client-id' }));
+  });
+
+  it('does not recreate Google iframes on unrelated component changes or same-width resize events', async () => {
+    signOut();
+    queryClient.removeQueries({ queryKey: ['auth', 'google-config'] });
+    const renderButton = vi.fn();
+    const initialize = vi.fn();
+    window.google = { accounts: { id: { initialize, renderButton } } };
+    responses['/auth/google/config'] = { enabled: true, clientId: 'test-client-id' };
+
+    let resized: (() => void) | undefined;
+    class ResizeObserverFake {
+      constructor(callback: () => void) { resized = callback; }
+      observe() {}
+      disconnect() {}
+    }
+    vi.stubGlobal('ResizeObserver', ResizeObserverFake);
+
+    mount('/login');
+    await release();
+    await waitFor(() => expect(renderButton).toHaveBeenCalledTimes(1));
+    resized?.();
+    expect(renderButton).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByRole('button', { name: 'Continue with Google' }));
-    expect(prompt).toHaveBeenCalledOnce();
+    await waitFor(() => expect(renderButton).toHaveBeenCalledTimes(2));
+    resized?.();
+    expect(renderButton).toHaveBeenCalledTimes(2);
   });
 
   it('keeps the shell mounted and uses zero requests on a fresh cached revisit', async () => {
