@@ -47,7 +47,7 @@ export default function ContractLockPanel({ contract }: { contract: ContractWith
           {knownState ? (locked ? 'Locked' : 'Unlocked') : 'State unknown'}
         </span>
       </div>
-      <DeviceLinkStatus enrollment={enrollment} loading={contract.deviceEnrollment === undefined && device.isPending} now={new Date().getTime()} />
+      <DeviceLinkStatus enrollment={enrollment} loading={contract.deviceEnrollment === undefined && device.isPending} />
       <div className="flex flex-wrap items-center gap-3 text-sm text-body">
         {latest ? (
           <>
