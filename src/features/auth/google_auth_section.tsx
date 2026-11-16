@@ -10,10 +10,11 @@ import GoogleSignInButton from './google_sign_in_button';
 
 interface GoogleAuthSectionProps {
   redirectTo: string;
+  priority?: number;
 }
 
 /** Shared Google sign-in flow. First-time Google users continue to the shop onboarding screen. */
-export default function GoogleAuthSection({ redirectTo }: GoogleAuthSectionProps) {
+export default function GoogleAuthSection({ redirectTo, priority = 0 }: GoogleAuthSectionProps) {
   const navigate = useNavigate();
   const busyRef = useRef(false);
   const [busy, setBusy] = useState(false);
@@ -46,7 +47,7 @@ export default function GoogleAuthSection({ redirectTo }: GoogleAuthSectionProps
 
   return (
     <div className="space-y-3">
-      <GoogleSignInButton onCredential={handleCredential} busy={busy} />
+      <GoogleSignInButton onCredential={handleCredential} busy={busy} priority={priority} />
       {busy && <p role="status" className="text-center text-sm text-muted">Signing you in securely…</p>}
       {error && <Alert tone="danger">{error}</Alert>}
     </div>

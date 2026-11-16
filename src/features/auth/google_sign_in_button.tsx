@@ -21,7 +21,6 @@ interface GoogleIdentityApi {
     id: {
       initialize: (options: { client_id: string; callback: (response: GoogleCredentialResponse) => void }) => void;
       renderButton: (parent: HTMLElement, options: GoogleButtonOptions) => void;
-      prompt: () => void;
     };
   };
 }
@@ -34,110 +33,128 @@ declare global {
 
 type CredentialHandler = (credential: string) => void | Promise<void>;
 
+const GOOGLE_SCRIPT_URL = 'https://accounts.google.com/gsi/client';
 let googleScriptPromise: Promise<void> | null = null;
 let initializedClientId: string | null = null;
-let activeCredentialHandler: CredentialHandler | null = null;
 
+/**
+ * Google Identity Services has one global callback. Keep each mounted button registered and route
+ * credentials to the foreground dialog while it is open, otherwise to the page's main button.
+ */
+const handlers = new Map<symbol, { priority: number; onCredential: CredentialHandler }>();
+
+function dispatchGoogleCredential(response: GoogleCredentialResponse) {
+  if (!response.credential) return;
+  const active = [...handlers.values()].sort((a, b) => b.priority - a.priority)[0];
+  if (active) void active.onCredential(response.credential);
+}
+
+/** Load Google's official, automatically updated SDK in parallel with the API config query. */
 function loadGoogleIdentityScript(): Promise<void> {
   if (window.google?.accounts.id) return Promise.resolve();
   if (googleScriptPromise) return googleScriptPromise;
 
   googleScriptPromise = new Promise<void>((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => {
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${GOOGLE_SCRIPT_URL}"]`);
+    const script = existing ?? document.createElement('script');
+
+    const loaded = () => {
+      cleanup();
+      if (window.google?.accounts.id) resolve();
+      else fail();
+    };
+    const fail = () => {
+      cleanup();
+      script.remove();
       googleScriptPromise = null;
       reject(new Error('Google sign-in could not load. Check your connection and try again.'));
     };
-    document.head.append(script);
+    const cleanup = () => {
+      script.removeEventListener('load', loaded);
+      script.removeEventListener('error', fail);
+    };
+
+    script.addEventListener('load', loaded);
+    script.addEventListener('error', fail);
+    if (!existing) {
+      script.src = GOOGLE_SCRIPT_URL;
+      script.async = true;
+      document.head.append(script);
+    }
   });
 
   return googleScriptPromise;
 }
 
-function dispatchGoogleCredential(response: GoogleCredentialResponse) {
-  if (response.credential && activeCredentialHandler) {
-    void activeCredentialHandler(response.credential);
-  }
-}
-
-/** Opens Google's One Tap prompt for the secondary text CTA; the official button remains the fallback. */
-export function promptGoogleSignIn(): boolean {
-  const googleId = window.google?.accounts.id;
-  if (!googleId || !initializedClientId || !activeCredentialHandler) return false;
-  googleId.prompt();
-  return true;
-}
-
 interface GoogleSignInButtonProps {
   onCredential: CredentialHandler;
   busy?: boolean;
+  /** The dialog takes precedence over the underlying login button while both are mounted. */
+  priority?: number;
 }
 
-/** Google's official Sign in with Google button; initialize once and share the callback across auth screens. */
-export default function GoogleSignInButton({ onCredential, busy = false }: GoogleSignInButtonProps) {
+/** The interactive Google account chooser must be Google's official button, never a simulated iframe click. */
+export default function GoogleSignInButton({ onCredential, busy = false, priority = 0 }: GoogleSignInButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [sdkReady, setSdkReady] = useState(false);
   const [loadError, setLoadError] = useState('');
   const configQuery = useQuery(googleAuthConfigQuery);
-  const config = configQuery.data;
-  const clientId = config?.clientId;
-  const enabled = config?.enabled;
+  const clientId = configQuery.data?.clientId;
+  const enabled = configQuery.data?.enabled;
+
+  // SDK and config load concurrently; neither blocks the other.
+  useEffect(() => {
+    let active = true;
+    void loadGoogleIdentityScript()
+      .then(() => { if (active) setSdkReady(true); })
+      .catch((error: unknown) => {
+        if (active) setLoadError(error instanceof Error ? error.message : 'Google sign-in could not load.');
+      });
+    return () => { active = false; };
+  }, []);
+
+  // Credential callbacks change with the view state, but must not tear down Google's iframe.
+  useEffect(() => {
+    const key = Symbol('google-button');
+    handlers.set(key, { priority, onCredential });
+    return () => { handlers.delete(key); };
+  }, [onCredential, priority]);
 
   useEffect(() => {
-    if (!enabled || !clientId || !containerRef.current) return;
+    if (!sdkReady || !enabled || !clientId || !containerRef.current || !window.google) return;
 
-    let disposed = false;
-    let observer: ResizeObserver | undefined;
-    activeCredentialHandler = onCredential;
+    const googleId = window.google.accounts.id;
+    if (initializedClientId !== clientId) {
+      googleId.initialize({ client_id: clientId, callback: dispatchGoogleCredential });
+      initializedClientId = clientId;
+    }
 
-    void loadGoogleIdentityScript()
-      .then(() => {
-        if (disposed || !containerRef.current || !window.google) return;
-
-        if (initializedClientId !== clientId) {
-          window.google.accounts.id.initialize({
-            client_id: clientId,
-            callback: dispatchGoogleCredential,
-          });
-          initializedClientId = clientId;
-        }
-
-        const render = () => {
-          const container = containerRef.current;
-          if (disposed || !container || !window.google) return;
-          const width = Math.max(200, Math.min(400, Math.floor(container.clientWidth)));
-          container.replaceChildren();
-          window.google.accounts.id.renderButton(container, {
-            type: 'standard',
-            theme: 'outline',
-            size: 'large',
-            text: 'continue_with',
-            shape: 'rectangular',
-            width,
-          });
-        };
-
-        render();
-        if (typeof ResizeObserver !== 'undefined' && containerRef.current) {
-          observer = new ResizeObserver(render);
-          observer.observe(containerRef.current);
-        }
-      })
-      .catch((error: unknown) => {
-        if (!disposed) setLoadError(error instanceof Error ? error.message : 'Google sign-in could not load.');
+    const container = containerRef.current;
+    let lastWidth = 0;
+    const render = () => {
+      const width = Math.max(200, Math.min(400, Math.floor(container.clientWidth)));
+      if (lastWidth === width) return;
+      lastWidth = width;
+      container.replaceChildren();
+      googleId.renderButton(container, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width,
       });
-
-    return () => {
-      disposed = true;
-      observer?.disconnect();
-      if (activeCredentialHandler === onCredential) activeCredentialHandler = null;
     };
-  }, [clientId, enabled, onCredential]);
 
-  if (configQuery.isPending) return <Skeleton className="h-11 w-full rounded-control" />;
+    render();
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(render) : null;
+    observer?.observe(container);
+    return () => { observer?.disconnect(); };
+  }, [sdkReady, enabled, clientId]);
+
+  if (configQuery.isPending || (!sdkReady && !loadError)) {
+    return <Skeleton className="h-11 w-full rounded-control" />;
+  }
   if (configQuery.isError) {
     return <Alert tone="warning">Google sign-in is temporarily unavailable. You can still use email and password.</Alert>;
   }
@@ -147,11 +164,7 @@ export default function GoogleSignInButton({ onCredential, busy = false }: Googl
   if (loadError) return <Alert tone="warning">{loadError}</Alert>;
 
   return (
-    <div
-      id="google-sign-in"
-      aria-busy={busy}
-      className={busy ? 'w-full pointer-events-none opacity-60' : 'w-full'}
-    >
+    <div aria-busy={busy} className={busy ? 'w-full pointer-events-none opacity-60' : 'w-full'}>
       <div ref={containerRef} className="flex min-h-11 w-full items-center justify-center" />
     </div>
   );
