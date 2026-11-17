@@ -4,6 +4,10 @@ import { ROLES, type Role } from './constants';
 
 // The matrix from docs/plan.md §4, written out so a change to PERMISSIONS has to be a deliberate change here too.
 const MATRIX: Record<Permission, Record<Role, boolean>> = {
+  'documents.write': { owner: true, manager: true, staff: true },
+  'documents.review': { owner: true, manager: true, staff: false },
+  'documents.identity': { owner: true, manager: true, staff: false },
+  'documents.delete': { owner: true, manager: true, staff: false },
   'org.manage': { owner: true, manager: false, staff: false },
   'team.manage': { owner: true, manager: false, staff: false },
   'branches.all': { owner: true, manager: false, staff: false },
