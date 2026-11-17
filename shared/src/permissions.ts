@@ -2,9 +2,13 @@ import type { Role } from './constants';
 
 /**
  * What each role may do (docs/plan.md §4). The server enforces it; the portal only uses it to hide actions.
- * Reading data needs no permission: it is limited by organization and assigned branches instead.
+ * Ordinary record reads are limited by organization and assigned branches. Private document contents also require the document permission.
  */
 export const PERMISSIONS = {
+  'documents.write': ['owner', 'manager', 'staff'],
+  'documents.review': ['owner', 'manager'],
+  'documents.identity': ['owner', 'manager'],
+  'documents.delete': ['owner', 'manager'],
   'org.manage': ['owner'], // organization profile, branches, installment plans, settings, lock policy
   'team.manage': ['owner'], // users, roles, branch access
   'branches.all': ['owner'], // see every branch without being assigned to it

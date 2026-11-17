@@ -22,3 +22,5 @@ export * from './schedule';
 export * from './users';
 
 export * from './customer_install';
+
+export * from './documents';

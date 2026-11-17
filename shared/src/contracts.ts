@@ -52,6 +52,8 @@ export interface Installment {
 
 /** A contract as the API sends it. Customer and phone details are copied in at sale, so the contract never changes. */
 export interface Contract {
+  /** Present for new agreements; absent means the historical guarantors are unknown. */
+  guarantorsSnapshot?: import('./customers').GuarantorInput[];
   _id: string;
   orgId: string;
   branchId: string;

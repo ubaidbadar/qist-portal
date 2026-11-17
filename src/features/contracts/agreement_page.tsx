@@ -100,7 +100,8 @@ function Agreement({ contract, customer }: { contract: ContractWithSchedule; cus
 
       <section className="grid grid-cols-2 gap-x-8 gap-y-10 pt-8 sm:grid-cols-3">
         <Signature label={`Customer: ${customer.fullName}`} />
-        {customer.guarantors.map((guarantor) => (
+        {contract.guarantorsSnapshot === undefined && <p className="col-span-full text-xs text-muted">This older agreement has no saved guarantor snapshot. Verify guarantors against the signed original.</p>}
+        {(contract.guarantorsSnapshot ?? []).map((guarantor) => (
           <Signature key={guarantor.cnic} label={`Guarantor: ${guarantor.fullName} (${formatCnic(guarantor.cnic)})`} />
         ))}
         <Signature label={`For ${org.name}`} />

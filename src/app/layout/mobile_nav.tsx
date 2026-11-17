@@ -27,7 +27,7 @@ export default function MobileNav() {
               <span className={`grid h-7 w-11 place-items-center rounded-pill ${isActive ? 'bg-accent/10' : ''}`}>
                 <item.icon size={20} strokeWidth={isActive ? 2.25 : 1.75} aria-hidden="true" />
               </span>
-              {item.label}
+              <span className="max-w-full [overflow-wrap:anywhere]">{item.label}</span>
             </>
           )}
         </NavLink>

@@ -60,14 +60,14 @@ function Toast({ id, type, message }: ToastMessage) {
 
   return (
     <div
-      className={`border border-border shadow-lg rounded-control p-4 flex items-center gap-3 min-w-75 pointer-events-auto transition duration-300 starting:opacity-0 starting:translate-x-8 motion-reduce:transition-none ${style.container}`}
+      className={`border border-border shadow-lg rounded-control p-4 flex items-center gap-3 min-w-0 w-full pointer-events-auto transition duration-300 starting:opacity-0 starting:translate-x-8 motion-reduce:transition-none ${style.container}`}
     >
       {style.icon}
-      <span className="text-sm font-medium text-ink flex-1">{message}</span>
+      <span className="min-w-0 flex-1 text-sm font-medium text-ink [overflow-wrap:anywhere]">{message}</span>
       <button
         type="button"
         onClick={() => dismiss(id)}
-        className="rounded-small text-muted hover:text-ink transition-colors cursor-pointer"
+        className="shrink-0 rounded-small text-muted hover:text-ink transition-colors cursor-pointer"
         aria-label="Close"
       >
         <X size={16} aria-hidden="true" />
@@ -85,7 +85,7 @@ export function ToastContainer() {
     <div
       aria-live="polite"
       aria-atomic="false"
-      className="fixed bottom-4 right-4 z-100 flex flex-col gap-2 pointer-events-none"
+      className="fixed inset-x-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-100 flex flex-col gap-2 pointer-events-none lg:inset-x-auto lg:bottom-4 lg:right-4 lg:w-96"
     >
       {toasts.map((t) => (
         <Toast key={t.id} {...t} />

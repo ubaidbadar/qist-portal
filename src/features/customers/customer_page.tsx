@@ -1,3 +1,4 @@
+import DocumentsPanel from '../documents/documents_panel';
 import { useParams } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatCnic, formatMobile, type Customer } from '@shop/shared';
@@ -39,6 +40,7 @@ export default function CustomerPage() {
               <ProfileCard customer={loaded.pages[0].customer} />
               <GuarantorsCard customer={loaded.pages[0].customer} />
             </div>
+            <DocumentsPanel target={{ customerId }} />
             <CustomerContracts customerId={customerId} contracts={loaded.pages.flatMap((page) => page.contracts.items)}
               hasMore={query.hasNextPage} loadingMore={query.isFetchingNextPage} onLoadMore={() => void query.fetchNextPage()} />
           </div>

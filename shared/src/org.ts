@@ -1,9 +1,11 @@
 import { z } from 'zod';
 import type { OrgStatus } from './constants';
 import { mobileSchema } from './identifiers';
+import { orgLogoInputSchema } from './auth';
 import { nameSchema } from './fields';
 
 export const orgUpdateSchema = z.object({ name: nameSchema });
+export const orgSettingsUpdateSchema = z.object({ name: nameSchema, logo: orgLogoInputSchema.nullable().optional(), expectedUpdatedAt: z.iso.datetime().optional() });
 
 export type OrgUpdateInput = z.infer<typeof orgUpdateSchema>;
 

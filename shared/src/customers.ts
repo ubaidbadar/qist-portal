@@ -6,6 +6,7 @@ import { cnicSchema, mobileSchema, optionalMobileSchema } from './identifiers';
 export const MAX_GUARANTORS = 2;
 
 export const guarantorSchema = z.object({
+  id: z.uuid().optional(),
   fullName: nameSchema,
   cnic: cnicSchema,
   phone: mobileSchema,

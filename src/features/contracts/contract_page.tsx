@@ -1,3 +1,4 @@
+import DocumentsPanel from '../documents/documents_panel';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { ContractWithSchedule } from '@shop/shared';
@@ -62,6 +63,7 @@ function ContractDetails({ contract }: { contract: ContractWithSchedule }) {
             </div>
           </Card>
           <LedgerCard contractId={contract._id} payments={contract.payments} />
+          <DocumentsPanel target={{ contractId: contract._id }} />
         </div>
         <div className="order-1 min-w-0 lg:order-2">
           <ContractInfoCard contract={contract} />

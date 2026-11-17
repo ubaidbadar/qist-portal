@@ -11,19 +11,23 @@ const sections = [
   },
   {
     "title": "Sign-in and WhatsApp verification",
-    "body": "The app sends your phone number and password over HTTPS to the Qist backend to authenticate you. Passwords are stored on the server as Argon2 hashes, not plaintext. If you request first-password setup or password recovery, Qist sends your phone number and a one-time verification code to Meta's WhatsApp Business Platform for delivery to you. Codes expire after five minutes and are stored as server-keyed hashes. Meta handles WhatsApp delivery under its own policies. We do not use WhatsApp to send unsolicited marketing through this flow."
+    "body": "The app sends your phone number and password over HTTPS to the Qist backend to authenticate you. Passwords are stored on the server as Argon2 hashes, not plaintext. The enrolled Locker may securely approve same-phone sign-in or an approval you initiate on another phone. Password sign-in and WhatsApp recovery remain available. If you request WhatsApp first-password setup or recovery, Qist sends your phone number and a one-time verification code to Meta's WhatsApp Business Platform for delivery to you. Codes expire after five minutes and are stored as server-keyed hashes. Meta handles WhatsApp delivery under its own policies. We do not use WhatsApp to send unsolicited marketing through this flow."
   },
   {
     "title": "Customer and financial records",
-    "body": "The backend matches your verified phone number to customer records registered by your retailers. The app retrieves your name, phone number, plan and installment amounts, due dates, paid amounts, late fees, payment receipts, retailer contact details, and the last device lock state recorded by the retailer's system. It does not display other customers' records, CNICs, guarantor information, retailer inventory costs, or device-enrollment credentials. Ask your retailer to correct inaccurate registration or payment records."
+    "body": "The backend matches your verified phone number to customer records registered by your retailers. The app retrieves your name, phone number, plan and installment amounts, due dates, paid amounts, late fees, payment receipts, retailer contact details, and the last device lock state recorded by the retailer's system. It does not display other customers' records, unrelated guarantor scans, retailer inventory costs, or device-enrollment credentials. Ask your retailer to correct inaccurate registration or payment records."
   },
   {
     "title": "Local storage and permissions",
-    "body": "The app uses internet access to communicate with Qist and to open links you choose. It keeps an encrypted sign-in token protected by Android Keystore, privacy acceptance, an in-app reminder preference, and read-notice identifiers on your device. Passwords and verification codes are not persisted by the app, and financial records are not cached to disk by this implementation. Backup is disabled for this app. Android or apps you choose may have separate data-handling practices."
+    "body": "The app uses Android Keystore to encrypt the session token and last-viewed account snapshot in backup-excluded storage. Offline screens identify saved data. Privacy acceptance and preferences remain locally. Photo and document selection uses Android system pickers without broad photo, storage, contact or SMS permissions. Pending document copies are encrypted in backup-excluded storage, limited in size and number, and removed after upload, cancellation, expiry or sign-out. Files exported by you remain at your chosen destination."
   },
   {
     "title": "Reminders and device status",
-    "body": "In-app notices are derived from your retrieved due dates, recorded payments, and last acknowledged phone status. The reminder switch does not register you for remote push notifications. Qist Customer does not enroll, lock, unlock, monitor, or manage your device. The displayed phone state may change when the separate retailer/device system reports a new acknowledgment; it is not a real-time connectivity guarantee."
+    "body": "With your notification preference and Android permission where required, Firebase Cloud Messaging handles an installation token and generic account notifications. Notification delivery is not a connectivity or approval guarantee. Qist Customer displays the last acknowledged phone state; the separate Qist Locker handles device management and cryptographically signed sign-in approval. The customer app itself does not enroll, lock, unlock or manage your phone."
+  },
+  {
+    "title": "Private documents and staff review",
+    "body": "If your retailer enables documents, staff and customers may upload identity, phone-box, warranty, invoice and signed agreement records for a specific retailer and plan. A customer may submit a guarantor identity scan only for a specific staff request and with permission to share it. Files are held privately for antivirus and format checks before access is allowed. Authorized owners and managers review submissions; ordinary staff can submit documents and see status but cannot retrieve file content, because a category alone cannot reliably identify sensitive content. Customers may access their own permitted submissions and review feedback; staff-uploaded files are not automatically shared to customer accounts, but cannot retrieve guarantor identity scans. Acceptance means staff review, not independent identity verification. The retailer retention notice is shown before submission. Contract files are retained through the contract and the disclosed period after it ends; standalone identity documents count from upload. A retailer dispute hold may extend retention. Removed or expired files lose access immediately and stored objects are deleted by a retryable cleanup process. Exported copies are under your control. Contact your retailer for correction, deletion or a hold dispute. Deleting your app account does not automatically erase retailer business documents."
   },
   {
     "title": "Payments, contact actions, and receipts",
@@ -31,7 +35,7 @@ const sections = [
   },
   {
     "title": "Retention, sign-out, and deletion requests",
-    "body": "Customer-login sessions expire after 30 days and may be revoked sooner. Signing out removes the sign-in token on this device and attempts to revoke that session on the server; if the device is offline, server expiry still applies. Resetting the password revokes all customer-login sessions. Preferences remain until you clear app storage or uninstall. For customer-login account deletion or other privacy requests, contact m.ubaidbadar@gmail.com so we can verify ownership and handle the request. Retailer transaction and contract records are separate business records; contact the relevant retailer about correction or deletion and any applicable retention requirements. No fixed retention period for those records is promised here."
+    "body": "Customer-login sessions expire after 30 days and may be revoked sooner. Signing out removes the sign-in token on this device and attempts to revoke that session on the server; if the device is offline, server expiry still applies. Resetting the password revokes all customer-login sessions. Preferences remain until you clear app storage or uninstall. Use Delete my data in the app to remove your login identity, password, sessions, push registrations and notification inbox. You can also contact m.ubaidbadar@gmail.com for privacy requests. Retailer transaction and contract records are separate business records; contact the relevant retailer about correction or deletion and any applicable retention requirements. No fixed retention period for those records is promised here."
   },
   {
     "title": "Support, analytics, and advertising",
@@ -65,7 +69,7 @@ export default function CustomerPrivacyPolicyPage() {
         <Page title="Privacy policy" description="Qist Customer Android app · Provided by Ubaid Badar">
           <article className="space-y-5">
             <Card padding="lg">
-              <p className="text-sm text-muted">Last updated <time dateTime="2026-11-05">5 November 2026</time></p>
+              <p className="text-sm text-muted">Last updated <time dateTime="2026-11-17">17 November 2026</time></p>
               <p className="mt-4 text-sm leading-relaxed text-body">
                 This policy covers connected versions of Qist Customer, including phone/password login,
                 WhatsApp password recovery, and retailer-provided account records. Earlier demo versions
