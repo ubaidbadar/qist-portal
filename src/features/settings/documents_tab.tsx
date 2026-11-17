@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { documentPolicySchema, type DocumentPolicy } from '@shop/shared';
@@ -10,6 +11,7 @@ const key = ['document-settings'] as const;
 type Settings = { policy: DocumentPolicy; available: boolean };
 export default function DocumentsTab() {
   const query = useQuery({ queryKey: key, queryFn: () => apiGet<Settings>('/org/documents') });
+  if (axios.isAxiosError(query.error) && query.error.response?.status === 404) return <SettingsCard title="Documents" description="Private customer and contract documents"><p className="text-sm text-muted">Documents are not available yet. Your other settings remain available.</p></SettingsCard>;
   return (
     <QueryView query={query} skeleton={<Skeleton className="h-96 w-full max-w-4xl" />}>
       {(settings) => <DocumentPolicyForm settings={settings} />}

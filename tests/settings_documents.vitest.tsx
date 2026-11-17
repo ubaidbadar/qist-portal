@@ -132,3 +132,15 @@ test('review requires actionable rejection feedback and uses the version returne
     feedback: updated.feedback,
   });
 });
+
+
+test('an older backend still saves the business name without hiding authorization failures', async () => {
+  mock.patch.mockImplementation((path: string, body: object) => path === '/org/settings'
+    ? Promise.reject({ isAxiosError: true, response: { status: 404 } })
+    : Promise.resolve({ ...org, ...body }));
+  mount(<OrganizationTab />);
+  fireEvent.change(await screen.findByLabelText(/Business name/), { target: { value: 'Legacy Safe Shop' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(mock.patch).toHaveBeenCalledWith('/org', { name: 'Legacy Safe Shop' }));
+  await waitFor(() => expect((screen.getByRole('button', { name: 'Save changes' }) as HTMLButtonElement).disabled).toBe(true));
+});

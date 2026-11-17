@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ImagePlus, Trash2 } from 'lucide-react';
 import { orgSettingsUpdateSchema, type Me, type Org, type OrgLogoInput } from '@shop/shared';
 import { Alert, Button, Input, Skeleton, toast } from '../../ui';
-import { apiPatch } from '../../config/api';
+import { saveBusinessSettings } from './save_business_settings';
 import { ME_KEY } from '../../auth';
 import QueryView from '../../shared/query_view';
 import { prepareOrgLogo } from '../../utils/prepare_org_logo';
@@ -39,7 +39,11 @@ function OrganizationForm({ org }: { org: Org }) {
       });
       if (!parsed.success)
         throw new Error(parsed.error.issues[0]?.message ?? 'Check your business settings.');
-      return apiPatch<Org>('/org/settings', parsed.data);
+      return saveBusinessSettings(parsed.data, baseline, result => {
+        cache.setQueryData(orgQuery.queryKey, result);
+        cache.setQueryData<Me>(ME_KEY, previous => previous ? { ...previous, org: result } : previous);
+        setBaseline(result);
+      });
     },
     onSuccess: (result) => {
       cache.setQueryData(orgQuery.queryKey, result);

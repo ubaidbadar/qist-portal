@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -96,6 +97,7 @@ function DocumentRecords({ target }: { target: DocumentTarget }) {
         <Skeleton className="h-24" />
       </div>
     );
+  if (axios.isAxiosError(query.error) && query.error.response?.status === 404) return <p className="p-5 text-sm text-muted">Documents are not available yet.</p>;
   if (query.isError || !data)
     return (
       <div className="space-y-3 p-5">
