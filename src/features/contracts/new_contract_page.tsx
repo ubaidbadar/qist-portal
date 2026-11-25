@@ -80,7 +80,7 @@ export default function NewContractPage() {
               )}
               {customer && draft.device && branchId && (
                 <div className={draft.step === 2 ? '' : 'hidden'}>
-                  <TermsStep key={draft.device._id} branchId={branchId} customer={customer} device={draft.device} />
+                  <TermsStep key={customer._id + draft.device._id} branchId={branchId} customer={customer} device={draft.device} />
                 </div>
               )}
             </div>
